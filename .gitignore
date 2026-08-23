@@ -19,7 +19,10 @@ lerna-debug.log*
 .pnpm-debug.log*
 *.tsbuildinfo
 
-src/userplugins
+src/userplugins/*
+!src/userplugins/FakeMessages
+!src/userplugins/SpoofPlatform
+!src/userplugins/TrollStream
 
 ExtensionCache/
 /settings

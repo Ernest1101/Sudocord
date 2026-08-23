@@ -16,8 +16,8 @@ import { exportSettings, importSettings } from "./offline";
 
 const logger = new Logger("SettingsSync:Cloud", "#39b7e0");
 
-const SYNC_DIRECTION_KEY = "Vencord_cloudSyncDirection";
-const SETTINGS_DIRTY_KEY = "Vencord_settingsDirty";
+const SYNC_DIRECTION_KEY = "SudoCord_cloudSyncDirection";
+const SETTINGS_DIRTY_KEY = "SudoCord_settingsDirty";
 export const getCloudSyncDirection = () => localStorage.getItem(SYNC_DIRECTION_KEY) || "both";
 export const setCloudSyncDirection = (direction: "push" | "pull" | "both" | "manual") => localStorage.setItem(SYNC_DIRECTION_KEY, direction);
 export const areLocalSettingsDirty = () => localStorage.getItem(SETTINGS_DIRTY_KEY) === "true";

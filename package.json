@@ -1,8 +1,8 @@
 {
-    "name": "vencord",
+    "name": "sudocord",
     "private": "true",
     "version": "1.15.2",
-    "description": "The cutest Discord client mod",
+    "description": "SudoCord — the cutest Discord client mod (Vencord fork)",
     "homepage": "https://github.com/Vendicated/Vencord#readme",
     "bugs": {
         "url": "https://github.com/Vendicated/Vencord/issues"

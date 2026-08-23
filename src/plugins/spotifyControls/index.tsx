@@ -60,8 +60,8 @@ export default definePlugin({
             replacement: {
                 // react.jsx)(AccountPanel, { ..., showTaglessAccountPanel: blah })
                 match: /(?<=\i\.jsxs?\)\()(\i),{(?=[^}]*?userTag:\i,occluded:)/,
-                // react.jsx(WrapperComponent, { VencordOriginal: AccountPanel, ...
-                replace: "$self.PanelWrapper,{VencordOriginal:$1,"
+                // react.jsx(WrapperComponent, { SudoCordOriginal: AccountPanel, ...
+                replace: "$self.PanelWrapper,{SudoCordOriginal:$1,"
             }
         },
         {
@@ -96,7 +96,7 @@ export default definePlugin({
 
     start: () => toggleHoverControls(settings.store.hoverControls),
 
-    PanelWrapper({ VencordOriginal, ...props }) {
+    PanelWrapper({ SudoCordOriginal, ...props }) {
         return (
             <>
                 <ErrorBoundary
@@ -110,7 +110,7 @@ export default definePlugin({
                     <Player />
                 </ErrorBoundary>
 
-                <VencordOriginal {...props} />
+                <SudoCordOriginal {...props} />
             </>
         );
     }

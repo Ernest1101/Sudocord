@@ -64,7 +64,7 @@ export function removeMessagePopoverButton(identifier: string) {
     MessagePopoverButtonMap.delete(identifier);
 }
 
-function VencordPopoverButtons(props: { Component: React.ComponentType<MessagePopoverButtonItem>, message: Message; }) {
+function SudoCordPopoverButtons(props: { Component: React.ComponentType<MessagePopoverButtonItem>, message: Message; }) {
     const { Component, message } = props;
 
     const { messagePopoverButtons } = useSettings(["uiElements.messagePopoverButtons.*"]).uiElements;
@@ -95,5 +95,5 @@ export function _buildPopoverElements(
     Component: React.ComponentType<MessagePopoverButtonItem>,
     message: Message
 ) {
-    return <VencordPopoverButtons Component={Component} message={message} />;
+    return <SudoCordPopoverButtons Component={Component} message={message} />;
 }

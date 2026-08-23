@@ -49,7 +49,7 @@ function Icon({ isShown }: { isShown: boolean; }) {
     );
 }
 
-function VencordPopoutButton() {
+function SudoCordPopoutButton() {
     const buttonRef = useRef(null);
     const [show, setShow] = useState(false);
 
@@ -68,7 +68,7 @@ function VencordPopoutButton() {
                     ref={buttonRef}
                     className="vc-toolbox-btn"
                     onClick={() => setShow(v => !v)}
-                    tooltip={isShown ? null : "Vencord Toolbox"}
+                    tooltip={isShown ? null : "SudoCord Toolbox"}
                     icon={() => <Icon isShown={isShown} />}
                     selected={isShown}
                 />
@@ -78,8 +78,8 @@ function VencordPopoutButton() {
 }
 
 export default definePlugin({
-    name: "VencordToolbox",
-    description: "Adds a button to the titlebar that houses Vencord quick actions",
+    name: "SudoCordToolbox",
+    description: "Adds a button to the titlebar that houses SudoCord quick actions",
     tags: ["Utility", "Developers"],
     authors: [Devs.Ven, Devs.AutumnVN],
 
@@ -100,7 +100,7 @@ export default definePlugin({
             <>
                 {children}
                 <ErrorBoundary key="vc-toolbox" noop>
-                    <VencordPopoutButton />
+                    <SudoCordPopoutButton />
                 </ErrorBoundary>
             </>
         );

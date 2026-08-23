@@ -178,7 +178,7 @@ let socket: WebSocket;
 
 async function start() {
     if (socket) socket.close();
-    socket = new WebSocket(`ws://127.0.0.1:${settings.store.webSocketPort ?? 42070}/?client=Vencord`);
+    socket = new WebSocket(`ws://127.0.0.1:${settings.store.webSocketPort ?? 42070}/?client=SudoCord`);
     return new Promise((resolve, reject) => {
         socket.onopen = resolve;
         socket.onerror = reject;
@@ -342,7 +342,7 @@ function sendMsgNotif(titleString: string, content: string, message: Message) {
                 content: content,
                 useBase64Icon: true,
                 icon: result,
-                sourceApp: "Vencord"
+                sourceApp: "SudoCord"
             };
 
             sendToOverlay(msgData);
@@ -361,7 +361,7 @@ function sendOtherNotif(content: string, titleString: string) {
         content: content,
         useBase64Icon: false,
         icon: "default",
-        sourceApp: "Vencord"
+        sourceApp: "SudoCord"
     };
     sendToOverlay(msgData);
 }
@@ -372,7 +372,7 @@ async function sendToOverlay(notif: NotificationObject) {
         return;
     }
     const apiObject: ApiObject = {
-        sender: "Vencord",
+        sender: "SudoCord",
         target: "xsoverlay",
         command: "SendNotification",
         jsonData: JSON.stringify(notif),

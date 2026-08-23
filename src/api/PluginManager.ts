@@ -74,7 +74,7 @@ export function hasAnyVisibleSettings({ settings }: Plugin) {
     return !!settings && Object.values(settings.def).some(s => !isSettingHidden(settings, s));
 }
 
-export function addPatch(newPatch: Omit<Patch, "plugin">, pluginName: string, pluginPath = `Vencord.Plugins.plugins[${JSON.stringify(pluginName)}]`) {
+export function addPatch(newPatch: Omit<Patch, "plugin">, pluginName: string, pluginPath = `SudoCord.Plugins.plugins[${JSON.stringify(pluginName)}]`) {
     // TODO: this causes crashes
     if (pluginName === "Vesktop" && newPatch.find === ".STREAMING_AUTO_STREAMER_MODE,") return;
 

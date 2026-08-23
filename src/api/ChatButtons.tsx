@@ -95,7 +95,7 @@ export type ChatBarButtonData = {
 export const ChatBarButtonMap = new Map<string, ChatBarButtonData>();
 const logger = new Logger("ChatButtons");
 
-function VencordChatBarButtons(props: ChatBarProps) {
+function SudoCordChatBarButtons(props: ChatBarProps) {
     const { chatBarButtons } = useSettings(["uiElements.chatBarButtons.*"]).uiElements;
 
     const { analyticsName } = props.type;
@@ -115,7 +115,7 @@ function VencordChatBarButtons(props: ChatBarProps) {
 export function _injectButtons(buttons: ReactNode[], props: ChatBarProps) {
     if (props.disabled || buttons.length === 0) return;
 
-    buttons.unshift(<VencordChatBarButtons key="vencord-chat-buttons" {...props} />);
+    buttons.unshift(<SudoCordChatBarButtons key="vencord-chat-buttons" {...props} />);
 }
 
 /**
@@ -172,7 +172,7 @@ addContextMenuPatch("textarea-context", (children, args) => {
     if (idx === -1) return;
 
     group.splice(idx, 0,
-        <Menu.MenuItem id="vc-chat-buttons" key="vencord-chat-buttons" label="Vencord Buttons">
+        <Menu.MenuItem id="vc-chat-buttons" key="vencord-chat-buttons" label="SudoCord Buttons">
             {buttons.map(([id]) => (
                 <Menu.MenuCheckboxItem
                     label={id}

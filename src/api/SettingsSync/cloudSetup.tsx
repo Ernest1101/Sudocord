@@ -50,13 +50,13 @@ const getUserId = () => {
 };
 
 export async function getAuthorization() {
-    const secrets = await DataStore.get<Record<string, string>>("Vencord_cloudSecret") ?? {};
+    const secrets = await DataStore.get<Record<string, string>>("SudoCord_cloudSecret") ?? {};
 
     const origin = getCloudUrlOrigin();
 
     // we need to migrate from the old format here
     if (secrets[origin]) {
-        await DataStore.update<Record<string, string>>("Vencord_cloudSecret", secrets => {
+        await DataStore.update<Record<string, string>>("SudoCord_cloudSecret", secrets => {
             secrets ??= {};
             // use the current user ID
             secrets[`${origin}:${getUserId()}`] = secrets[origin];
@@ -72,7 +72,7 @@ export async function getAuthorization() {
 }
 
 async function setAuthorization(secret: string) {
-    await DataStore.update<Record<string, string>>("Vencord_cloudSecret", secrets => {
+    await DataStore.update<Record<string, string>>("SudoCord_cloudSecret", secrets => {
         secrets ??= {};
         secrets[`${getCloudUrlOrigin()}:${getUserId()}`] = secret;
         return secrets;
@@ -80,7 +80,7 @@ async function setAuthorization(secret: string) {
 }
 
 export async function deauthorizeCloud() {
-    await DataStore.update<Record<string, string>>("Vencord_cloudSecret", secrets => {
+    await DataStore.update<Record<string, string>>("SudoCord_cloudSecret", secrets => {
         secrets ??= {};
         delete secrets[`${getCloudUrlOrigin()}:${getUserId()}`];
         return secrets;

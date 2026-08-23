@@ -31,7 +31,7 @@ for (const [plugin, methods] of Object.entries(PluginNatives)) {
     const mappings = PluginIpcMappings[plugin] = {};
 
     for (const [methodName, method] of entries) {
-        const key = `VencordPluginNative_${plugin}_${methodName}`;
+        const key = `SudoCordPluginNative_${plugin}_${methodName}`;
         ipcMain.handle(key, method);
         mappings[methodName] = key;
     }

@@ -32,9 +32,9 @@ import { waitForComponent } from "./internal";
 
 export const Forms = {
     // TODO: Stop using this and use Heading/Paragraph directly
-    /** @deprecated use Heading from Vencord */
+    /** @deprecated use Heading from SudoCord */
     FormTitle: Heading,
-    /** @deprecated use Paragraph from Vencord */
+    /** @deprecated use Paragraph from SudoCord */
     FormText: Paragraph,
     /** @deprecated don't use this */
     FormSection: "section" as never, // Backwards compat since Vesktop uses this
@@ -43,11 +43,11 @@ export const Forms = {
 };
 
 // TODO: Stop using this and use Paragraph/Span directly
-/** @deprecated use Paragraph, Span, or BaseText from Vencord */
+/** @deprecated use Paragraph, Span, or BaseText from SudoCord */
 export const Text = TextCompat;
-/** @deprecated use Button from Vencord */
+/** @deprecated use Button from SudoCord */
 export const Button = ButtonCompat;
-/** @deprecated Use FormSwitch from Vencord */
+/** @deprecated Use FormSwitch from SudoCord */
 export const Switch = FormSwitchCompat as never;
 
 export const Checkbox = waitForComponent<t.Checkbox>("Checkbox", filters.componentByCode('"data-toggleable-component":"checkbox'));

@@ -18,7 +18,7 @@
 
 import { definePluginSettings } from "@api/Settings";
 import { BackupRestoreIcon, CloudIcon, MainSettingsIcon, PaintbrushIcon, PatchHelperIcon, PlaceholderIcon, PluginsIcon, UpdaterIcon, VesktopSettingsIcon } from "@components/Icons";
-import { BackupAndRestoreTab, CloudTab, PatchHelperTab, PluginsTab, ThemesTab, UpdaterTab, VencordTab } from "@components/settings/tabs";
+import { BackupAndRestoreTab, CloudTab, PatchHelperTab, PluginsTab, ThemesTab, UpdaterTab, SudoCordTab } from "@components/settings/tabs";
 import { Devs } from "@utils/constants";
 import { isTruthy } from "@utils/guards";
 import definePlugin, { IconProps, OptionType } from "@utils/types";
@@ -80,7 +80,7 @@ interface SettingsLayoutBuilder {
 const settings = definePluginSettings({
     settingsLocation: {
         type: OptionType.SELECT,
-        description: "Where to put the Vencord settings section",
+        description: "Where to put the SudoCord settings section",
         options: [
             { label: "At the very top", value: "top" },
             { label: "Above the Nitro section", value: "aboveNitro", default: true },
@@ -90,9 +90,9 @@ const settings = definePluginSettings({
             { label: "At the very bottom", value: "bottom" },
         ] as { label: string; value: SettingsLocation; default?: boolean; }[]
     },
-    includeVencordInfoWhenCopying: {
+    includeSudoCordInfoWhenCopying: {
         type: OptionType.BOOLEAN,
-        description: "Also copy Vencord info (Vencord, Electron, Chromium) when clicking the version info in the bottom left area of the Settings page",
+        description: "Also copy SudoCord info (SudoCord, Electron, Chromium) when clicking the version info in the bottom left area of the Settings page",
         default: true
     }
 });
@@ -171,9 +171,9 @@ export default definePlugin({
         const vencordEntries: SettingsLayoutNode[] = [
             buildEntry({
                 key: "vencord_main",
-                title: "Vencord",
-                panelTitle: "Vencord Settings",
-                Component: VencordTab,
+                title: "SudoCord",
+                panelTitle: "SudoCord Settings",
+                Component: SudoCordTab,
                 Icon: MainSettingsIcon
             }),
             buildEntry({
@@ -191,14 +191,14 @@ export default definePlugin({
             !IS_UPDATER_DISABLED && UpdaterTab && buildEntry({
                 key: "vencord_updater",
                 title: "Updater",
-                panelTitle: "Vencord Updater",
+                panelTitle: "SudoCord Updater",
                 Component: UpdaterTab,
                 Icon: UpdaterIcon
             }),
             buildEntry({
                 key: "vencord_cloud",
                 title: "Cloud",
-                panelTitle: "Vencord Cloud",
+                panelTitle: "SudoCord Cloud",
                 Component: CloudTab,
                 Icon: CloudIcon
             }),
@@ -232,7 +232,7 @@ export default definePlugin({
         const vencordSection: SettingsLayoutNode = {
             key: "vencord_section",
             type: LayoutTypes.SECTION,
-            useTitle: () => "Vencord Settings",
+            useTitle: () => "SudoCord Settings",
             buildLayout: () => vencordEntries
         };
 
@@ -291,7 +291,7 @@ export default definePlugin({
     getInfoRows() {
         const { electronVersion, chromiumVersion, additionalInfo } = this;
 
-        const rows = [`Vencord ${gitHash}${additionalInfo}`];
+        const rows = [`SudoCord ${gitHash}${additionalInfo}`];
 
         if (electronVersion) rows.push(`Electron ${electronVersion}`);
         if (chromiumVersion) rows.push(`Chromium ${chromiumVersion}`);
@@ -300,7 +300,7 @@ export default definePlugin({
     },
 
     getInfoString() {
-        if (!settings.store.includeVencordInfoWhenCopying) return "";
+        if (!settings.store.includeSudoCordInfoWhenCopying) return "";
         return "\n" + this.getInfoRows().join("\n");
     },
 

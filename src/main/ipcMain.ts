@@ -81,7 +81,7 @@ ipcMain.handle(IpcEvents.OPEN_EXTERNAL, (_, url) => {
         throw "Disallowed protocol.";
 
     shell.openExternal(url)
-        .catch(err => console.error("[Vencord] Failed to open external link", url, err));
+        .catch(err => console.error("[SudoCord] Failed to open external link", url, err));
 });
 
 
@@ -147,7 +147,7 @@ ipcMain.on(IpcEvents.GET_MONACO_THEME, e => {
 });
 
 ipcMain.handle(IpcEvents.OPEN_MONACO_EDITOR, async () => {
-    const title = "Vencord QuickCSS Editor";
+    const title = "SudoCord QuickCSS Editor";
     const existingWindow = BrowserWindow.getAllWindows().find(w => w.title === title);
     if (existingWindow && !existingWindow.isDestroyed()) {
         existingWindow.focus();

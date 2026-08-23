@@ -24,12 +24,12 @@ async function runReporter() {
             find: '"Could not find app-mount"',
             replacement: {
                 match: /"Could not find app-mount"/,
-                replace: "(Vencord.Webpack._initReporter(),$&)"
+                replace: "(SudoCord.Webpack._initReporter(),$&)"
             }
-        }, "Vencord Reporter");
+        }, "SudoCord Reporter");
 
         // @ts-expect-error
-        Vencord.Webpack._initReporter = function () {
+        SudoCord.Webpack._initReporter = function () {
             // initReporter is called in the patched entry point of Discord
             // setImmediate to only start searching for lazy chunks after Discord initialized the app
             setTimeout(() => loadLazyChunks().then(loadLazyChunksResolve), 0);
@@ -122,6 +122,6 @@ async function runReporter() {
     }
 }
 
-// Run after the Vencord object has been created.
-// We need to add extra properties to it, and it is only created after all of Vencord code has ran
+// Run after the SudoCord object has been created.
+// We need to add extra properties to it, and it is only created after all of SudoCord code has ran
 setTimeout(runReporter, 0);

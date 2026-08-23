@@ -288,7 +288,7 @@ export default definePlugin({
                 {
                     // Change the permissionOverwrite check to CONNECT if the channel is locked
                     match: /permissionOverwrites\[.+?\i=(?<=context:(\i)}.+?)(?=(.+?)VIEW_CHANNEL)/,
-                    replace: (m, channel, permCheck) => `${m}!Vencord.Webpack.Common.PermissionStore.can(${CONNECT}n,${channel})?${permCheck}CONNECT):`
+                    replace: (m, channel, permCheck) => `${m}!SudoCord.Webpack.Common.PermissionStore.can(${CONNECT}n,${channel})?${permCheck}CONNECT):`
                 },
                 {
                     // Include the @everyone role in the allowed roles list for Hidden Channels

@@ -17,42 +17,42 @@
 */
 
 export const enum IpcEvents {
-    INIT_FILE_WATCHERS = "VencordInitFileWatchers",
+    INIT_FILE_WATCHERS = "SudoCordInitFileWatchers",
 
-    OPEN_QUICKCSS = "VencordOpenQuickCss",
-    GET_QUICK_CSS = "VencordGetQuickCss",
-    SET_QUICK_CSS = "VencordSetQuickCss",
-    QUICK_CSS_UPDATE = "VencordQuickCssUpdate",
+    OPEN_QUICKCSS = "SudoCordOpenQuickCss",
+    GET_QUICK_CSS = "SudoCordGetQuickCss",
+    SET_QUICK_CSS = "SudoCordSetQuickCss",
+    QUICK_CSS_UPDATE = "SudoCordQuickCssUpdate",
 
-    GET_SETTINGS = "VencordGetSettings",
-    SET_SETTINGS = "VencordSetSettings",
+    GET_SETTINGS = "SudoCordGetSettings",
+    SET_SETTINGS = "SudoCordSetSettings",
 
-    GET_THEMES_LIST = "VencordGetThemesList",
-    GET_THEME_DATA = "VencordGetThemeData",
-    GET_THEME_SYSTEM_VALUES = "VencordGetThemeSystemValues",
-    THEME_UPDATE = "VencordThemeUpdate",
+    GET_THEMES_LIST = "SudoCordGetThemesList",
+    GET_THEME_DATA = "SudoCordGetThemeData",
+    GET_THEME_SYSTEM_VALUES = "SudoCordGetThemeSystemValues",
+    THEME_UPDATE = "SudoCordThemeUpdate",
 
-    OPEN_EXTERNAL = "VencordOpenExternal",
-    OPEN_THEMES_FOLDER = "VencordOpenThemesFolder",
-    OPEN_SETTINGS_FOLDER = "VencordOpenSettingsFolder",
+    OPEN_EXTERNAL = "SudoCordOpenExternal",
+    OPEN_THEMES_FOLDER = "SudoCordOpenThemesFolder",
+    OPEN_SETTINGS_FOLDER = "SudoCordOpenSettingsFolder",
 
-    GET_UPDATES = "VencordGetUpdates",
-    GET_REPO = "VencordGetRepo",
-    UPDATE = "VencordUpdate",
-    BUILD = "VencordBuild",
+    GET_UPDATES = "SudoCordGetUpdates",
+    GET_REPO = "SudoCordGetRepo",
+    UPDATE = "SudoCordUpdate",
+    BUILD = "SudoCordBuild",
 
-    OPEN_MONACO_EDITOR = "VencordOpenMonacoEditor",
-    GET_MONACO_THEME = "VencordGetMonacoTheme",
+    OPEN_MONACO_EDITOR = "SudoCordOpenMonacoEditor",
+    GET_MONACO_THEME = "SudoCordGetMonacoTheme",
 
-    GET_PLUGIN_IPC_METHOD_MAP = "VencordGetPluginIpcMethodMap",
+    GET_PLUGIN_IPC_METHOD_MAP = "SudoCordGetPluginIpcMethodMap",
 
-    CSP_IS_DOMAIN_ALLOWED = "VencordCspIsDomainAllowed",
-    CSP_REMOVE_OVERRIDE = "VencordCspRemoveOverride",
-    CSP_REQUEST_ADD_OVERRIDE = "VencordCspRequestAddOverride",
+    CSP_IS_DOMAIN_ALLOWED = "SudoCordCspIsDomainAllowed",
+    CSP_REMOVE_OVERRIDE = "SudoCordCspRemoveOverride",
+    CSP_REQUEST_ADD_OVERRIDE = "SudoCordCspRequestAddOverride",
 
-    GET_RENDERER_CSS = "VencordGetRendererCss",
-    RENDERER_CSS_UPDATE = "VencordRendererCssUpdate",
-    PRELOAD_GET_RENDERER_JS = "VencordPreloadGetRendererJs",
+    GET_RENDERER_CSS = "SudoCordGetRendererCss",
+    RENDERER_CSS_UPDATE = "SudoCordRendererCssUpdate",
+    PRELOAD_GET_RENDERER_JS = "SudoCordPreloadGetRendererJs",
 
-    SUPPORTS_WINDOWS_MATERIAL = "VencordSupportsWindowsMaterial",
+    SUPPORTS_WINDOWS_MATERIAL = "SudoCordSupportsWindowsMaterial",
 }

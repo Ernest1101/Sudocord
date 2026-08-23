@@ -67,7 +67,7 @@ export default definePlugin({
                 // Patch the central context menu handler
                 {
                     match: /(?=let{navId:)(?<=function \i\((\i)\).+?)/,
-                    replace: "$1=Vencord.Api.ContextMenu._usePatchContextMenu($1);"
+                    replace: "$1=SudoCord.Api.ContextMenu._usePatchContextMenu($1);"
                 },
 
                 // Demangle Discord's Menu Item module

@@ -49,7 +49,7 @@ const NO_ERROR = {};
 const ErrorBoundary = LazyComponent(() => {
     // This component is used in a lot of files which end up importing other Webpack commons and causing circular imports.
     // For this reason, use a non import access here.
-    return class ErrorBoundary extends Vencord.Webpack.Common.React.PureComponent<React.PropsWithChildren<Props>> {
+    return class ErrorBoundary extends SudoCord.Webpack.Common.React.PureComponent<React.PropsWithChildren<Props>> {
         state = {
             error: NO_ERROR as any,
             stack: "",

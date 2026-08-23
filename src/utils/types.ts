@@ -188,7 +188,7 @@ export interface PluginDef {
      */
     contextMenus?: Record<string, NavContextMenuPatchCallback>;
     /**
-     * Allows you to add custom actions to the Vencord Toolbox.
+     * Allows you to add custom actions to the SudoCord Toolbox.
      *
      * Can either be an object mapping labels to action functions or a Function returning Menu components.
      * Please note that you can only use Menu components.
@@ -221,7 +221,7 @@ export interface PluginDef {
 }
 
 export const enum StartAt {
-    /** Right away, as soon as Vencord initialised */
+    /** Right away, as soon as SudoCord initialised */
     Init = "Init",
     /** On the DOMContentLoaded event, so once the document is ready */
     DOMContentLoaded = "DOMContentLoaded",

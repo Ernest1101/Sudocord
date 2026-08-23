@@ -35,7 +35,7 @@ export default definePlugin({
 
                     // textCommands = builtInCommands.filter(...)
                     match: /(?<=\w=)(\w)(\.filter\(.{0,60}tableflip)/,
-                    replace: "Vencord.Api.Commands._init($1)$2",
+                    replace: "SudoCord.Api.Commands._init($1)$2",
                 }
             ],
         },
@@ -45,7 +45,7 @@ export default definePlugin({
             replacement: {
                 // return [2, cmd.execute(args, ctx)]
                 match: /,(\i)\.execute\((\i),(\i)\)/,
-                replace: (_, cmd, args, ctx) => `,Vencord.Api.Commands._handleCommand(${cmd}, ${args}, ${ctx})`
+                replace: (_, cmd, args, ctx) => `,SudoCord.Api.Commands._handleCommand(${cmd}, ${args}, ${ctx})`
             }
         },
         // Show plugin name instead of "Built-In"

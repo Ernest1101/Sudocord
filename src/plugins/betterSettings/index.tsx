@@ -97,7 +97,7 @@ export default definePlugin({
             replacement: [
                 {
                     match: /class (\i)( extends \i\.PureComponent.+?jsx\)\(\1,\{mode:)/,
-                    replace: "var $1=$self.Layer;class VencordPatchedOldFadeLayer$2",
+                    replace: "var $1=$self.Layer;class SudoCordPatchedOldFadeLayer$2",
                     predicate: () => settings.store.disableFade
                 },
                 { // Lazy-load contents

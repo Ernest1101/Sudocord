@@ -31,11 +31,11 @@ export interface Style {
     dom: HTMLStyleElement | null;
 }
 
-export const styleMap = window.VencordStyles ??= new Map();
+export const styleMap = window.SudoCordStyles ??= new Map();
 
 export const vencordRootNode = document.createElement("vencord-root");
 /**
- * Houses all Vencord core styles. This includes all imported css files
+ * Houses all SudoCord core styles. This includes all imported css files
  */
 export const coreStyleRootNode = document.createElement("vencord-styles");
 /**
