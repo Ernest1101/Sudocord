@@ -39,3 +39,51 @@
     background: var(--button-danger-background);
     color: #fff;
 }
+
+/* chat mode */
+.sc-msg {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    max-width: 78%;
+    position: relative;
+}
+
+.sc-msg-own {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.sc-msg-saved {
+    align-self: flex-start;
+}
+
+.sc-msg-bubble {
+    padding: 8px 12px;
+    overflow-wrap: anywhere;
+}
+
+.sc-msg-del {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    opacity: 0;
+    font-size: 12px;
+    padding: 2px 4px;
+}
+
+.sc-msg:hover .sc-msg-del {
+    opacity: 1;
+}
+
+.sc-msg-del:hover {
+    color: var(--text-danger, #f04747);
+}
+
+.sc-fav-send {
+    background: linear-gradient(135deg,#5865f2,#4752c4);
+    color: #fff;
+    font-size: 16px;
+    padding: 8px 14px;
+}
