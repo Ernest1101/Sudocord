@@ -26,10 +26,10 @@ import { join } from "path";
 import gitHash from "~git-hash";
 import gitRemote from "~git-remote";
 
-import { serializeErrors, VENCORD_FILES } from "./common";
+import { serializeErrors } from "./common";
 
 const API_BASE = `https://api.github.com/repos/${gitRemote}`;
-let PendingUpdates = [] as [string, string][];
+let PendingAsarUrl: string | null = null;
 
 async function githubGet<T = any>(endpoint: string) {
     return fetchJson<T>(API_BASE + endpoint, {
@@ -57,32 +57,36 @@ async function calculateGitChanges() {
 }
 
 async function fetchUpdates() {
-    const data = await githubGet("/releases/latest");
+    // latest release may be a prerelease (devbuild), so use the list endpoint
+    const data = await githubGet("/releases?per_page=1");
+    const release = data[0];
+    if (!release) throw new Error("No releases found");
 
-    const hash = data.name.slice(data.name.lastIndexOf(" ") + 1);
+    const hash = release.name.slice(release.name.lastIndexOf(" ") + 1);
     if (hash === gitHash)
         return false;
 
-    data.assets.forEach(({ name, browser_download_url }) => {
-        if (VENCORD_FILES.some(s => name.startsWith(s))) {
-            PendingUpdates.push([name, browser_download_url]);
-        }
-    });
+    const asar = release.assets.find(({ name }: any) => name === "desktop.asar");
+    if (!asar) throw new Error("No desktop.asar found in the latest release");
 
+    PendingAsarUrl = asar.browser_download_url;
     return true;
 }
 
 async function applyUpdates() {
-    const fileContents = await Promise.all(PendingUpdates.map(async ([name, url]) => {
-        const contents = await fetchBuffer(url);
-        return [join(__dirname, name), contents] as const;
-    }));
+    if (!PendingAsarUrl) return false;
 
-    await Promise.all(fileContents.map(async ([filename, contents]) =>
-        writeFile(filename, contents))
-    );
+    const contents = await fetchBuffer(PendingAsarUrl);
 
-    PendingUpdates = [];
+    // when running from inside an asar, __dirname looks like
+    // "...\SudoCord\sudocord.asar\..." - the real file on disk is the part up to ".asar"
+    const asarFile = __dirname.includes(".asar")
+        ? __dirname.slice(0, __dirname.lastIndexOf(".asar") + 5)
+        : join(__dirname, "desktop.asar");
+
+    await writeFile(asarFile, contents);
+
+    PendingAsarUrl = null;
     return true;
 }
 
