@@ -46,6 +46,7 @@ declare global {
     export var BUILD_TIMESTAMP: number;
 
     export var VencordNative: typeof import("./VencordNative").default;
+    export var Vencord: typeof import("./Vencord");
     export var SudoCord: typeof import("./Vencord");
     export var SudoCordStyles: Map<string, Style>;
     export var appSettings: {

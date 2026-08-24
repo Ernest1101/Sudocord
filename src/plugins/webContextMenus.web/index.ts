@@ -116,7 +116,7 @@ export default definePlugin({
                 // Fix silly Discord calling the non web support copy
                 {
                     match: /\i\.\i\.copy/,
-                    replace: "SudoCord.Util.copyToClipboard"
+                    replace: "Vencord.Util.copyToClipboard"
                 }
             ]
         },
@@ -234,7 +234,7 @@ export default definePlugin({
                 },
                 {
                     match: /\i\.\i\.copy(?=\(\i)/,
-                    replace: "SudoCord.Util.copyToClipboard"
+                    replace: "Vencord.Util.copyToClipboard"
                 }
             ],
             all: true,

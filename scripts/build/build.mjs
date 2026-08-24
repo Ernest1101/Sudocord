@@ -145,7 +145,7 @@ const buildConfigs = ([
         format: "iife",
         target: ["esnext"],
         footer: { js: "//# sourceURL=file:///VencordRenderer\n" + sourceMapFooter("renderer") },
-        globalName: "Vencord",
+        globalName: "SudoCord",
         sourcemap,
         plugins: [
             globPlugins("discordDesktop"),
@@ -194,7 +194,7 @@ const buildConfigs = ([
         format: "iife",
         target: ["esnext"],
         footer: { js: "//# sourceURL=file:///VencordDesktopRenderer\n" + sourceMapFooter("vencordDesktopRenderer") },
-        globalName: "Vencord",
+        globalName: "SudoCord",
         sourcemap,
         plugins: [
             globPlugins("vesktop"),

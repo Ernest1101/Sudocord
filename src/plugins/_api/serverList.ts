@@ -35,7 +35,7 @@ export default definePlugin({
             find: ".setGuildsTree(",
             replacement: {
                 match: /(?<=#{intl::SERVERS}\),gap:"xs",children:)\i\.map\(.{0,50}\.length\)/,
-                replace: "SudoCord.Api.ServerList.renderAll(SudoCord.Api.ServerList.ServerListRenderPosition.In).concat($&)"
+                replace: "Vencord.Api.ServerList.renderAll(SudoCord.Api.ServerList.ServerListRenderPosition.In).concat($&)"
             }
         }
     ]

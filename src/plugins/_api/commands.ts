@@ -35,7 +35,7 @@ export default definePlugin({
 
                     // textCommands = builtInCommands.filter(...)
                     match: /(?<=\w=)(\w)(\.filter\(.{0,60}tableflip)/,
-                    replace: "SudoCord.Api.Commands._init($1)$2",
+                    replace: "Vencord.Api.Commands._init($1)$2",
                 }
             ],
         },
