@@ -66,4 +66,5 @@ jobs:
                       sleep 15
                   done
                   [ "$ok" = "1" ] || exit 1
-                  gh release edit devbuild --title "DevBuild $RELEASE_TAG"
+                  CHANGELOG=$(git log --oneline -15 --no-decorate | sed "s/^/- /")
+                  gh release edit devbuild --title "DevBuild $RELEASE_TAG" --notes "$CHANGELOG"
