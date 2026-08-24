@@ -16,23 +16,33 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import "./styles.css";
+
 import { addMessagePopoverButton, removeMessagePopoverButton } from "@api/MessagePopover";
+import { get, set } from "@api/DataStore";
 import { definePluginSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
-import { get, set } from "@api/DataStore";
 import definePlugin from "@utils/types";
-import { NavigationRouter, React, Toasts, useState } from "@webpack/common";
+import { Modal, NavigationRouter, React, Toasts, openModal, useState } from "@webpack/common";
 import { Message } from "@vencord/discord-types";
 
-
 const STORE_KEY = "sudocord-favorite-messages";
+
+interface FavAttachment {
+    url: string;
+    contentType?: string;
+    width?: number;
+    height?: number;
+}
 
 interface FavoriteEntry {
     id: string;
     channelId: string;
     guildId: string | null;
     author: string;
+    avatarUrl?: string;
     content: string;
+    attachments: FavAttachment[];
     savedAt: number;
 }
 
@@ -46,136 +56,161 @@ function toast(message: string, type: number) {
     Toasts.show({ message, type, id: Toasts.genId() });
 }
 
+function isImage(att: FavAttachment) {
+    return (att.contentType ?? "").startsWith("image/") || /\.(png|jpe?g|gif|webp)(\?|$)/i.test(att.url);
+}
+
 function jumpTo(fav: FavoriteEntry) {
     const guild = fav.guildId ?? "@me";
     NavigationRouter.transitionTo(`/channels/${guild}/${fav.channelId}/${fav.id}`);
 }
 
-function SettingsAbout() {
-    const [favorites, setFavorites] = useState<Record<string, FavoriteEntry>>({});
+function FavoritesList({ favorites, onRemove }: { favorites: FavoriteEntry[]; onRemove: (id: string) => void; }) {
+    if (!favorites.length) {
+        return (
+            <div style={{ color: "var(--text-muted)", padding: "24px 0", textAlign: "center" }}>
+                Пока пусто. Открой любое сообщение → ⋯ → ⭐
+            </div>
+        );
+    }
+
+    return (
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {favorites.map(fav => (
+                <div
+                    key={fav.id}
+                    style={{
+                        background: "var(--background-secondary)",
+                        borderRadius: 8,
+                        padding: 12
+                    }}
+                >
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                        {fav.avatarUrl && (
+                            <img src={fav.avatarUrl} style={{ width: 20, height: 20, borderRadius: "50%" }} />
+                        )}
+                        <span style={{ fontWeight: 600, fontSize: 14 }}>{fav.author}</span>
+                        <span style={{ color: "var(--text-muted)", fontSize: 12, flex: 1, textAlign: "right" }}>
+                            {new Date(fav.savedAt).toLocaleString()}
+                        </span>
+                    </div>
+
+                    {fav.content && (
+                        <div style={{ fontSize: 14, whiteSpace: "pre-wrap", wordBreak: "break-word", marginBottom: fav.attachments.length ? 8 : 0 }}>
+                            {fav.content}
+                        </div>
+                    )}
+
+                    {fav.attachments.map((att, i) =>
+                        isImage(att) ? (
+                            <img
+                                key={i}
+                                src={att.url}
+                                style={{ maxWidth: "100%", maxHeight: 300, borderRadius: 8, marginBottom: 8, display: "block" }}
+                            />
+                        ) : (
+                            <a
+                                key={i}
+                                href={att.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                style={{ color: "var(--text-link)", fontSize: 13, display: "block", marginBottom: 4 }}
+                            >
+                                📎 Вложение
+                            </a>
+                        )
+                    )}
+
+                    <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+                        <button className="sc-fav-btn" onClick={() => jumpTo(fav)}>Перейти</button>
+                        <button className="sc-fav-btn sc-fav-btn-danger" onClick={() => onRemove(fav.id)}>Удалить</button>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function openFavoritesModal() {
+    openModal(props => <FavoritesModalRoot props={props} />);
+}
+
+
+function FavoritesModalRoot({ props }: { props: any; }) {
+    const [favorites, setFavorites] = useState<FavoriteEntry[]>([]);
     const [loaded, setLoaded] = useState(false);
 
-    useState(() => {
+    React.useEffect(() => {
         getFavorites().then(fav => {
-            setFavorites(fav);
+            setFavorites(Object.values(fav).sort((a, b) => b.savedAt - a.savedAt));
             setLoaded(true);
         });
-    });
+    }, []);
 
     async function remove(id: string) {
         const fav = await getFavorites();
         delete fav[id];
         await set(STORE_KEY, fav);
-        setFavorites({ ...fav });
+        setFavorites(Object.values(fav).sort((a, b) => b.savedAt - a.savedAt));
     }
 
-    if (!loaded) return <div style={{ color: "var(--text-muted)" }}>Loading...</div>;
-
-    const list = Object.values(favorites).sort((a, b) => b.savedAt - a.savedAt);
-
     return (
-        <ErrorBoundary noop>
-            <div style={{ padding: "8px 0" }}>
-                <div style={{ fontWeight: 600, marginBottom: 8 }}>
-                    ⭐ Favorite messages ({list.length})
-                </div>
-                {!list.length && (
-                    <div style={{ color: "var(--text-muted)" }}>
-                        No favorites yet. Open any message → three dots menu → star icon.
-                    </div>
-                )}
-                {list.map(fav => (
-                    <div
-                        key={fav.id}
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 8,
-                            padding: "8px",
-                            marginBottom: 4,
-                            background: "var(--background-secondary)",
-                            borderRadius: 6
-                        }}
-                    >
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontWeight: 600, fontSize: 13 }}>{fav.author}</div>
-                            <div
-                                style={{
-                                    color: "var(--text-muted)",
-                                    fontSize: 12,
-                                    whiteSpace: "nowrap",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis"
-                                }}
-                            >
-                                {fav.content || "(attachment/embed)"}
-                            </div>
-                        </div>
-                        <button
-                            onClick={() => jumpTo(fav)}
-                            style={{
-                                background: "var(--button-secondary-background)",
-                                color: "var(--text-normal)",
-                                border: "none",
-                                borderRadius: 4,
-                                padding: "4px 10px",
-                                cursor: "pointer"
-                            }}
-                        >
-                            Jump
-                        </button>
-                        <button
-                            onClick={() => remove(fav.id)}
-                            style={{
-                                background: "var(--button-danger-background)",
-                                color: "#fff",
-                                border: "none",
-                                borderRadius: 4,
-                                padding: "4px 8px",
-                                cursor: "pointer"
-                            }}
-                        >
-                            <TrashIcon size={14} />
-                        </button>
-                    </div>
-                ))}
-            </div>
-        </ErrorBoundary>
+        <Modal.ModalRoot {...props}>
+            <Modal.ModalHeader>
+                <div style={{ fontSize: 20, fontWeight: 600 }}>⭐ Избранное</div>
+            </Modal.ModalHeader>
+            <Modal.ModalContent>
+                {loaded
+                    ? <FavoritesList favorites={favorites} onRemove={remove} />
+                    : <div style={{ color: "var(--text-muted)" }}>Загрузка...</div>}
+            </Modal.ModalContent>
+            <Modal.ModalFooter>
+                <button className="sc-fav-btn" onClick={props.onClose}>Закрыть</button>
+            </Modal.ModalFooter>
+        </Modal.ModalRoot>
     );
 }
 
-
-function StarIcon({ size = 16, ...props }: any) {
+function SidebarFavoritesItem() {
     return (
-        <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-        </svg>
-    );
-}
-
-function TrashIcon({ size = 16, ...props }: any) {
-    return (
-        <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <polyline points="3 6 5 6 21 6" />
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-        </svg>
+        <div
+            className="sc-fav-sidebar-item"
+            onClick={() => openFavoritesModal()}
+        >
+            <svg viewBox="0 0 24 24" width={18} height={18} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+            <span>Избранное</span>
+        </div>
     );
 }
 
 export default definePlugin({
     name: "FavoriteMessages",
-    description: "Избранное: звёздочка в меню сообщения (три точки). Просмотр — Настройки → SudoCord → FavoriteMessages",
+    description: "Избранное: кнопка в сайдбаре внизу. Сохраняй сообщения, картинки и вложения — просмотр в одном месте",
     tags: ["Utility", "Messages"],
     authors: [{ name: "dsd16", id: 0n }],
     enabledByDefault: true,
 
     settings,
-    settingsAboutComponent: SettingsAbout,
 
-    async start() {
+    patches: [
+        {
+            // insert our item after the quests entry, before the bottom divider
+            find: '"section-divider-top"',
+            replacement: {
+                match: /(},"quests"\),)(\(0,\w+\.\w+\)\(\w+,\{\},"section-divider-top"\))/,
+                replace: "$1$self.SidebarFavoritesItem(),$2"
+            }
+        }
+    ],
+
+    SidebarFavoritesItem: ErrorBoundary.wrap(SidebarFavoritesItem, { noop: true }),
+
+    start() {
         addMessagePopoverButton((msg: Message) => ({
             key: "sudocord-favorite",
-            label: "Favorite",
+            label: "В избранное",
             icon: StarIcon,
             message: msg,
             onClick: async () => {
@@ -183,18 +218,26 @@ export default definePlugin({
                 if (fav[msg.id]) {
                     delete fav[msg.id];
                     await set(STORE_KEY, fav);
-                    toast("Removed from favorites", 1);
+                    toast("Убрано из избранного", 1);
                 } else {
+                    const attachments: FavAttachment[] = ((msg as any).attachments ?? []).map((a: any) => ({
+                        url: a.proxyUrl ?? a.url,
+                        contentType: a.contentType,
+                        width: a.width,
+                        height: a.height
+                    }));
                     fav[msg.id] = {
                         id: msg.id,
                         channelId: msg.channel_id,
                         guildId: (msg as any).guildId ?? null,
                         author: msg.author?.username ?? "unknown",
+                        avatarUrl: (msg.author as any)?.getAvatarURL?.() ?? undefined,
                         content: msg.content ?? "",
+                        attachments,
                         savedAt: Date.now()
                     };
                     await set(STORE_KEY, fav);
-                    toast("Added to favorites ⭐", 2);
+                    toast("Добавлено в избранное ⭐", 2);
                 }
             }
         }));
@@ -205,3 +248,10 @@ export default definePlugin({
     },
 });
 
+function StarIcon({ size = 16, ...props }: any) {
+    return (
+        <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+    );
+}

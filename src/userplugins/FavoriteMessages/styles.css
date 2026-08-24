@@ -1,0 +1,41 @@
+.sc-fav-sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    margin: 0 8px 2px;
+    border-radius: 4px;
+    color: var(--interactive-normal);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    user-select: none;
+}
+
+.sc-fav-sidebar-item:hover {
+    background: var(--background-modifier-hover);
+    color: var(--interactive-hover);
+}
+
+.sc-fav-sidebar-item svg {
+    flex-shrink: 0;
+}
+
+.sc-fav-btn {
+    background: var(--button-secondary-background);
+    color: var(--text-normal);
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.sc-fav-btn:hover {
+    background: var(--button-secondary-background-hover);
+}
+
+.sc-fav-btn-danger {
+    background: var(--button-danger-background);
+    color: #fff;
+}

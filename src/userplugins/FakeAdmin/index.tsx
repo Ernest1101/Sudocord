@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { addContextMenuPatch, removeContextMenuPatch, NavContextMenuPatchCallback } from "@api/ContextMenu";
+import { addContextMenuPatch, NavContextMenuPatchCallback, removeContextMenuPatch } from "@api/ContextMenu";
 import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType } from "@utils/types";
 import { Menu, Toasts } from "@webpack/common";
@@ -25,24 +25,24 @@ import { React } from "@webpack/common";
 const settings = definePluginSettings({
     showMute: {
         type: OptionType.BOOLEAN,
-        description: "Fake Mute in user context menu",
+        description: "Таймаут в меню пользователя",
         default: true
     },
     showKickBan: {
         type: OptionType.BOOLEAN,
-        description: "Fake Kick / Fake Ban in user context menu",
+        description: "Кик и бан в меню пользователя",
         default: true
     },
     showCreateChannel: {
         type: OptionType.BOOLEAN,
-        description: "Fake Create Channel in channel context menu",
+        description: "Создать канал в меню канала",
         default: true
     }
 });
 
 function fakeToast(message: string) {
     Toasts.show({
-        message: `${message} (fake)`,
+        message,
         type: Toasts.Type.SUCCESS,
         id: Toasts.genId()
     });
@@ -59,8 +59,8 @@ const UserPatch: NavContextMenuPatchCallback = (children, props) => {
             <Menu.MenuItem
                 key="fake-admin-mute"
                 id="fake-admin-mute"
-                label="Fake Mute (10m)"
-                action={() => fakeToast(`Muted ${user.username} for 10 minutes`)}
+                label="Таймаут"
+                action={() => fakeToast(`${user.username} получил таймаут на 10 минут`)}
             />
         );
     }
@@ -70,14 +70,14 @@ const UserPatch: NavContextMenuPatchCallback = (children, props) => {
             <Menu.MenuItem
                 key="fake-admin-kick"
                 id="fake-admin-kick"
-                label="Fake Kick"
-                action={() => fakeToast(`Kicked ${user.username}`)}
+                label="Кикнуть"
+                action={() => fakeToast(`${user.username} кикнут с сервера`)}
             />,
             <Menu.MenuItem
                 key="fake-admin-ban"
                 id="fake-admin-ban"
-                label="Fake Ban"
-                action={() => fakeToast(`Banned ${user.username}`)}
+                label="Забанить"
+                action={() => fakeToast(`${user.username} забанен навсегда`)}
             />
         );
     }
@@ -100,8 +100,8 @@ const ChannelPatch: NavContextMenuPatchCallback = (children, props) => {
             <Menu.MenuItem
                 key="fake-admin-create-channel"
                 id="fake-admin-create-channel"
-                label="Fake Create Channel"
-                action={() => fakeToast(`Channel created (visually, of course)`)}
+                label="Создать канал"
+                action={() => fakeToast("Канал создан")}
             />
         </Menu.MenuGroup>
     );
@@ -109,7 +109,7 @@ const ChannelPatch: NavContextMenuPatchCallback = (children, props) => {
 
 export default definePlugin({
     name: "FakeAdmin",
-    description: "Троллинг: в контекстном меню появляются Fake Mute / Kick / Ban / Create Channel. Чисто визуал — ничего реального не происходит",
+    description: "В контекстных меню появляются Таймаут / Кикнуть / Забанить / Создать канал — выглядит как настоящие права модератора, но это визуал",
     tags: ["Trolling", "Utility"],
     authors: [{ name: "dsd16", id: 0n }],
     enabledByDefault: true,
