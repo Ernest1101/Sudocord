@@ -48,7 +48,7 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
                   PREV_TAG=$(git describe --tags --abbrev=0 "${{ github.ref_name }}^" 2>/dev/null || echo "")
-                  if [ -n "$PREV_TAG" ]; then CHANGELOG=$(git log --oneline --no-decorate "$PREV_TAG..${{ github.ref_name }}" | sed "s/^/- /"); else CHANGELOG=$(git log --oneline -30 --no-decorate | sed "s/^/- "); fi
+                  if [ -n "$PREV_TAG" ]; then CHANGELOG=$(git log --oneline --no-decorate "$PREV_TAG..${{ github.ref_name }}" -- src | sed "s/^/- /"); else CHANGELOG=$(git log --oneline -30 --no-decorate -- src | sed "s/^/- "); fi
                   gh release view "${{ github.ref_name }}" > /dev/null 2>&1 || gh release create "${{ github.ref_name }}" --title "SudoCord ${{ github.ref_name }}" --notes "Стабильный релиз SudoCord. Установка: sudocord.h4ck.me/download"$'\n'"$CHANGELOG"
                   ok=0
                   for i in 1 2 3; do

@@ -68,5 +68,11 @@ jobs:
                       sleep 15
                   done
                   [ "$ok" = "1" ] || exit 1
-                  CHANGELOG=$(git log --oneline -15 --no-decorate | sed "s/^/- /")
+                  OLD_HASH=$(gh release view devbuild --json name -q .name 2>/dev/null | awk "{print $2}")
+                  if [ -n "$OLD_HASH" ]; then
+                      CHANGELOG=$(git log --oneline --no-decorate "$OLD_HASH..HEAD" -- src | sed "s/^/- /")
+                  fi
+                  if [ -z "$CHANGELOG" ]; then
+                      CHANGELOG=$(git log --oneline -10 --no-decorate -- src | sed "s/^/- /")
+                  fi
                   gh release edit devbuild --title "DevBuild $RELEASE_TAG" --notes "$CHANGELOG"
