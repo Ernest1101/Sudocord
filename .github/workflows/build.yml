@@ -73,6 +73,6 @@ jobs:
                       CHANGELOG=$(git log --oneline --no-decorate "$OLD_HASH..HEAD" -- src | sed "s/^/- /")
                   fi
                   if [ -z "$CHANGELOG" ]; then
-                      CHANGELOG=$(git log --oneline -10 --no-decorate -- src | sed "s/^/- /")
+                      CHANGELOG="- Техническое обновление: изменений клиента нет"
                   fi
                   gh release edit devbuild --title "DevBuild $RELEASE_TAG" --notes "$CHANGELOG"
