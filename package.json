@@ -45,6 +45,7 @@
         "virtual-merge": "^1.0.1"
     },
     "devDependencies": {
+        "@electron/asar": "^4.3.0",
         "@stylistic/eslint-plugin": "^5.10.0",
         "@types/chrome": "^0.2.0",
         "@types/lodash": "^4.17.24",

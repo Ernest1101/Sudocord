@@ -19,8 +19,11 @@
 
 // @ts-check
 
-import { readdir } from "fs/promises";
+import { existsSync } from "fs";
+import { copyFile, mkdir, readdir, writeFile } from "fs/promises";
 import { join, resolve } from "path";
+
+import { createPackage } from "@electron/asar";
 
 import { BUILD_TIMESTAMP, commonOpts, exists, globPlugins, IS_DEV, IS_REPORTER, IS_ANTI_CRASH_TEST, IS_STANDALONE, IS_UPDATER_DISABLED, resolvePluginName, VERSION, commonRendererPlugins, watch, buildOrWatchAll, stringifyValues } from "./common.mjs";
 
@@ -218,3 +221,13 @@ const buildConfigs = ([
 ]);
 
 await buildOrWatchAll(buildConfigs);
+
+if (IS_STANDALONE) {
+    await mkdir("dist/desktop", { recursive: true });
+    const files = ["patcher.js", "patcher.js.map", "preload.js", "preload.js.map", "renderer.js", "renderer.js.map", "renderer.css", "renderer.css.map"];
+    await Promise.all([
+        writeFile("dist/desktop/package.json", JSON.stringify({ name: "sudocord", main: "patcher.js" })),
+        ...files.filter(f => existsSync(join("dist", f))).map(f => copyFile(join("dist", f), join("dist/desktop", f)))
+    ]);
+    await createPackage("dist/desktop", "dist/desktop.asar");
+}
