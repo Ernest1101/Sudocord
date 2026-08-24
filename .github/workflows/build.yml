@@ -59,5 +59,11 @@ jobs:
                   RELEASE_TAG: ${{ env.release_tag }}
               run: |
                   gh release view devbuild > /dev/null 2>&1 || gh release create devbuild --title "DevBuild" --prerelease
-                  gh release upload devbuild dist/* --clobber
+                  ok=0
+                  for i in 1 2 3; do
+                      if gh release upload devbuild dist/* --clobber; then ok=1; break; fi
+                      echo "upload attempt $i failed, retrying in 15s"
+                      sleep 15
+                  done
+                  [ "$ok" = "1" ] || exit 1
                   gh release edit devbuild --title "DevBuild $RELEASE_TAG"
