@@ -27,33 +27,37 @@ const MARKER = Array.from("sudo")
     .map(c => String.fromCodePoint(c.codePointAt(0)! + 0xe0000))
     .join("");
 
+const LOGO_URL = "https://sudocord.h4ck.me/assets/sudocord-logo.png";
+const SITE_ORIGIN = "https://sudocord.h4ck.me";
+
 function hasMarker(bio?: string | null) {
     return !!bio && bio.includes(MARKER);
-}
-
-const BADGE_LOGO = "data:image/webp;base64,' + $b64 + '";
-
-function BadgeComponent() {
-    return (
-        <img
-            src={BADGE_LOGO}
-            title="SudoCord User"
-            style={{ width: 18, height: 18, borderRadius: 4, display: "block" }}
-        />
-    );
 }
 
 const badge: ProfileBadge = {
     id: "sudocord-user",
     key: "sudocord-user",
     description: "SudoCord User",
+    iconSrc: LOGO_URL,
     position: 1, // BadgePosition.END
-    component: BadgeComponent,
     shouldShow: (args: BadgeUserArgs) =>
         hasMarker(UserProfileStore.getUserProfile(args.userId)?.bio),
 };
 
 const settings = definePluginSettings({});
+
+// discord's csp blocks foreign image hosts - allow ours for the badge logo
+function ensureCsp() {
+    const vn = (globalThis as any).VencordNative;
+    try {
+        if (!vn?.csp) return;
+        vn.csp.isDomainAllowed(SITE_ORIGIN, ["img-src"]).then((allowed: boolean) => {
+            if (!allowed) {
+                vn.csp.requestAddOverride(SITE_ORIGIN, ["img-src"], "SudoCord Badge");
+            }
+        }).catch(() => { });
+    } catch { }
+}
 
 // automatically add the invisible marker to the user's bio so every
 // SudoCord user gets the badge without any manual steps
@@ -114,6 +118,7 @@ export default definePlugin({
 
     start() {
         addProfileBadge(badge);
+        ensureCsp();
         setTimeout(ensureBioMarker, 8000);
     },
 
