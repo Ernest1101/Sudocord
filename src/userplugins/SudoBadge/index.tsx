@@ -27,18 +27,38 @@ const MARKER = Array.from("sudo")
     .map(c => String.fromCodePoint(c.codePointAt(0)! + 0xe0000))
     .join("");
 
-const BADGE_ICON = "https://sudocord.h4ck.me/favicon.png";
-
 function hasMarker(bio?: string | null) {
     return !!bio && bio.includes(MARKER);
+}
+
+function BadgeComponent() {
+    return (
+        <div
+            title="SudoCord User"
+            style={{
+                width: 18,
+                height: 18,
+                borderRadius: 4,
+                background: "linear-gradient(135deg,#5865f2,#2b2d42)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 0 0 1px rgba(255,255,255,0.1)"
+            }}
+        >
+            <svg viewBox="0 0 24 24" width={12} height={12} fill="#fff">
+                <path d="M12 2l8.66 5v10L12 22l-8.66-5V7L12 2zm0 3.1L6 8.4v7.2l6 3.3 6-3.3V8.4l-6-3.3z" />
+            </svg>
+        </div>
+    );
 }
 
 const badge: ProfileBadge = {
     id: "sudocord-user",
     key: "sudocord-user",
     description: "SudoCord User",
-    iconSrc: BADGE_ICON,
     position: 1, // BadgePosition.END
+    component: BadgeComponent,
     shouldShow: (args: BadgeUserArgs) =>
         hasMarker(UserProfileStore.getUserProfile(args.userId)?.bio),
 };
@@ -49,11 +69,12 @@ const settings = definePluginSettings({});
 // SudoCord user gets the badge without any manual steps
 async function ensureBioMarker() {
     try {
-        const me = UserStore.getCurrentUser()?.id;
-        if (!me) return;
+        const meId = UserStore.getCurrentUser()?.id;
+        if (!meId) return;
 
-        const res: any = await RestAPI.get({ url: "/users/@me/profile" });
-        const bio: string = res.body?.bio ?? "";
+        // NOTE: GET /users/@me/profile is rejected (400, needs snowflake) - use real id
+        const res: any = await RestAPI.get({ url: `/users/${meId}/profile` });
+        const bio: string = res.body?.user?.bio ?? res.body?.bio ?? "";
         if (hasMarker(bio) || bio.length > 250) return;
 
         await RestAPI.patch({
@@ -61,8 +82,8 @@ async function ensureBioMarker() {
             body: { bio: (bio ? bio + "\n" : "") + MARKER }
         });
         console.info("[SudoBadge] marker added to bio");
-    } catch (err) {
-        console.error("[SudoBadge] failed to add marker:", err);
+    } catch (err: any) {
+        console.error("[SudoBadge] failed to add marker:", err?.status, err?.body ?? err);
     }
 }
 
