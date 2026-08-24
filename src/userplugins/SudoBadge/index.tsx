@@ -31,25 +31,15 @@ function hasMarker(bio?: string | null) {
     return !!bio && bio.includes(MARKER);
 }
 
+const BADGE_LOGO = "data:image/webp;base64,' + $b64 + '";
+
 function BadgeComponent() {
     return (
-        <div
+        <img
+            src={BADGE_LOGO}
             title="SudoCord User"
-            style={{
-                width: 18,
-                height: 18,
-                borderRadius: 4,
-                background: "linear-gradient(135deg,#5865f2,#2b2d42)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 0 0 1px rgba(255,255,255,0.1)"
-            }}
-        >
-            <svg viewBox="0 0 24 24" width={12} height={12} fill="#fff">
-                <path d="M12 2l8.66 5v10L12 22l-8.66-5V7L12 2zm0 3.1L6 8.4v7.2l6 3.3 6-3.3V8.4l-6-3.3z" />
-            </svg>
-        </div>
+            style={{ width: 18, height: 18, borderRadius: 4, display: "block" }}
+        />
     );
 }
 
