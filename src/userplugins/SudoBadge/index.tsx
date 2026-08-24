@@ -18,7 +18,7 @@
 
 import { addProfileBadge, BadgeUserArgs, ProfileBadge } from "@api/Badges";
 import { definePluginSettings } from "@api/Settings";
-import { copyWithToast } from "@utils/discord";
+import { copyWithToast, fetchUserProfile } from "@utils/discord";
 import definePlugin from "@utils/types";
 import { RestAPI, UserProfileStore, UserStore } from "@webpack/common";
 
@@ -34,14 +34,29 @@ function hasMarker(bio?: string | null) {
     return !!bio && bio.includes(MARKER);
 }
 
+const fetchedProfiles = new Set<string>();
+
 const badge: ProfileBadge = {
     id: "sudocord-user",
     key: "sudocord-user",
     description: "SudoCord User",
     iconSrc: LOGO_URL,
     position: 1, // BadgePosition.END
-    shouldShow: (args: BadgeUserArgs) =>
-        hasMarker(UserProfileStore.getUserProfile(args.userId)?.bio),
+    shouldShow: (args: BadgeUserArgs) => {
+        // own badge - always, you are using SudoCord right now
+        if (args.userId === UserStore.getCurrentUser()?.id) return true;
+
+        const profile = UserProfileStore.getUserProfile(args.userId);
+        if (!profile) {
+            // profile not cached yet - fetch it once so the badge can appear
+            if (!fetchedProfiles.has(args.userId)) {
+                fetchedProfiles.add(args.userId);
+                fetchUserProfile(args.userId).catch(() => { });
+            }
+            return false;
+        }
+        return hasMarker(profile.bio);
+    },
 };
 
 const settings = definePluginSettings({});
