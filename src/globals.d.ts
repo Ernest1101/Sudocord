@@ -1,5 +1,5 @@
 /*
- * Vencord, a modification for Discord's desktop app
+ * SudoCord, a modification for Discord's desktop app
  * Copyright (c) 2022 Vendicated and contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,8 +46,7 @@ declare global {
     export var BUILD_TIMESTAMP: number;
 
     export var VencordNative: typeof import("./VencordNative").default;
-    export var Vencord: typeof import("./Vencord");
-    export var SudoCord: typeof import("./Vencord");
+    export var SudoCord: typeof import("./SudoCord");
     export var SudoCordStyles: Map<string, Style>;
     export var appSettings: {
         set(setting: string, v: any): void;

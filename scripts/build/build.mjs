@@ -140,7 +140,7 @@ const buildConfigs = ([
     },
     {
         ...commonOpts,
-        entryPoints: ["src/Vencord.ts"],
+        entryPoints: ["src/SudoCord.ts"],
         outfile: "dist/renderer.js",
         format: "iife",
         target: ["esnext"],
@@ -189,7 +189,7 @@ const buildConfigs = ([
     },
     {
         ...commonOpts,
-        entryPoints: ["src/Vencord.ts"],
+        entryPoints: ["src/SudoCord.ts"],
         outfile: "dist/vencordDesktopRenderer.js",
         format: "iife",
         target: ["esnext"],

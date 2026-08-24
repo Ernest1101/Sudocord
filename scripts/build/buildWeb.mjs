@@ -31,7 +31,7 @@ import { BUILD_TIMESTAMP, commonOpts, globPlugins, IS_DEV, IS_REPORTER, IS_ANTI_
  */
 const commonOptions = {
     ...commonOpts,
-    entryPoints: ["browser/Vencord.ts"],
+    entryPoints: ["browser/SudoCord.ts"],
     format: "iife",
     globalName: "SudoCord",
     external: ["~plugins", "~git-hash", "/assets/*"],
@@ -109,7 +109,7 @@ const buildConfigs = [
         },
         footer: {
             // UserScripts get wrapped in an iife, so define Vencord prop on window that returns our local
-            js: "Object.defineProperty(unsafeWindow,'Vencord',{get:()=>Vencord});"
+            js: "Object.defineProperty(unsafeWindow,'Vencord',{get:()=>SudoCord});Object.defineProperty(unsafeWindow,'SudoCord',{get:()=>SudoCord});"
         }
     }
 ];

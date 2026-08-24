@@ -1,5 +1,5 @@
 /*
- * Vencord, a modification for Discord's desktop app
+ * SudoCord, a modification for Discord's desktop app
  * Copyright (c) 2022 Vendicated and contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,7 @@ export default definePlugin({
             find: ".setGuildsTree(",
             replacement: {
                 match: /(?<=#{intl::SERVERS}\),gap:"xs",children:)\i\.map\(.{0,50}\.length\)/,
-                replace: "Vencord.Api.ServerList.renderAll(SudoCord.Api.ServerList.ServerListRenderPosition.In).concat($&)"
+                replace: "SudoCord.Api.ServerList.renderAll(SudoCord.Api.ServerList.ServerListRenderPosition.In).concat($&)"
             }
         }
     ]
