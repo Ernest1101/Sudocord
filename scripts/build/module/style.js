@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-(window.VencordStyles ??= new Map()).set(STYLE_NAME, {
+(window.SudoCordStyles ??= new Map()).set(STYLE_NAME, {
     name: STYLE_NAME,
     source: STYLE_SOURCE,
     classNames: {},
