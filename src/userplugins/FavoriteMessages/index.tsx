@@ -205,7 +205,7 @@ export default definePlugin({
         }
     ],
 
-    SidebarFavoritesItem: ErrorBoundary.wrap(SidebarFavoritesItem, { noop: true }),
+    SidebarFavoritesItem,
 
     start() {
         addMessagePopoverButton((msg: Message) => ({
