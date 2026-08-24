@@ -1,0 +1,94 @@
+/* fake admin dialogs - discord modal style */
+
+.sc-fa-modal-x {
+    background: transparent;
+    border: none;
+    color: #b5bac1;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.sc-fa-modal-x:hover {
+    color: #fff;
+}
+
+.sc-fa-input {
+    width: 100%;
+    background: #1e1f22;
+    color: #dbdee1;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.sc-fa-input:focus {
+    border: 1px solid #00a8fc;
+    padding: 9px 11px;
+}
+
+.sc-fa-input::placeholder {
+    color: #6d6f78;
+}
+
+.sc-fa-btn {
+    border: none;
+    border-radius: 3px;
+    padding: 9px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.sc-fa-btn-primary {
+    background: #5865f2;
+}
+
+.sc-fa-btn-primary:hover {
+    background: #4752c4;
+}
+
+.sc-fa-btn-danger {
+    background: #da373c;
+}
+
+.sc-fa-btn-danger:hover {
+    background: #a12828;
+}
+
+.sc-fa-btn-secondary {
+    background: #4e5058;
+}
+
+.sc-fa-btn-secondary:hover {
+    background: #6d6f78;
+}
+
+.sc-fa-pill {
+    background: #111214;
+    color: #dbdee1;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.sc-fa-pill:hover {
+    color: #fff;
+}
+
+.sc-fa-pill-active,
+.sc-fa-pill-active:hover {
+    background: #5865f2;
+    color: #fff;
+}
