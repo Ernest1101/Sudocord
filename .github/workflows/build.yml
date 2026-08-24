@@ -13,6 +13,9 @@ on:
 env:
     FORCE_COLOR: true
 
+permissions:
+    contents: write
+
 jobs:
     Build:
         runs-on: ubuntu-latest
