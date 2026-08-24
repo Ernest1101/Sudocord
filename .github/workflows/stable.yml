@@ -1,0 +1,55 @@
+name: Stable Release
+on:
+    push:
+        tags:
+            - v*
+
+env:
+    FORCE_COLOR: true
+
+permissions:
+    contents: write
+
+jobs:
+    Build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v7
+
+            - uses: pnpm/action-setup@v6
+
+            - name: Use Node.js 24
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24
+                  cache: "pnpm"
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Build web
+              run: pnpm buildWebStandalone
+
+            - name: Build
+              run: pnpm build --standalone
+
+            - name: Generate plugin list
+              run: pnpm generatePluginJson dist/plugins.json dist/plugin-readmes.json
+
+            - name: Clean up obsolete files
+              run: |
+                  rm -rf dist/*-unpacked dist/vendor dist/desktop Vencord.user.css vencordDesktopRenderer.css vencordDesktopRenderer.css.map
+
+            - name: Upload Stable Release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  gh release view "${{ github.ref_name }}" > /dev/null 2>&1 || gh release create "${{ github.ref_name }}" --title "SudoCord ${{ github.ref_name }}" --notes "Стабильный релиз SudoCord. Установка: sudocord.h4ck.me/download"
+                  ok=0
+                  for i in 1 2 3; do
+                      if gh release upload "${{ github.ref_name }}" dist/* --clobber; then ok=1; break; fi
+                      echo "attempt $i failed, retrying in 15s"
+                      sleep 15
+                  done
+                  [ "$ok" = "1" ] || exit 1
