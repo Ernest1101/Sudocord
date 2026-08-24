@@ -23,10 +23,13 @@ import { join } from "path";
 import { pathToFileURL } from "url";
 
 import { initCsp } from "./csp";
+import { initSplashBranding } from "./splash";
 import { RendererSettings } from "./settings";
 import { IS_VANILLA, THEMES_DIR } from "./utils/constants";
 import { ensureSafePath } from "./utils/ensureSafePath";
 import { installExt } from "./utils/extensions";
+
+initSplashBranding();
 
 if (IS_VESKTOP || !IS_VANILLA) {
     app.whenReady().then(() => {
