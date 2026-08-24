@@ -83,9 +83,9 @@ function openFakeDialog(opts: FakeDialogOptions) {
     const modal = el("div", {
         width: `${opts.width ?? 470}px`, maxWidth: "92vw",
         maxHeight: "85vh", overflowY: "auto",
-        background: D.modalBg, borderRadius: "6px",
+        background: D.modalBg, borderRadius: "4px",
         boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
-        padding: "16px", marginBottom: "60px"
+        padding: "16px"
     });
 
     // header row: title + X
