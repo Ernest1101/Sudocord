@@ -20,7 +20,7 @@ import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType } from "@utils/types";
 import { findLazy } from "@webpack";
 
-// webpack-модуль с классом голосового/стримового соединения
+// webpack-модуль с классом голосового/стримового соединения (для битрейта)
 const ConnectionModule = findLazy((m: any) => {
     if (!m || typeof m !== "object") return false;
     for (const k in m) {
@@ -30,33 +30,14 @@ const ConnectionModule = findLazy((m: any) => {
 });
 
 const settings = definePluginSettings({
-    enabled: {
-        type: OptionType.BOOLEAN,
-        description: "Применять кастомное качество",
-        default: true
-    },
-    width: {
-        type: OptionType.NUMBER,
-        description: "Ширина (px). 1920 = 1080p, 2560 = 1440p",
-        default: 1920
-    },
-    height: {
-        type: OptionType.NUMBER,
-        description: "Высота (px). 1080 = 1080p, 1440 = 1440p",
-        default: 1080
-    },
-    framerate: {
-        type: OptionType.NUMBER,
-        description: "FPS",
-        default: 60
-    },
     bitrate: {
         type: OptionType.NUMBER,
-        description: "Битрейт (kbit/s). Стандарт ~2500-5000",
+        description: "Битрейт стрима (kbit/s). 0 = стандартный. Стандарт Discord ~2500-5000",
         default: 10000
     }
 });
 
+// применяем только битрейт; разрешение и FPS берутся из панели качества
 function hookConnection() {
     const mod: any = ConnectionModule;
     if (!mod) {
@@ -65,46 +46,71 @@ function hookConnection() {
     }
     for (const k in mod) {
         const cls = mod[k];
-        if (cls?.prototype?.overwriteQualityForTesting && !cls.prototype.__scHooked) {
+        if (cls?.prototype?.overwriteQualityForTesting && !cls.prototype.__scBitrateHooked) {
             const orig = cls.prototype.overwriteQualityForTesting;
             cls.prototype.overwriteQualityForTesting = function (quality: any) {
-                if (!settings.store.enabled) return orig.call(this, quality);
-
-                const w = Number(settings.store.width) || 1920;
-                const h = Number(settings.store.height) || 1080;
-                const fps = Number(settings.store.framerate) || 60;
-                const br = Number(settings.store.bitrate) || 10000;
-
-                const custom = {
-                    encode: { framerate: fps, width: w, height: h },
-                    capture: { framerate: fps, width: w, height: h },
+                const br = Number(settings.store.bitrate) || 0;
+                if (!quality || !br) return orig.call(this, quality);
+                return orig.call(this, {
+                    ...quality,
                     bitrate: { minimum: 1000, target: br, maximum: br * 2 }
-                };
-                return orig.call(this, custom);
+                });
             };
-            cls.prototype.__scHooked = true;
-            console.info("[StreamQuality] hook установлен");
+            cls.prototype.__scBitrateHooked = true;
+            console.info("[StreamQuality] bitrate hook установлен");
             return;
         }
     }
-    // голосовые модули ещё не загружены — пробуем позже
     setTimeout(hookConnection, 3000);
 }
 
 export default definePlugin({
     name: "StreamQuality",
-    description: "Кастомное разрешение, FPS и битрейт для стрима вместо пресетов Discord. Применяется автоматически при начале трансляции",
+    description: "В панели качества стрима: 75 и 120 FPS, все разрешения без бустов и нитро + кастомный битрейт",
     tags: ["SudoCord", "Utility"],
     authors: [{ name: "dsd16", id: 0n }],
     enabledByDefault: true,
 
     settings,
 
+    patches: [
+        {
+            find: "PRESET_MOBILE_HIGH_QUALITY",
+            replacement: [
+                {
+                    // все пресеты доступны без бустов/нитро
+                    match: /guildPremiumTier:\w+\.\w+\.\w+,?/g,
+                    replace: ""
+                },
+                {
+                    // FPS-энум: пропускать неизвестные значения вместо throw
+                    match: /default:throw Error\(`Unknown frame rate: \$\{e\}`\)/,
+                    replace: "default:return e"
+                },
+                {
+                    // энум разрешений: пропускать неизвестные значения
+                    match: /default:throw Error\(`Unknown resolution: \$\{e\}`\)/,
+                    replace: "default:return e"
+                },
+                {
+                    // 75 и 120 FPS в списке опций
+                    match: /\{value:60\}\)\)\]/,
+                    replace: "{value:60})),h(75,()=>o.intl.formatToPlainString(o.t[\"bW+JCW\"],{value:75})),h(120,()=>o.intl.formatToPlainString(o.t[\"bW+JCW\"],{value:120}))]"
+                },
+                {
+                    // пресеты для 75/120 FPS со всеми разрешениями
+                    match: /\{resolution:480,fps:5}\];function h\(/,
+                    replace: "{resolution:480,fps:5},{resolution:0,fps:75},{resolution:480,fps:75},{resolution:720,fps:75},{resolution:1080,fps:75},{resolution:1440,fps:75},{resolution:0,fps:120},{resolution:480,fps:120},{resolution:720,fps:120},{resolution:1080,fps:120},{resolution:1440,fps:120}];function h("
+                }
+            ]
+        }
+    ],
+
     start() {
         hookConnection();
     },
 
     stop() {
-        // хук снимется сам при перезапуске клиента; прототип патчим минимально
+        // хук снимется при перезапуске клиента
     },
 });
