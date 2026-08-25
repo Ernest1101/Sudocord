@@ -82,12 +82,15 @@ let hookTimer: ReturnType<typeof setTimeout> | null = null;
 let hookAttempts = 0;
 
 // ленивый прокси объекта соединения (резолвится когда голос/стрим инициализируются)
-const connObj = (window as any).SudoCord.Webpack.findByPropsLazy("overwriteQualityForTesting", "setDesktopEncodingOptions");
+let connObj: any = null;
 
 function hookConnection() {
     if (hookAttempts > 100) return;
     hookAttempts++;
     try {
+        if (!connObj) {
+            connObj = (window as any).SudoCord.Webpack.findByProps("overwriteQualityForTesting", "setDesktopEncodingOptions");
+        }
         const proto = connObj?.constructor?.prototype;
         if (!proto?.overwriteQualityForTesting || proto.__scHooked) {
             hookTimer = setTimeout(hookConnection, 4000);
@@ -172,21 +175,17 @@ function ensureStyles() {
 }
 
 function findQualityPanel(): HTMLElement | null {
-    const candidates = document.querySelectorAll('div,span');
-    for (const c of candidates) {
-        if (c.childElementCount > 0) continue;
-        const t = c.textContent?.trim();
-        if (t !== "Разрешение") continue;
-        let node: HTMLElement | null = c as HTMLElement;
-        for (let i = 0; i < 6 && node; i++) {
-            node = node.parentElement;
-            if (!node) break;
-            if (node.textContent?.includes("кадров") && node.textContent.includes("Разрешение")) {
-                return node;
-            }
-        }
+    // ищем самый маленький контейнер, где есть и "кадров", и "Разрешение", и радиокнопки
+    let best: HTMLElement | null = null;
+    for (const d of document.querySelectorAll("div")) {
+        const t = d.textContent ?? "";
+        if (!t.includes("кадров") || !t.includes("Разрешение")) continue;
+        if (!d.querySelector("[role=radio], input[type=radio]")) continue;
+        if (best === null || d.contains(best) === false && best.contains(d)) best = d;
+        if (best === null) best = d;
+        else if (best.contains(d)) best = d;
     }
-    return null;
+    return best;
 }
 
 function injectCustomRow(panel: HTMLElement) {
