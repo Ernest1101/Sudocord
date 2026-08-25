@@ -410,7 +410,7 @@ export default definePlugin({
     },
 
     start() {
-        addMessagePopoverButton((msg: Message) => ({
+        addMessagePopoverButton("sudocord-favorite", (msg: Message) => ({
             key: "sudocord-favorite",
             label: "В избранное",
             icon: StarIcon,

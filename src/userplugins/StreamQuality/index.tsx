@@ -18,9 +18,36 @@
 
 import "./styles.css";
 
+import { addMessagePopoverButton, removeMessagePopoverButton } from "@api/MessagePopover";
+import { get, set } from "@api/DataStore";
 import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType } from "@utils/types";
-import { extractAndLoadChunksLazy, find } from "@webpack";
+import { NavigationRouter, Toasts } from "@webpack/common";
+import { Message } from "@vencord/discord-types";
+
+const STORE_KEY = "sudocord-favorite-chat";
+const MAX_FILE_BYTES = 8 * 1024 * 1024;
+
+interface FavImage {
+    dataUrl: string;
+    width?: number;
+    height?: number;
+}
+
+interface ChatEntry {
+    id: string;
+    ts: number;
+    text?: string;
+    images?: FavImage[];
+    // for messages saved from Discord via the star menu
+    saved?: {
+        messageId: string;
+        channelId: string;
+        guildId: string | null;
+        author: string;
+        avatarUrl?: string;
+    };
+}
 
 const settings = definePluginSettings({
     bitrate: {
@@ -47,69 +74,61 @@ function getCustom(): CustomStreamValues | null {
     return { fps, width, height };
 }
 
+// ---------- применение через хук прототипа ----------
+
 let lastConn: any = null;
 let lastQuality: any = null;
 let hookTimer: ReturnType<typeof setTimeout> | null = null;
 let hookAttempts = 0;
 
+// ленивый прокси объекта соединения (резолвится когда голос/стрим инициализируются)
+const connObj = (window as any).SudoCord.Webpack.findByPropsLazy("overwriteQualityForTesting", "setDesktopEncodingOptions");
+
 function hookConnection() {
     if (hookAttempts > 100) return;
     hookAttempts++;
     try {
-        const chunks = (window as any).webpackChunkdiscord_app;
-        if (!Array.isArray(chunks)) throw new Error("no chunk global");
-
-        let wreq: any;
-        chunks.push([[Math.random()], {}, (r: any) => { wreq = r; }]);
-        if (!wreq?.m) throw new Error("no wreq.m");
-
-        for (const id in wreq.m) {
-            let src: string;
-            try { src = String(wreq.m[id]); } catch { continue; }
-            if (!src.includes("overwriteQualityForTesting") || !src.includes("setDesktopEncodingOptions")) continue;
-
-            const mod = wreq(id);
-            for (const k in mod) {
-                const cls = mod[k];
-                if (!cls?.prototype?.overwriteQualityForTesting || cls.prototype.__scHooked) continue;
-
-                const orig = cls.prototype.overwriteQualityForTesting;
-                cls.prototype.overwriteQualityForTesting = function (quality: any) {
-                    lastConn = this;
-                    lastQuality = quality;
-
-                    const custom = getCustom();
-                    const br = Number(settings.store.bitrate) || 0;
-
-                    let out = quality;
-                    if (custom) {
-                        const fps = Number(custom.fps) || undefined;
-                        const width = Number(custom.width) || undefined;
-                        const height = Number(custom.height) || undefined;
-                        out = {
-                            ...(quality ?? {}),
-                            encode: { ...(quality?.encode ?? {}), framerate: fps, width, height },
-                            capture: { ...(quality?.capture ?? {}), framerate: fps, width, height }
-                        };
-                    }
-                    if (br) {
-                        out = {
-                            ...(out ?? {}),
-                            bitrate: { minimum: 1000, target: br, maximum: br * 2 }
-                        };
-                    }
-                    return orig.call(this, out);
-                };
-                cls.prototype.__scHooked = true;
-                console.info("[StreamQuality] hook ok, module " + id);
-                return;
-            }
+        const proto = connObj?.constructor?.prototype;
+        if (!proto?.overwriteQualityForTesting || proto.__scHooked) {
+            hookTimer = setTimeout(hookConnection, 4000);
+            return;
         }
-        throw new Error("connection class not found");
+
+        const orig = proto.overwriteQualityForTesting;
+        proto.overwriteQualityForTesting = function (quality: any) {
+            lastConn = this;
+            lastQuality = quality;
+
+            const custom = getCustom();
+            const br = Number(settings.store.bitrate) || 0;
+
+            let out = quality;
+            if (custom) {
+                const fps = Number(custom.fps) || undefined;
+                const width = Number(custom.width) || undefined;
+                const height = Number(custom.height) || undefined;
+                out = {
+                    ...(quality ?? {}),
+                    encode: { ...(quality?.encode ?? {}), framerate: fps, width, height },
+                    capture: { ...(quality?.capture ?? {}), framerate: fps, width, height }
+                };
+            }
+            if (br) {
+                out = {
+                    ...(out ?? {}),
+                    bitrate: { minimum: 1000, target: br, maximum: br * 2 }
+                };
+            }
+            return orig.call(this, out);
+        };
+        proto.__scHooked = true;
+        console.info("[StreamQuality] hook установлен");
     } catch (err: any) {
-        hookTimer = setTimeout(hookConnection, 5000);
+        console.warn("[StreamQuality] hook retry:", err?.message ?? err);
+        hookTimer = setTimeout(hookConnection, 4000);
     }
 }
+
 // ---------- инжекция полей в панель качества ----------
 
 const STYLE_ID = "sc-stream-quality-styles";
@@ -215,8 +234,8 @@ function injectCustomRow(panel: HTMLElement) {
     apply.className = "sc-fav-btn";
     apply.textContent = "Применить";
     apply.onclick = () => {
-        if (lastConn) {
-            lastConn.overwriteQualityForTesting(lastQuality ?? {});
+        if (lastConn && lastQuality) {
+            lastConn.overwriteQualityForTesting(lastQuality);
             toast("Кастомное качество применено", 2);
         } else {
             toast("Начни трансляцию, затем примени", 3);
