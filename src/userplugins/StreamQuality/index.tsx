@@ -20,7 +20,7 @@ import "./styles.css";
 
 import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType } from "@utils/types";
-import { find } from "@webpack";
+import { extractAndLoadChunksLazy, find } from "@webpack";
 
 const settings = definePluginSettings({
     bitrate: {
@@ -51,13 +51,17 @@ function getCustom(): CustomStreamValues | null {
 
 let lastConn: any = null;
 let lastQuality: any = null;
+let hooked = false;
 let hookTimer: ReturnType<typeof setTimeout> | null = null;
+let hookAttempts = 0;
+// ленивая загрузка чанка с модулем соединения
+const loadConnChunk = extractAndLoadChunksLazy(["overwriteQualityForTesting"]);
 
 function hookConnection() {
+    if (hooked) return;
+    hookAttempts++;
     let mod: any;
     try {
-        // модуль соединения грузится лениво - ищем с ретраями,
-        // он появится когда юзер зайдёт в голос/начнёт стрим
         mod = find((m: any) => {
             if (!m || typeof m !== "object") return false;
             for (const k in m) {
@@ -70,13 +74,21 @@ function hookConnection() {
     }
 
     if (!mod) {
-        hookTimer = setTimeout(hookConnection, 5000);
+        // раз в 3 попытки принудительно грузим чанк с модулем соединения
+        if (hookAttempts % 3 === 0) {
+            loadConnChunk()
+                .then(() => setTimeout(hookConnection, 1000))
+                .catch(() => setTimeout(hookConnection, 5000));
+            return;
+        }
+        hookTimer = setTimeout(hookConnection, 4000);
         return;
     }
 
     for (const k in mod) {
         const cls = mod[k];
         if (cls?.prototype?.overwriteQualityForTesting && !cls.prototype.__scHooked) {
+            hooked = true;
             const orig = cls.prototype.overwriteQualityForTesting;
             cls.prototype.overwriteQualityForTesting = function (quality: any) {
                 lastConn = this;
