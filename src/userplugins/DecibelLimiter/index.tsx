@@ -42,8 +42,8 @@ const settings = definePluginSettings({
     maxDb: {
         type: OptionType.SLIDER,
         description: "Макс. уровень (dB) — выше срабатывает",
-        markers: makeRange(-60, 0, 5),
-        default: -20,
+        markers: makeRange(0, 60, 5),
+        default: 20,
         stickToMarkers: true
     },
     reduceTo: {
@@ -83,7 +83,7 @@ function checkLevels(id: string) {
         sum += mon.data[i] * mon.data[i];
     }
     const rms = Math.sqrt(sum / mon.data.length) / 255;
-    const db = rms > 0 ? Math.max(-60, Math.min(0, 20 * Math.log10(rms))) : -60;
+    const db = rms > 0 ? Math.min(60, Math.abs(20 * Math.log10(rms || 0.001))) : -60;
     mon.currentDb = db;
 
     const maxDb = settings.store.maxDb;
@@ -108,7 +108,7 @@ function DbMeter() {
         return () => clearInterval(i);
     }, []);
 
-    let maxDb = -100;
+    let maxDb = 0;
     let limited = 0;
     for (const [, mon] of monitors) {
         if (mon.currentDb > maxDb) maxDb = mon.currentDb;
@@ -197,7 +197,7 @@ export default definePlugin({
                 analyser,
                 gain: data.gainNode,
                 data: buffer,
-                currentDb: -100,
+                currentDb: 0,
                 originalVolume: data._volume || 100,
                 isReduced: false,
                 interval: setInterval(() => checkLevels(id), 100)
