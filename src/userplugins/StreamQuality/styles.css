@@ -1,0 +1,33 @@
+.sc-custom-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+
+.sc-custom-row input {
+    background: #1e1f22;
+    color: #dbdee1;
+    border: 1px solid #26272b;
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-size: 13px;
+    width: 70px;
+    outline: none;
+    font-family: inherit;
+}
+
+.sc-custom-row input:focus {
+    border-color: #00a8fc;
+}
+
+.sc-custom-row label {
+    color: #b5bac1;
+    font-size: 12px;
+}
+
+.sc-custom-row .sc-fa-btn {
+    padding: 6px 12px;
+}
