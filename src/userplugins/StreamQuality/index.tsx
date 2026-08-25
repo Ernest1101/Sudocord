@@ -47,85 +47,69 @@ function getCustom(): CustomStreamValues | null {
     return { fps, width, height };
 }
 
-// ---------- применение через хук прототипа ----------
-
 let lastConn: any = null;
 let lastQuality: any = null;
-let hooked = false;
 let hookTimer: ReturnType<typeof setTimeout> | null = null;
 let hookAttempts = 0;
-// ленивая загрузка чанка с модулем соединения
-const loadConnChunk = extractAndLoadChunksLazy(["overwriteQualityForTesting"]);
 
 function hookConnection() {
-    if (hooked) return;
+    if (hookAttempts > 100) return;
     hookAttempts++;
-    let mod: any;
     try {
-        mod = find((m: any) => {
-            if (!m || typeof m !== "object") return false;
-            for (const k in m) {
-                if (m[k]?.prototype?.overwriteQualityForTesting && m[k]?.prototype?.setDesktopEncodingOptions) return true;
-            }
-            return false;
-        });
-    } catch {
-        mod = undefined;
-    }
+        const chunks = (window as any).webpackChunkdiscord_app;
+        if (!Array.isArray(chunks)) throw new Error("no chunk global");
 
-    if (!mod) {
-        // раз в 3 попытки пробуем догрузить чанк (может кинуть синхронно - ловим)
-        if (hookAttempts % 3 === 0) {
-            try {
-                loadConnChunk()
-                    .then(() => setTimeout(hookConnection, 1000))
-                    .catch(() => setTimeout(hookConnection, 5000));
+        let wreq: any;
+        chunks.push([[Math.random()], {}, (r: any) => { wreq = r; }]);
+        if (!wreq?.m) throw new Error("no wreq.m");
+
+        for (const id in wreq.m) {
+            let src: string;
+            try { src = String(wreq.m[id]); } catch { continue; }
+            if (!src.includes("overwriteQualityForTesting") || !src.includes("setDesktopEncodingOptions")) continue;
+
+            const mod = wreq(id);
+            for (const k in mod) {
+                const cls = mod[k];
+                if (!cls?.prototype?.overwriteQualityForTesting || cls.prototype.__scHooked) continue;
+
+                const orig = cls.prototype.overwriteQualityForTesting;
+                cls.prototype.overwriteQualityForTesting = function (quality: any) {
+                    lastConn = this;
+                    lastQuality = quality;
+
+                    const custom = getCustom();
+                    const br = Number(settings.store.bitrate) || 0;
+
+                    let out = quality;
+                    if (custom) {
+                        const fps = Number(custom.fps) || undefined;
+                        const width = Number(custom.width) || undefined;
+                        const height = Number(custom.height) || undefined;
+                        out = {
+                            ...(quality ?? {}),
+                            encode: { ...(quality?.encode ?? {}), framerate: fps, width, height },
+                            capture: { ...(quality?.capture ?? {}), framerate: fps, width, height }
+                        };
+                    }
+                    if (br) {
+                        out = {
+                            ...(out ?? {}),
+                            bitrate: { minimum: 1000, target: br, maximum: br * 2 }
+                        };
+                    }
+                    return orig.call(this, out);
+                };
+                cls.prototype.__scHooked = true;
+                console.info("[StreamQuality] hook ok, module " + id);
                 return;
-            } catch { }
+            }
         }
-        hookTimer = setTimeout(hookConnection, 4000);
-        return;
+        throw new Error("connection class not found");
+    } catch (err: any) {
+        hookTimer = setTimeout(hookConnection, 5000);
     }
-
-    for (const k in mod) {
-        const cls = mod[k];
-        if (cls?.prototype?.overwriteQualityForTesting && !cls.prototype.__scHooked) {
-            hooked = true;
-            const orig = cls.prototype.overwriteQualityForTesting;
-            cls.prototype.overwriteQualityForTesting = function (quality: any) {
-                lastConn = this;
-                lastQuality = quality;
-
-                const custom = getCustom();
-                const br = Number(settings.store.bitrate) || 0;
-
-                let out = quality;
-                if (custom) {
-                    const fps = Number(custom.fps) || undefined;
-                    const width = Number(custom.width) || undefined;
-                    const height = Number(custom.height) || undefined;
-                    out = {
-                        ...(quality ?? {}),
-                        encode: { ...(quality?.encode ?? {}), framerate: fps, width, height },
-                        capture: { ...(quality?.capture ?? {}), framerate: fps, width, height }
-                    };
-                }
-                if (br) {
-                    out = {
-                        ...(out ?? {}),
-                        bitrate: { minimum: 1000, target: br, maximum: br * 2 }
-                    };
-                }
-                return orig.call(this, out);
-            };
-            cls.prototype.__scHooked = true;
-            console.info("[StreamQuality] hook установлен");
-            return;
-        }
-    }
-    hookTimer = setTimeout(hookConnection, 5000);
 }
-
 // ---------- инжекция полей в панель качества ----------
 
 const STYLE_ID = "sc-stream-quality-styles";
