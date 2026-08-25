@@ -382,7 +382,7 @@ function openChat() {
 export default definePlugin({
     name: "FavoriteMessages",
     description: "Избранное как в Telegram: личный чат внизу сайдбара — пиши сообщения, кидай фотки, сохраняй чужие сообщения через ⋯ → ⭐. Всё локально",
-    tags: ["Utility", "Messages"],
+    tags: ["SudoCord", "Utility", "Messages"],
     authors: [{ name: "dsd16", id: 0n }],
     enabledByDefault: true,
 

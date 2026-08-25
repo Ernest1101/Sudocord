@@ -140,7 +140,7 @@ function getSpoofProps(source = "patch"): Record<string, string | number> {
 export default definePlugin({
     name: "SpoofPlatform",
     description: "Подменяет устройство, которое видят другие: ПК, телефон, браузер, консоль, VR",
-    authors: [{ name: "dsd16", id: 0n }],
+    authors: [{ name: "dsd16", id: 0n }], tags: ["SudoCord", "Trolling"],
     settings,
 
     // стартуем как можно раньше — до раннего скрипта fast-connect,

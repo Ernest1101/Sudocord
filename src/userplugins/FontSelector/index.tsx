@@ -62,7 +62,7 @@ const settings = definePluginSettings({
 export default definePlugin({
     name: "FontSelector",
     description: "Выбор шрифта и размера текста для всего клиента без CSS",
-    tags: ["Appearance"],
+    tags: ["SudoCord", "Appearance"],
     authors: [{ name: "dsd16", id: 0n }],
     enabledByDefault: true,
 

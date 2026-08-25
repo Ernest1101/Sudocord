@@ -99,7 +99,7 @@ function fd_button(props: { nameplate?: any; }) {
 }
 
 export default definePlugin({
-    name: "FakeDeafen",
+    name: "FakeDeafen", tags: ["SudoCord", "Utility"],
     description: "Fake deafen yourself",
     authors: [{ name: "hyyven", id: 449282863582412850n }],
     settings: Settings,

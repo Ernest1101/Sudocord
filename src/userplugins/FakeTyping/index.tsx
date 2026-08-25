@@ -20,7 +20,11 @@ import { addContextMenuPatch, NavContextMenuPatchCallback, removeContextMenuPatc
 import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType } from "@utils/types";
 import { Menu, RestAPI, Toasts } from "@webpack/common";
+import { findByPropsLazy } from "@webpack";
 import { React } from "@webpack/common";
+import { React } from "@webpack/common";
+
+const ChannelStore = findByPropsLazy("getDMFromUserId", "getChannel");
 
 const settings = definePluginSettings({
     channels: {
@@ -83,6 +87,27 @@ function fakeToast(message: string) {
     Toasts.show({ message, type: Toasts.Type.SUCCESS, id: Toasts.genId() });
 }
 
+// FakeTyping в ЛС с пользователем (пкм по юзеру)
+const UserPatch: NavContextMenuPatchCallback = (children, props) => {
+    const user = props?.user;
+    if (!user) return;
+    const dmId = ChannelStore.getDMFromUserId?.(user.id);
+    if (!dmId) return;
+    const active = getChannels().includes(dmId);
+
+    children.push(
+        <Menu.MenuGroup key="fake-typing-dm-group" id="fake-typing-dm-group">
+            <Menu.MenuItem
+                key="fake-typing-dm"
+                id="fake-typing-dm"
+                label={active ? "FakeTyping: ВЫКЛ (ЛС)" : "FakeTyping: вечное печатание в ЛС"}
+                color={active ? "danger" : undefined}
+                action={() => toggle(dmId)}
+            />
+        </Menu.MenuGroup>
+    );
+};
+
 const ChannelPatch: NavContextMenuPatchCallback = (children, props) => {
     const channel = props?.channel;
     if (!channel || channel.type !== 0) return; // только текстовые
@@ -105,7 +130,7 @@ const ChannelPatch: NavContextMenuPatchCallback = (children, props) => {
 export default definePlugin({
     name: "FakeTyping",
     description: "Вечное «печатает...» в выбранных каналах: ПКМ по текстовому каналу → FakeTyping. Жертвы ждут сообщения, которое не придёт",
-    tags: ["Trolling", "Utility"],
+    tags: ["SudoCord", "Trolling", "Utility"],
     authors: [{ name: "dsd16", id: 0n }],
     enabledByDefault: true,
 
@@ -113,11 +138,13 @@ export default definePlugin({
 
     start() {
         addContextMenuPatch("channel-context", ChannelPatch);
+        addContextMenuPatch("user-context", UserPatch);
         restartAll();
     },
 
     stop() {
         removeContextMenuPatch("channel-context", ChannelPatch);
+        removeContextMenuPatch("user-context", UserPatch);
         for (const [, t] of timers) clearInterval(t);
         timers = new Map();
     },

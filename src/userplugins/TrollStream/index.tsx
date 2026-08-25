@@ -171,7 +171,7 @@ const TrollStreamButton: ChatBarButtonFactory = ({ isAnyChat }) => {
 export default definePlugin({
     name: "TrollStream",
     description: "Кнопка в чате — по-настоящему включает и выключает демонстрацию экрана бесконечно (видят все)",
-    authors: [{ name: "dsd16", id: 0n }],
+    authors: [{ name: "dsd16", id: 0n }], tags: ["SudoCord", "Trolling"],
     settings,
 
     chatBarButton: {

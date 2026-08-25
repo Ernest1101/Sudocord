@@ -358,7 +358,7 @@ const ChannelPatch: NavContextMenuPatchCallback = (children, props) => {
 export default definePlugin({
     name: "FakeAdmin",
     description: "Визуальные права модератора: тайм-аут, кик, бан с настоящими диалогами Discord и создание каналов. Ничего реального не происходит",
-    tags: ["Trolling", "Utility"],
+    tags: ["SudoCord", "Trolling", "Utility"],
     authors: [{ name: "dsd16", id: 0n }],
     enabledByDefault: true,
 
