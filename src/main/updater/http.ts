@@ -1,6 +1,6 @@
 /*
  * SudoCord, a modification for Discord's desktop app
- * Copyright (c) 2022 Vendicated and contributors
+ * Copyright (c) 2026 dsd16
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,16 +57,18 @@ async function calculateGitChanges() {
 }
 
 async function fetchUpdates() {
-    // latest release may be a prerelease (devbuild), so use the list endpoint
-    const data = await githubGet("/releases?per_page=1");
-    const release = data[0];
+    // list endpoint: the newest release may be a stable one, we want the devbuild prerelease
+    const data = await githubGet("/releases?per_page=10");
+    const releases = Array.isArray(data) ? data : [data];
+
+    const release = releases.find(r => r.tag_name === "devbuild" || r.prerelease) ?? releases[0];
     if (!release) throw new Error("No releases found");
 
     const hash = release.name.slice(release.name.lastIndexOf(" ") + 1);
     if (hash === gitHash)
         return false;
 
-    const asar = release.assets.find(({ name }: any) => name === "desktop.asar");
+    const asar = release.assets?.find((a: any) => a.name === "desktop.asar");
     if (!asar) throw new Error("No desktop.asar found in the latest release");
 
     PendingAsarUrl = asar.browser_download_url;
