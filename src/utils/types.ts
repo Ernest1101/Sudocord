@@ -52,7 +52,6 @@ export const PluginTags = [
     "Developers",
     "Emotes",
     "Friends",
-    "Fun",
     "Media",
     "Notifications",
     "Organisation",
@@ -61,6 +60,8 @@ export const PluginTags = [
     "Roles",
     "Servers",
     "Shortcuts",
+    "SudoCord",
+    "Trolling",
     "Utility",
     "Voice"
 ] as const;
