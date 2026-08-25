@@ -81,57 +81,66 @@ let lastQuality: any = null;
 let hookTimer: ReturnType<typeof setTimeout> | null = null;
 let hookAttempts = 0;
 
-// ленивый прокси объекта соединения (резолвится когда голос/стрим инициализируются)
-let connObj: any = null;
-
 function hookConnection() {
-    if (hookAttempts > 100) return;
+    if (hookAttempts > 60) return;
     hookAttempts++;
     try {
-        if (!connObj) {
-            connObj = (window as any).SudoCord.Webpack.findByProps("overwriteQualityForTesting", "setDesktopEncodingOptions");
-        }
-        const proto = connObj?.constructor?.prototype;
-        if (!proto?.overwriteQualityForTesting || proto.__scHooked) {
-            hookTimer = setTimeout(hookConnection, 4000);
-            return;
-        }
+        const chunks = (window as any).webpackChunkdiscord_app;
+        if (!Array.isArray(chunks)) throw new Error("no chunk global");
 
-        const orig = proto.overwriteQualityForTesting;
-        proto.overwriteQualityForTesting = function (quality: any) {
-            lastConn = this;
-            lastQuality = quality;
+        let wreq: any;
+        chunks.push([[Math.random()], {}, (r: any) => { wreq = r; }]);
+        if (!wreq?.m) throw new Error("no wreq.m");
 
-            const custom = getCustom();
-            const br = Number(settings.store.bitrate) || 0;
+        // ищем модуль соединения по исходнику фабрики
+        for (const id in wreq.m) {
+            let src: string;
+            try { src = String(wreq.m[id]); } catch { continue; }
+            if (!src.includes("overwriteQualityForTesting") || !src.includes("setDesktopEncodingOptions")) continue;
 
-            let out = quality;
-            if (custom) {
-                const fps = Number(custom.fps) || undefined;
-                const width = Number(custom.width) || undefined;
-                const height = Number(custom.height) || undefined;
-                out = {
-                    ...(quality ?? {}),
-                    encode: { ...(quality?.encode ?? {}), framerate: fps, width, height },
-                    capture: { ...(quality?.capture ?? {}), framerate: fps, width, height }
+            const mod = wreq(id);
+            for (const k in mod) {
+                const cls = mod[k];
+                if (!cls?.prototype?.overwriteQualityForTesting || cls.prototype.__scHooked) continue;
+
+                const orig = cls.prototype.overwriteQualityForTesting;
+                cls.prototype.overwriteQualityForTesting = function (quality: any) {
+                    lastConn = this;
+                    lastQuality = quality;
+
+                    const custom = getCustom();
+                    const br = Number(settings.store.bitrate) || 0;
+
+                    let out = quality;
+                    if (custom) {
+                        const fps = Number(custom.fps) || undefined;
+                        const width = Number(custom.width) || undefined;
+                        const height = Number(custom.height) || undefined;
+                        out = {
+                            ...(quality ?? {}),
+                            encode: { ...(quality?.encode ?? {}), framerate: fps, width, height },
+                            capture: { ...(quality?.capture ?? {}), framerate: fps, width, height }
+                        };
+                    }
+                    if (br) {
+                        out = {
+                            ...(out ?? {}),
+                            bitrate: { minimum: 1000, target: br, maximum: br * 2 }
+                        };
+                    }
+                    return orig.call(this, out);
                 };
+                cls.prototype.__scHooked = true;
+                console.info("[StreamQuality] hook ok, module " + id);
+                return;
             }
-            if (br) {
-                out = {
-                    ...(out ?? {}),
-                    bitrate: { minimum: 1000, target: br, maximum: br * 2 }
-                };
-            }
-            return orig.call(this, out);
-        };
-        proto.__scHooked = true;
-        console.info("[StreamQuality] hook установлен");
+        }
+        throw new Error("класс соединения не найден в фабриках");
     } catch (err: any) {
-        console.warn("[StreamQuality] hook retry:", err?.message ?? err);
-        hookTimer = setTimeout(hookConnection, 4000);
+        // ретрай — фабрики могут зарегистрироваться позже
+        hookTimer = setTimeout(hookConnection, 5000);
     }
 }
-
 // ---------- инжекция полей в панель качества ----------
 
 const STYLE_ID = "sc-stream-quality-styles";
