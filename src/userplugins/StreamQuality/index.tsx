@@ -20,16 +20,7 @@ import "./styles.css";
 
 import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType } from "@utils/types";
-import { findLazy } from "@webpack";
-
-// webpack-модуль с классом голосового/стримового соединения (для битрейта и хука)
-const ConnectionModule = findLazy((m: any) => {
-    if (!m || typeof m !== "object") return false;
-    for (const k in m) {
-        if (m[k]?.prototype?.overwriteQualityForTesting && m[k]?.prototype?.setDesktopEncodingOptions) return true;
-    }
-    return false;
-});
+import { find } from "@webpack";
 
 const settings = definePluginSettings({
     bitrate: {
@@ -60,13 +51,29 @@ function getCustom(): CustomStreamValues | null {
 
 let lastConn: any = null;
 let lastQuality: any = null;
+let hookTimer: ReturnType<typeof setTimeout> | null = null;
 
 function hookConnection() {
-    const mod: any = ConnectionModule;
+    let mod: any;
+    try {
+        // модуль соединения грузится лениво - ищем с ретраями,
+        // он появится когда юзер зайдёт в голос/начнёт стрим
+        mod = find((m: any) => {
+            if (!m || typeof m !== "object") return false;
+            for (const k in m) {
+                if (m[k]?.prototype?.overwriteQualityForTesting && m[k]?.prototype?.setDesktopEncodingOptions) return true;
+            }
+            return false;
+        });
+    } catch {
+        mod = undefined;
+    }
+
     if (!mod) {
-        setTimeout(hookConnection, 3000);
+        hookTimer = setTimeout(hookConnection, 5000);
         return;
     }
+
     for (const k in mod) {
         const cls = mod[k];
         if (cls?.prototype?.overwriteQualityForTesting && !cls.prototype.__scHooked) {
@@ -102,7 +109,7 @@ function hookConnection() {
             return;
         }
     }
-    setTimeout(hookConnection, 3000);
+    hookTimer = setTimeout(hookConnection, 5000);
 }
 
 // ---------- инжекция полей в панель качества ----------
@@ -120,6 +127,7 @@ function ensureStyles() {
             gap: 6px;
             padding: 8px 10px;
             margin-top: 4px;
+            flex-wrap: wrap;
         }
         .sc-custom-row input {
             background: #1e1f22;
@@ -139,7 +147,7 @@ function ensureStyles() {
             color: #b5bac1;
             font-size: 12px;
         }
-        .sc-custom-row .sc-fa-btn {
+        .sc-custom-row .sc-fav-btn {
             padding: 6px 12px;
         }
     `;
@@ -147,13 +155,11 @@ function ensureStyles() {
 }
 
 function findQualityPanel(): HTMLElement | null {
-    // панель качества: ищем label "Разрешение" и поднимаемся к общему контейнеру
-    const candidates = document.querySelectorAll('div,span,div[class*="label"]');
+    const candidates = document.querySelectorAll('div,span');
     for (const c of candidates) {
         if (c.childElementCount > 0) continue;
         const t = c.textContent?.trim();
         if (t !== "Разрешение") continue;
-        // поднимаемся до контейнера, в котором есть и FPS-пункты
         let node: HTMLElement | null = c as HTMLElement;
         for (let i = 0; i < 6 && node; i++) {
             node = node.parentElement;
@@ -174,12 +180,21 @@ function injectCustomRow(panel: HTMLElement) {
     const w = window as any;
     w.__scStreamCustom ??= { fps: undefined, width: undefined, height: undefined };
 
-    const row = el("div", { display: "flex", alignItems: "center", gap: "6px", padding: "8px 10px", flexWrap: "wrap" });
+    const row = document.createElement("div");
     row.className = "sc-custom-row";
 
-    row.appendChild(el("span", { fontWeight: "700", fontSize: "11px", color: "#b5bac1", textTransform: "uppercase", width: "100%" }, "Своё (SudoCord)"));
+    const title = document.createElement("div");
+    title.style.cssText = "font-weight:700;font-size:11px;color:#b5bac1;text-transform:uppercase;width:100%;";
+    title.textContent = "Своё (SudoCord)";
+    row.appendChild(title);
 
-    row.appendChild(el("label", undefined, "FPS"));
+    const mkLabel = (t: string) => {
+        const l = document.createElement("label");
+        l.textContent = t;
+        return l;
+    };
+
+    row.appendChild(mkLabel("FPS"));
     const fps = document.createElement("input");
     fps.type = "number";
     fps.placeholder = "60";
@@ -187,7 +202,7 @@ function injectCustomRow(panel: HTMLElement) {
     fps.oninput = () => { w.__scStreamCustom.fps = Number(fps.value) || undefined; };
     row.appendChild(fps);
 
-    row.appendChild(el("label", undefined, "Высота"));
+    row.appendChild(mkLabel("Высота"));
     const height = document.createElement("input");
     height.type = "number";
     height.placeholder = "1080";
@@ -198,12 +213,12 @@ function injectCustomRow(panel: HTMLElement) {
     };
     row.appendChild(height);
 
-    const apply = el("button", undefined, "Применить");
-    apply.className = "sc-fa-btn sc-fa-btn-primary";
-    apply.style.padding = "6px 12px";
+    const apply = document.createElement("button");
+    apply.className = "sc-fav-btn";
+    apply.textContent = "Применить";
     apply.onclick = () => {
-        if (lastConn && lastQuality) {
-            lastConn.overwriteQualityForTesting(lastQuality);
+        if (lastConn) {
+            lastConn.overwriteQualityForTesting(lastQuality ?? {});
             toast("Кастомное качество применено", 2);
         } else {
             toast("Начни трансляцию, затем примени", 3);
@@ -215,7 +230,6 @@ function injectCustomRow(panel: HTMLElement) {
 }
 
 function toast(message: string, type: number) {
-    // лёгкий тост без зависимостей
     const t = document.createElement("div");
     t.textContent = message;
     Object.assign(t.style, {
@@ -233,7 +247,6 @@ let injectInterval: ReturnType<typeof setInterval> | null = null;
 
 function startPanelWatcher() {
     ensureStyles();
-    // панель открывается/закрывается — проверяем периодически, дёшево
     injectInterval = setInterval(() => {
         if (!document.body) return;
         const panel = findQualityPanel();
@@ -244,39 +257,18 @@ function startPanelWatcher() {
 function stopPanelWatcher() {
     if (injectInterval) clearInterval(injectInterval);
     injectInterval = null;
+    if (hookTimer) clearTimeout(hookTimer);
     document.querySelectorAll(".sc-custom-row").forEach(e => e.remove());
 }
 
 export default definePlugin({
     name: "StreamQuality",
-    description: "Своё FPS и разрешение прямо в панели качества стрима + все разрешения без бустов + кастомный битрейт",
+    description: "Своё FPS и разрешение прямо в панели качества стрима + кастомный битрейт",
     tags: ["SudoCord", "Utility"],
     authors: [{ name: "dsd16", id: 0n }],
     enabledByDefault: true,
 
     settings,
-
-    patches: [
-        {
-            find: "PRESET_MOBILE_HIGH_QUALITY",
-            replacement: [
-                {
-                    // все пресеты без бустов/нитро
-                    match: /guildPremiumTier:\w+\.\w+\.\w+,?/g,
-                    replace: ""
-                },
-                {
-                    // энумы принимают любые значения (нужно для кастомных)
-                    match: /default:throw Error\(`Unknown frame rate: \$\{e\}`\)/,
-                    replace: "default:return e"
-                },
-                {
-                    match: /default:throw Error\(`Unknown resolution: \$\{e\}`\)/,
-                    replace: "default:return e"
-                }
-            ]
-        }
-    ],
 
     start() {
         hookConnection();
