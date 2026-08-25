@@ -44,9 +44,27 @@ function applyFont(font: string, size: number) {
 
 const settings = definePluginSettings({
     font: {
-        type: OptionType.STRING,
-        description: "Название шрифта (должен быть установлен в системе). Пусто = стандартный",
-        default: "",
+        type: OptionType.SELECT,
+        description: "Шрифт клиента",
+        options: [
+            { label: "Стандартный (gg sans)", value: "", default: true },
+            { label: "Segoe UI", value: "Segoe UI" },
+            { label: "Arial", value: "Arial" },
+            { label: "Calibri", value: "Calibri" },
+            { label: "Verdana", value: "Verdana" },
+            { label: "Tahoma", value: "Tahoma" },
+            { label: "Georgia", value: "Georgia" },
+            { label: "Times New Roman", value: "Times New Roman" },
+            { label: "Trebuchet MS", value: "Trebuchet MS" },
+            { label: "Impact", value: "Impact" },
+            { label: "Comic Sans MS", value: "Comic Sans MS" },
+            { label: "Consolas (моно)", value: "Consolas" },
+            { label: "Courier New (моно)", value: "Courier New" },
+            { label: "JetBrains Mono (моно)", value: "JetBrains Mono" },
+            { label: "Fira Code (моно)", value: "Fira Code" },
+            { label: "Roboto", value: "Roboto" },
+            { label: "Inter", value: "Inter" }
+        ],
         onChange: () => applyFont(Settings.plugins.FontSelector.font, Settings.plugins.FontSelector.size)
     },
     size: {
