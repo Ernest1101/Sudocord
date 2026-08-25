@@ -35,18 +35,21 @@ const HEIGHT_CYCLE = [720, 1080, 1440];
 const settings = definePluginSettings({
     fps: {
         type: OptionType.NUMBER,
-        description: "FPS стрима (30/60/75/120). Меняется и из тулбокса",
-        default: 60
+        description: "FPS стрима — любое число",
+        default: 60,
+        onChange: () => applyNow()
     },
     height: {
         type: OptionType.NUMBER,
-        description: "Высота (720/1080/1440). Ширина считается 16:9",
-        default: 1080
+        description: "Высота (px) — любое число",
+        default: 1080,
+        onChange: () => applyNow()
     },
     bitrate: {
         type: OptionType.NUMBER,
         description: "Битрейт (kbit/s). 0 = стандартный",
-        default: 10000
+        default: 10000,
+        onChange: () => applyNow()
     }
 });
 
