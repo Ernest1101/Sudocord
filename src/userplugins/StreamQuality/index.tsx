@@ -74,12 +74,14 @@ function hookConnection() {
     }
 
     if (!mod) {
-        // раз в 3 попытки принудительно грузим чанк с модулем соединения
+        // раз в 3 попытки пробуем догрузить чанк (может кинуть синхронно - ловим)
         if (hookAttempts % 3 === 0) {
-            loadConnChunk()
-                .then(() => setTimeout(hookConnection, 1000))
-                .catch(() => setTimeout(hookConnection, 5000));
-            return;
+            try {
+                loadConnChunk()
+                    .then(() => setTimeout(hookConnection, 1000))
+                    .catch(() => setTimeout(hookConnection, 5000));
+                return;
+            } catch { }
         }
         hookTimer = setTimeout(hookConnection, 4000);
         return;
