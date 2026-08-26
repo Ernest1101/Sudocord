@@ -60,7 +60,15 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   RELEASE_TAG: ${{ env.release_tag }}
               run: |
-                  gh release view devbuild > /dev/null 2>&1 || gh release create devbuild --title "DevBuild" --prerelease
+                  OLD_HASH=$(gh release view devbuild --json name -q .name 2>/dev/null | awk '{print $2}')
+                  gh release delete devbuild --yes 2>/dev/null || true
+                  ok=0
+                  for i in 1 2 3; do
+                      if gh release create devbuild --prerelease --title "DevBuild $RELEASE_TAG" --notes " "; then ok=1; break; fi
+                      echo "create attempt $i failed, retrying in 15s"
+                      sleep 15
+                  done
+                  [ "$ok" = "1" ] || exit 1
                   ok=0
                   for i in 1 2 3; do
                       if gh release upload devbuild dist/* --clobber; then ok=1; break; fi
@@ -68,7 +76,6 @@ jobs:
                       sleep 15
                   done
                   [ "$ok" = "1" ] || exit 1
-                  OLD_HASH=$(gh release view devbuild --json name -q .name 2>/dev/null | awk "{print $2}")
                   if [ -n "$OLD_HASH" ]; then
                       CHANGELOG=$(git log --oneline --no-decorate "$OLD_HASH..HEAD" -- src | sed "s/^/- /")
                   fi
