@@ -1,20 +1,8 @@
 /*
- * SudoCord, a modification for Discord's desktop app
- * Copyright (c) 2022 Vendicated and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 
 import { IpcEvents } from "@shared/IpcEvents";
 import { execFile as cpExecFile } from "child_process";
@@ -54,7 +42,7 @@ async function calculateGitChanges() {
     const existsOnOrigin = (await git("ls-remote", "origin", branch)).stdout.length > 0;
     if (!existsOnOrigin) return [];
 
-    const res = await git("log", `HEAD...origin/${branch}`, "--pretty=format:%an/%h/%s");
+    const res = await git("log", `HEAD..origin/${branch}`, "--pretty=format:%an/%h/%s");
 
     const commits = res.stdout.trim();
     return commits ? commits.split("\n").map(line => {
@@ -67,8 +55,10 @@ async function calculateGitChanges() {
 }
 
 async function pull() {
-    const res = await git("pull");
-    return res.stdout.includes("Fast-forward");
+    const before = (await git("rev-parse", "HEAD")).stdout.trim();
+    await git("pull", "--ff-only");
+    const after = (await git("rev-parse", "HEAD")).stdout.trim();
+    return before !== after;
 }
 
 async function build() {

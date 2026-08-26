@@ -1,20 +1,8 @@
 /*
- * SudoCord, a modification for Discord's desktop app
- * Copyright (c) 2026 dsd16
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 
 import { fetchBuffer, fetchJson } from "@main/utils/http";
 import { IpcEvents } from "@shared/IpcEvents";
@@ -65,6 +53,8 @@ async function fetchUpdates() {
     if (!release) throw new Error("No releases found");
 
     const hash = release.name.slice(release.name.lastIndexOf(" ") + 1);
+    if (!/^[0-9a-f]{7,40}$/.test(hash))
+        throw new Error(`Devbuild release has invalid name: "${release.name}"`);
     if (hash === gitHash)
         return false;
 
