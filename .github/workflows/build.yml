@@ -61,10 +61,10 @@ jobs:
                   RELEASE_TAG: ${{ env.release_tag }}
               run: |
                   OLD_HASH=$(gh release view devbuild --json name -q .name 2>/dev/null | awk '{print $2}')
-                  gh release delete devbuild --yes 2>/dev/null || true
+                  gh release delete devbuild --yes --cleanup-tag 2>/dev/null || true
                   ok=0
                   for i in 1 2 3; do
-                      if gh release create devbuild --prerelease --title "DevBuild $RELEASE_TAG" --notes " "; then ok=1; break; fi
+                      if gh release create devbuild --prerelease --target "$GITHUB_SHA" --title "DevBuild $RELEASE_TAG" --notes " "; then ok=1; break; fi
                       echo "create attempt $i failed, retrying in 15s"
                       sleep 15
                   done
