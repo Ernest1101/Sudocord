@@ -55,8 +55,17 @@ async function calculateGitChanges() {
 }
 
 async function pull() {
+    const branch = (await git("branch", "--show-current")).stdout.trim();
+    if (!branch) return false;
+
+    await git("fetch", "origin");
+
     const before = (await git("rev-parse", "HEAD")).stdout.trim();
-    await git("pull", "--ff-only");
+
+    const status = (await git("status", "--porcelain")).stdout.trim();
+    if (status) await git("pull", "--ff-only");
+    else await git("reset", "--hard", `origin/${branch}`);
+
     const after = (await git("rev-parse", "HEAD")).stdout.trim();
     return before !== after;
 }
