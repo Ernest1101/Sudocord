@@ -22,7 +22,7 @@ import "./settings";
 
 import { debounce } from "@shared/debounce";
 import { IpcEvents } from "@shared/IpcEvents";
-import { BrowserWindow, ipcMain, nativeTheme, shell, systemPreferences } from "electron";
+import { BrowserWindow, ipcMain, nativeTheme, net, shell, systemPreferences } from "electron";
 import monacoHtml from "file://monacoWin.html?minify&base64";
 import { FSWatcher, mkdirSync, readFileSync, watch, writeFileSync } from "fs";
 import { open, readdir, readFile } from "fs/promises";
@@ -182,4 +182,14 @@ if (IS_DISCORD_DESKTOP) {
 
 ipcMain.on(IpcEvents.SUPPORTS_WINDOWS_MATERIAL, e => {
     e.returnValue = process.platform === "win32" && Number(release().split(".")[2]) >= 22621;
+});
+
+ipcMain.handle(IpcEvents.FETCH_URL, async (_, url: string) => {
+    try {
+        const res = await net.fetch(url);
+        const text = await res.text();
+        return { ok: res.ok, status: res.status, text };
+    } catch (e: any) {
+        return { ok: false, status: 0, text: "", error: e?.message || String(e) };
+    }
 });

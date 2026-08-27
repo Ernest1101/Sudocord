@@ -100,5 +100,8 @@ export default {
             invoke<CspRequestResult>(IpcEvents.CSP_REQUEST_ADD_OVERRIDE, url, directives, callerName),
     },
 
+    fetchUrl: (url: string): Promise<{ ok: boolean; status: number; text: string; error?: string; }> =>
+        invoke(IpcEvents.FETCH_URL, url),
+
     pluginHelpers: PluginHelpers
 };

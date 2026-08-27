@@ -55,4 +55,6 @@ export const enum IpcEvents {
     PRELOAD_GET_RENDERER_JS = "SudoCordPreloadGetRendererJs",
 
     SUPPORTS_WINDOWS_MATERIAL = "SudoCordSupportsWindowsMaterial",
+
+    FETCH_URL = "SudoCordFetchUrl",
 }

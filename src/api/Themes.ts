@@ -48,7 +48,7 @@ async function toggle(isEnabled: boolean) {
 // for cleanup
 let previousThemeBlobObjectURLs = [] as string[];
 
-async function initThemes() {
+export async function initThemes() {
     themesStyle ??= createAndAppendStyle("vencord-themes", userStyleRootNode);
 
     const { themeLinks, enabledThemes } = Settings;
@@ -69,7 +69,8 @@ async function initThemes() {
             const [, mode, link] = match;
             return mode === activeTheme ? link : null;
         })
-        .filter(link => link !== null);
+        .filter(link => link !== null)
+        .map(link => link.replace(/\.(\?|#|$)/, "$1"));
 
     if (IS_WEB) {
         previousThemeBlobObjectURLs.forEach(url => URL.revokeObjectURL(url));

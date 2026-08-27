@@ -5,8 +5,8 @@
  */
 
 import { definePluginSettings } from "@api/Settings";
-import definePlugin, { makeRange,OptionType } from "@utils/types";
-import { FluxDispatcher, MediaEngineStore, React, UserStore } from "@webpack/common";
+import definePlugin, { makeRange, OptionType } from "@utils/types";
+import { FluxDispatcher, MediaEngineStore, React, showToast, Toasts, UserStore } from "@webpack/common";
 
 interface InboundAudioStats {
     type: string;
@@ -68,6 +68,11 @@ const settings = definePluginSettings({
         markers: makeRange(0, 5000, 250),
         default: 1500,
         stickToMarkers: true
+    },
+    whitelist: {
+        type: OptionType.SET,
+        description: "Whitelist — эти юзеры не будут понижаться лимитером",
+        default: [] as string[]
     }
 });
 
@@ -100,7 +105,7 @@ function restoreVolume(userId: string) {
 }
 
 function applyLimiter(userId: string, db: number, thresholdDb: number) {
-    if (!settings.store.limiterEnabled || MediaEngineStore.isLocalMute(userId)) {
+    if (!settings.store.limiterEnabled || MediaEngineStore.isLocalMute(userId) || settings.store.whitelist.has(userId)) {
         restoreVolume(userId);
         return;
     }
@@ -180,6 +185,8 @@ export function getLoudestDb(): number {
 
 const DbMeterComponent = () => {
     const [, setTick] = React.useState(0);
+    const [inputValue, setInputValue] = React.useState("");
+    const [, forceUpdate] = React.useState(0);
     React.useEffect(() => {
         const i = setInterval(() => setTick(t => t + 1), 300);
         return () => clearInterval(i);
@@ -190,9 +197,33 @@ const DbMeterComponent = () => {
     const threshold = settings.store.maxDb;
     const color = db > -threshold ? "#ed4245" : db > -(threshold + 15) ? "#faa61a" : "#23a55a";
 
+    const whitelist = settings.store.whitelist;
     const users = [...levels.entries()]
         .sort(([, a], [, b]) => b.db - a.db)
         .slice(0, 12);
+
+    function addToWhitelist() {
+        const val = inputValue.trim();
+        if (!val) return;
+        const user = UserStore.getUser(val);
+        if (user) {
+            whitelist.add(val);
+            settings.store.whitelist = whitelist;
+            setInputValue("");
+            forceUpdate(n => n + 1);
+            showToast(`Added ${user.username} to whitelist`, Toasts.Type.SUCCESS);
+        } else {
+            showToast("User not found", Toasts.Type.FAILURE);
+        }
+    }
+
+    function removeFromWhitelist(userId: string) {
+        whitelist.delete(userId);
+        settings.store.whitelist = whitelist;
+        forceUpdate(n => n + 1);
+        const user = UserStore.getUser(userId);
+        showToast(`Removed ${user?.username ?? userId} from whitelist`, Toasts.Type.SUCCESS);
+    }
 
     return (
         <div style={{ padding: "12px 0", fontFamily: "monospace" }}>
@@ -212,14 +243,73 @@ const DbMeterComponent = () => {
                 </div>
             </div>
             <div style={{ color: "#b5bac1", fontSize: 13, marginBottom: 8 }}>
-                Порог: -{threshold} dBFS | Юзеров: {levels.size} | Понижено: {reduced.size}
+                Порог: -{threshold} dBFS | Юзеров: {levels.size} | Понижено: {reduced.size} | Whitelist: {whitelist.size}
             </div>
+
+            <div style={{ marginBottom: 12, padding: "8px 0", borderTop: "1px solid #2e3035" }}>
+                <div style={{ fontWeight: 600, fontSize: "14px", marginBottom: 6, color: "#f2f3f5" }}>
+                    Whitelist (не понижать громкость)
+                </div>
+                <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
+                    <input
+                        type="text"
+                        value={inputValue}
+                        onChange={e => setInputValue(e.target.value)}
+                        onKeyDown={e => e.key === "Enter" && addToWhitelist()}
+                        placeholder="User ID или @username"
+                        style={{
+                            flex: 1, padding: "6px 10px", borderRadius: 6,
+                            border: "1px solid #2e3035", background: "#1e1f22",
+                            color: "#f2f3f5", fontSize: 13, outline: "none"
+                        }}
+                    />
+                    <button
+                        onClick={addToWhitelist}
+                        style={{
+                            padding: "6px 14px", borderRadius: 6, border: "none",
+                            background: "#23a55a", color: "#fff", fontSize: 13,
+                            fontWeight: 600, cursor: "pointer"
+                        }}
+                    >
+                        +
+                    </button>
+                </div>
+                {whitelist.size > 0 && (
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                        {[...whitelist].map(id => {
+                            const user = UserStore.getUser(id);
+                            return (
+                                <span
+                                    key={id}
+                                    onClick={() => removeFromWhitelist(id)}
+                                    title="Click to remove"
+                                    style={{
+                                        display: "inline-flex", alignItems: "center", gap: 4,
+                                        padding: "3px 8px", borderRadius: 6,
+                                        background: "#23a55a22", border: "1px solid #23a55a55",
+                                        color: "#23a55a", fontSize: 12, cursor: "pointer"
+                                    }}
+                                >
+                                    {user?.username ?? id} ✕
+                                </span>
+                            );
+                        })}
+                    </div>
+                )}
+                {whitelist.size === 0 && (
+                    <div style={{ color: "#72767d", fontSize: 12 }}>
+                        Нет юзеров в whitelist. Напиши ID или @username чтобы добавить.
+                    </div>
+                )}
+            </div>
+
             {users.map(([id, lvl]) => (
                 <div key={id} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#b5bac1", padding: "2px 0" }}>
                     <span style={{ width: 8, height: 8, borderRadius: 4, background: lvl.speaking ? "#23a55a" : "#4e5058", flexShrink: 0 }} />
                     <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {UserStore.getUser(id)?.username ?? id}
                     </span>
+                    {whitelist.has(id) && <span style={{ color: "#23a55a", fontSize: 11 }}>W</span>}
                     {isReduced(id) && <span style={{ color: "#ed4245" }}>▼</span>}
                     <span style={{ minWidth: 55, textAlign: "right", color: lvl.db > -threshold ? "#ed4245" : undefined }}>
                         {Math.round(lvl.db)} dB
@@ -234,7 +324,7 @@ export default definePlugin({
     name: "DecibelLimiter",
     description: "Реальный измеритель dB входящего голоса (из RTC-статистики Discord) + авто-понижение громкости орущих",
     tags: ["SudoCord", "Voice"],
-    authors: [{ name: "dsd16", id: 0n }],
+    authors: [{ name: "mrernestyt", id: 0n }],
     enabledByDefault: true,
 
     settings,

@@ -72,6 +72,11 @@ export const CspPolicies: PolicyMap = {
     // Tenor, used by TenorSearch plugin and some themes
     "*.tenor.com": ImageAndMediaSrc,
     "*.tenor.co": ImageAndMediaSrc,
+
+    // BetterDiscord theme marketplace images (including trailing-dot FQDN variants)
+    "betterdiscord.app": ImageSrc,
+    "betterdiscord.app.": ImageSrc,
+    "*.betterdiscord.app": ImageSrc,
 };
 
 const findHeader = (headers: PolicyMap, headerName: Lowercase<string>) => {
@@ -118,8 +123,12 @@ const patchCsp = (headers: PolicyMap) => {
         // Once they stop using it, we also should
         pushDirective("script-src", "'unsafe-inline'", "'unsafe-eval'");
 
-        for (const directive of ["style-src", "connect-src", "img-src", "font-src", "media-src", "worker-src"]) {
+        for (const directive of ["connect-src", "media-src", "worker-src"]) {
             pushDirective(directive, "blob:", "data:", "vencord:", "vesktop:");
+        }
+        // Wildcards for theme loading from arbitrary domains
+        for (const directive of ["img-src", "style-src", "font-src"]) {
+            pushDirective(directive, "blob:", "data:", "vencord:", "vesktop:", "*");
         }
 
         for (const [host, directives] of Object.entries(NativeSettings.store.customCspRules)) {
@@ -141,8 +150,7 @@ const patchCsp = (headers: PolicyMap) => {
 export function initCsp() {
     session.defaultSession.webRequest.onHeadersReceived(({ responseHeaders, resourceType }, cb) => {
         if (responseHeaders) {
-            if (resourceType === "mainFrame")
-                patchCsp(responseHeaders);
+            patchCsp(responseHeaders);
 
             // Fix hosts that don't properly set the css content type, such as
             // raw.githubusercontent.com

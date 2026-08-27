@@ -30,11 +30,13 @@ import { Forms, React, TabBar, useState } from "@webpack/common";
 
 import { CspErrorCard } from "./CspErrorCard";
 import { LocalThemesTab } from "./LocalThemesTab";
+import { MarketplaceTab } from "./MarketplaceTab";
 import { OnlineThemesTab } from "./OnlineThemesTab";
 
 const enum ThemeTab {
     LOCAL,
-    ONLINE
+    ONLINE,
+    MARKETPLACE
 }
 
 function ThemesTab() {
@@ -61,6 +63,12 @@ function ThemesTab() {
                 >
                     Online Themes
                 </TabBar.Item>
+                <TabBar.Item
+                    className="vc-settings-tab-bar-item"
+                    id={ThemeTab.MARKETPLACE}
+                >
+                    Marketplace
+                </TabBar.Item>
             </TabBar>
 
             <Flex flexDirection="column" gap="1em">
@@ -76,6 +84,7 @@ function ThemesTab() {
 
                 {currentTab === ThemeTab.LOCAL && <LocalThemesTab />}
                 {currentTab === ThemeTab.ONLINE && <OnlineThemesTab />}
+                {currentTab === ThemeTab.MARKETPLACE && <MarketplaceTab />}
             </Flex>
         </SettingsTab>
     );
