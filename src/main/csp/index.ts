@@ -1,5 +1,5 @@
 /*
- * SudoCord, a Discord client mod
+ * Vencord, a Discord client mod
  * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -62,6 +62,15 @@ export const CspPolicies: PolicyMap = {
     "translate-pa.googleapis.com": ConnectSrc, // Google Translate API
     "*.vencord.dev": ImageSrc, // VenCloud (api.vencord.dev) and Badges (badges.vencord.dev)
     "manti.vendicated.dev": ImageSrc, // ReviewDB API
+    // SudoCord first-party: badges registry, updater metadata, audio proxy (element needs media-src, not just connect-src)
+    "sudocord.h4ck.me": ImageAndMediaSrc,
+    // Soundpad plugin: uwupad.me API + audio files (redirect to CDN) + covers CDN
+    "ru.uwupad.me": ImageAndMediaSrc,
+    "cdn.uwupad.me": ImageAndMediaSrc,
+    // GeniusLyrics plugin: Genius API (song match), LRCLIB (lyrics), genius.com pages (direct read)
+    "api.genius.com": ConnectSrc,
+    "lrclib.net": ConnectSrc,
+    "genius.com": ConnectSrc,
     "decor.fieryflames.dev": ConnectSrc, // Decor API
     "ugc.decor.fieryflames.dev": ImageSrc, // Decor CDN
     "sponsor.ajay.app": ConnectSrc, // Dearrow API

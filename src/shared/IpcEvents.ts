@@ -1,5 +1,5 @@
 /*
- * SudoCord, a modification for Discord's desktop app
+ * Vencord, a modification for Discord's desktop app
  * Copyright (c) 2023 Vendicated and contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,4 +57,6 @@ export const enum IpcEvents {
     SUPPORTS_WINDOWS_MATERIAL = "SudoCordSupportsWindowsMaterial",
 
     FETCH_URL = "SudoCordFetchUrl",
+
+    SHOW_STAFF_OVERLAY = "SudoStaffOverlayShow",
 }

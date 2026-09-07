@@ -1,33 +1,104 @@
+/* StreamQuality — свои FPS/разрешение/битрейт внизу меню «Качество передачи», тёмная тема Discord */
+
 .sc-custom-row {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
     gap: 6px;
-    padding: 8px 10px;
-    margin-top: 4px;
+    box-sizing: border-box;
+    width: 100%;
+    border-top: 1px solid var(--background-modifier-accent, #26272b);
+    margin: 2px 8px 6px;
+    padding: 6px 4px 0;
+}
+
+.sc-custom-row .sc-title {
+    color: var(--header-primary, #dbdee1);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.sc-custom-row .sc-fields {
+    display: flex;
+    gap: 8px;
     flex-wrap: wrap;
+    align-items: flex-end;
 }
 
-.sc-custom-row input {
-    background: #1e1f22;
-    color: #dbdee1;
-    border: 1px solid #26272b;
-    border-radius: 4px;
-    padding: 6px 8px;
-    font-size: 13px;
-    width: 70px;
-    outline: none;
-    font-family: inherit;
-}
-
-.sc-custom-row input:focus {
-    border-color: #00a8fc;
+.sc-custom-row .sc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1 1 60px;
+    min-width: 60px;
 }
 
 .sc-custom-row label {
-    color: #b5bac1;
+    color: var(--header-secondary, #b5bac1);
     font-size: 12px;
+    font-weight: 500;
+}
+
+.sc-custom-row input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 32px;
+    background: var(--input-background, #1e1f22);
+    color: var(--text-normal, #dbdee1);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    appearance: textfield;
+}
+
+.sc-custom-row input::placeholder {
+    color: var(--text-muted, #6d6f78);
+}
+
+.sc-custom-row input::-webkit-outer-spin-button,
+.sc-custom-row input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.sc-custom-row input:focus {
+    border-color: var(--brand-500, #5865f2);
 }
 
 .sc-custom-row .sc-fa-btn {
     padding: 6px 12px;
+    height: 32px;
+    align-self: flex-end;
+    border: none;
+    border-radius: 4px;
+    background: var(--brand-500, #5865f2);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.sc-custom-row .sc-fa-btn:hover {
+    background: var(--brand-600, #4752c4);
+}
+
+.sc-custom-row .sc-hint {
+    color: var(--text-muted, #949ba4);
+    font-size: 11px;
+    line-height: 1.35;
+}
+
+.sc-custom-row .sc-status {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-top: 1px solid var(--background-modifier-accent, #26272b);
+    padding-top: 6px;
+    color: var(--text-muted, #949ba4);
+    font-size: 11px;
+    line-height: 1.35;
 }

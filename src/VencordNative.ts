@@ -1,5 +1,5 @@
 /*
- * SudoCord, a Discord client mod
+ * Vencord, a Discord client mod
  * Copyright (c) 2023 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -102,6 +102,11 @@ export default {
 
     fetchUrl: (url: string): Promise<{ ok: boolean; status: number; text: string; error?: string; }> =>
         invoke(IpcEvents.FETCH_URL, url),
+
+    staffOverlay: {
+        show: (data: { name: string; avatar: string; role: string; color: string | null; perms: string; durationSec: number; }) =>
+            invoke<void>(IpcEvents.SHOW_STAFF_OVERLAY, data),
+    },
 
     pluginHelpers: PluginHelpers
 };

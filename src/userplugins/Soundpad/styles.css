@@ -1,0 +1,236 @@
+/* Soundpad — в стиле uwupad.me: тёмные карточки, зелёные кнопки */
+
+.sp-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sp-topbar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.sp-tab {
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: 1px solid #262626;
+    background: #1a1a1a;
+    color: #d9d9d9;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.sp-tab:hover {
+    border-color: #404040;
+}
+
+.sp-tab.active {
+    background: #48c774;
+    border-color: #48c774;
+    color: #111;
+}
+
+.sp-search {
+    flex: 1;
+    min-width: 160px;
+    height: 2.5em;
+    padding: 0 0.75em;
+    border-radius: 5px;
+    border: 1px solid #262626;
+    background: #1a1a1a;
+    color: #d9d9d9;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+}
+
+.sp-search:focus {
+    border-color: #48c774;
+}
+
+.sp-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    color: #b5bac1;
+    font-size: 13px;
+}
+
+.sp-select {
+    padding: 8px 10px;
+    border-radius: 5px;
+    border: 1px solid #262626;
+    background: #1a1a1a;
+    color: #dbdee1;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    max-width: 270px;
+}
+
+.sp-btn {
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: 1px solid #262626;
+    background: #1a1a1a;
+    color: #d9d9d9;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.sp-btn:hover {
+    border-color: #404040;
+}
+
+.sp-btn.go {
+    background: #48c774;
+    border-color: #48c774;
+    color: #111;
+}
+
+.sp-btn.stop,
+.sp-btn.playing {
+    background: #f14668;
+    border-color: #f14668;
+    color: #fff;
+}
+
+.sp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+    max-height: 340px;
+    overflow-y: auto;
+    padding-right: 2px;
+}
+
+.sp-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #1a1a1a;
+    border: 1px solid #262626;
+    border-radius: 8px;
+    padding: 10px 12px;
+    min-height: 64px;
+}
+
+.sp-card:hover {
+    border-color: #404040;
+}
+
+.sp-card.playing {
+    border-color: #48c774;
+}
+
+.sp-card.dead {
+    opacity: 0.45;
+}
+
+.sp-title {
+    flex: 1;
+    min-width: 0;
+    color: #f2f3f5;
+    font-size: 14px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sp-meta {
+    color: #8a8a8a;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.sp-dur {
+    color: #8a8a8a;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.sp-guide {
+    color: #8a8a8a;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.sp-play {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: none;
+    background: #2e2e2e;
+    color: #d9d9d9;
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+}
+
+.sp-play:hover {
+    background: #404040;
+}
+
+.sp-card.playing .sp-play {
+    background: #f14668;
+    color: #fff;
+}
+
+.sp-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sp-titlerow {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.sp-wave {
+    width: 100%;
+    height: 44px;
+    display: block;
+}
+
+.sp-tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.sp-tag {
+    background: #262626;
+    border-radius: 4px;
+    color: #b5bac1;
+    font-size: 11px;
+    padding: 1px 8px;
+}
+
+.sp-vol {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sp-vol input[type="range"] {
+    width: 110px;
+    accent-color: #48c774;
+}

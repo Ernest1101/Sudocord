@@ -1,5 +1,5 @@
 /*
- * SudoCord, a modification for Discord's desktop app
+ * Vencord, a modification for Discord's desktop app
  * Copyright (c) 2022 Vendicated and contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@
 
 import { openNotificationLogModal } from "@api/Notifications/notificationLog";
 import { useSettings } from "@api/Settings";
+import { getSudoTabActions } from "@api/SudoTabActions";
 import { Divider } from "@components/Divider";
 import { FormSwitch } from "@components/FormSwitch";
 import { FolderIcon, GithubIcon, LogIcon, PaintbrushIcon, RestartIcon } from "@components/Icons";
@@ -212,6 +213,14 @@ function SudoCordSettings() {
                         text="View Source Code"
                         action={() => VencordNative.native.openExternal("https://github.com/" + gitRemote)}
                     />
+                    {getSudoTabActions().map(a => (
+                        <QuickAction
+                            key={a.key}
+                            Icon={a.Icon}
+                            text={a.text}
+                            action={a.action}
+                        />
+                    ))}
                 </QuickActionCard>
             </section>
 

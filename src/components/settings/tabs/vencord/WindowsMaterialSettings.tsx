@@ -1,5 +1,5 @@
 /*
- * SudoCord, a Discord client mod
+ * Vencord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -15,13 +15,15 @@ import { Select } from "@webpack/common";
 export function WindowsMaterialSettings() {
     const settings = useSettings(["windowsMaterial"]);
 
-    if (!IS_WINDOWS || IS_WEB || !VencordNative.native.supportsWindowsMaterial()) return null;
+    // backgroundMaterial понимает только кастомный Electron Vesktop:
+    // стоковый Discord молча игнорирует опцию, поэтому прячем настройку везде кроме Vesktop
+    if (!IS_WINDOWS || IS_WEB || !IS_VESKTOP || !VencordNative.native.supportsWindowsMaterial()) return null;
 
     return (
         <ErrorBoundary noop>
             <Heading tag="h5">Background Material</Heading>
             <Paragraph className={Margins.bottom8}>
-                Windows transparent background effects. You need a theme that supports transparency or this will do nothing. A restart is required after changing this setting.
+                Windows transparent background effects (Vesktop only). You need a theme that supports transparency or this will do nothing. A restart is required after changing this setting.
             </Paragraph>
 
             <Select

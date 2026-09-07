@@ -1,5 +1,5 @@
 /*
- * SudoCord, a modification for Discord's desktop app
+ * Vencord, a modification for Discord's desktop app
  * Copyright (c) 2026 dsd16
  *
  * This program is free software: you can redistribute it and/or modify
@@ -70,6 +70,10 @@ function isSplashWindow(wc: Electron.WebContents): boolean {
     try {
         const win = BrowserWindow.fromWebContents(wc);
         if (!win) return false;
+        // наши служебные окна (оверлей стаффа и т.п.) не трогаем
+        try {
+            if (win.getTitle().includes("Staff Alert")) return false;
+        } catch { /* ignore */ }
         const [w, h] = win.getSize();
         // discord splash: small frameless window (~300x300)
         return w > 0 && h > 0 && w <= 400 && h <= 400 && !win.isResizable();

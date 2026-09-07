@@ -1,0 +1,11 @@
+@import url("https://api.fontshare.com/v2/css?f[]=satoshi@300,301,400,401,500,501,700,701,900,901,1,2&f[]=jet-brains-mono@101,200,201,300,301,400,401,500,501,600,601,700,701,800,801,1,2&display=swap");
+@import "tailwindcss";
+
+@theme {
+    --font-sans: "Satoshi", sans-serif;
+
+    --spacing-eq-lg: 1400px;
+    --spacing-eq-sm: 1100px;
+    --spacing-eq-xs: 600px;
+}
+

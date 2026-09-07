@@ -1,0 +1,17 @@
+export const CLIENT_MODS = [
+    "aero",
+    "aliucord",
+    "betterDiscord",
+    "bunny",
+    "enmity",
+    "goosemod",
+    "kettu",
+    "raincord",
+    "replugged",
+    "revenge",
+    "shelter",
+    "suncord",
+    "velocity",
+    "vencord",
+    "vendetta",
+];

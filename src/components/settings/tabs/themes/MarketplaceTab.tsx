@@ -1,5 +1,5 @@
 /*
- * SudoCord, a Discord client mod
+ * Vencord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -9,12 +9,11 @@ import { initThemes } from "@api/Themes";
 import { Card } from "@components/Card";
 import { Flex } from "@components/Flex";
 import { Link } from "@components/Link";
-import { Margins } from "@components/margins";
-import { Forms, React, useEffect, showToast, Toasts, useState } from "@webpack/common";
+import { Forms, React, showToast, Toasts, useEffect, useState } from "@webpack/common";
 
 const BD_API = "https://betterdiscord.app";
 
-interface BdTheme {
+export interface BdTheme {
     id: number;
     name: string;
     description: string;
@@ -25,6 +24,7 @@ interface BdTheme {
     imageUrl: string;
     downloadUrl: string;
     detailUrl: string;
+    kind?: string;
 }
 
 function parseThemesFromHtml(html: string): BdTheme[] {
@@ -244,7 +244,7 @@ function TagChip({ label, active, onClick }: { label: string; active: boolean; o
     );
 }
 
-function MarketplaceThemeCard({ theme, installed, onToggle, formatNumber }: {
+export function MarketplaceThemeCard({ theme, installed, onToggle, formatNumber }: {
     theme: BdTheme;
     installed: boolean;
     onToggle: () => void;

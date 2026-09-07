@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SudoCord — The cutest Discord client mod</title>
+<meta name="description" content="SudoCord — форк Vencord с собственными плагинами: спуф устройства, фейковые сообщения, троллинг стримом.">
+<style>
+    :root {
+        --bg: #232536;
+        --btn: #5865f2;
+        --btn-hover: #4752f0;
+        --white: #fff;
+        --muted: #b3b8d0;
+        --green: #23a55a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+        background: var(--bg);
+        color: var(--white);
+        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap { max-width: 1060px; margin: 0 auto; padding: 0 28px; }
+
+    /* ── навигация ── */
+    nav { padding: 22px 0; }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 19px; }
+    .logo .mark {
+        width: 34px; height: 34px; border-radius: 10px;
+        background: var(--btn);
+        display: grid; place-items: center; font-size: 16px;
+    }
+    .nav-right { display: flex; align-items: center; gap: 26px; }
+    .nav-right a.plain { color: var(--muted); text-decoration: none; font-size: 15px; font-weight: 500; transition: color .15s; }
+    .nav-right a.plain:hover { color: var(--white); }
+    .nav-btn {
+        background: var(--btn); color: var(--white);
+        text-decoration: none; font-weight: 600; font-size: 14.5px;
+        padding: 11px 22px; border-radius: 10px;
+        transition: background .15s;
+    }
+    .nav-btn:hover { background: var(--btn-hover); }
+
+    /* ── hero ── */
+    .hero { text-align: center; padding: 84px 0 0; }
+    h1 {
+        font-size: clamp(42px, 7.5vw, 72px);
+        font-weight: 800;
+        letter-spacing: -2.5px;
+        line-height: 1.08;
+    }
+    .sub {
+        color: var(--muted);
+        font-size: 19px;
+        line-height: 1.6;
+        max-width: 600px;
+        margin: 20px auto 0;
+    }
+    .cta { margin-top: 36px; display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap; }
+    .btn-main {
+        display: inline-flex; align-items: center; gap: 10px;
+        background: var(--btn); color: var(--white);
+        text-decoration: none; font-weight: 650; font-size: 17px;
+        padding: 16px 38px; border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(88, 101, 242, .35);
+        transition: background .15s, transform .15s;
+    }
+    .btn-main:hover { background: var(--btn-hover); transform: translateY(-2px); }
+    .gh-link {
+        color: var(--muted); text-decoration: none; font-size: 15.5px;
+        border-bottom: 1px solid transparent; transition: color .15s;
+    }
+    .gh-link:hover { color: var(--white); }
+
+    /* ── фичи ── */
+    .features { padding: 100px 0 90px; }
+    .features h2 { text-align: center; font-size: clamp(26px, 4vw, 38px); font-weight: 800; letter-spacing: -1px; }
+    .features .sub2 { text-align: center; color: var(--muted); margin-top: 10px; font-size: 16.5px; }
+    .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 40px; margin-top: 46px; }
+    .feat { display: flex; gap: 14px; align-items: flex-start; }
+    .feat .check {
+        width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+        background: rgba(35, 165, 90, .2); border: 1px solid rgba(35, 165, 90, .5);
+        display: grid; place-items: center; font-size: 13px; color: #3fce7d;
+        margin-top: 2px;
+    }
+    .feat b { font-size: 16px; display: block; margin-bottom: 4px; }
+    .feat span { font-size: 14.5px; color: var(--muted); line-height: 1.6; }
+
+    /* ── установка ── */
+    .install { padding: 0 0 100px; text-align: center; }
+    .install h2 { font-size: clamp(26px, 4vw, 38px); font-weight: 800; letter-spacing: -1px; }
+    .install .sub2 { color: var(--muted); margin-top: 10px; font-size: 16.5px; margin-bottom: 28px; }
+    .install pre {
+        display: inline-block; text-align: left;
+        background: rgba(0, 0, 0, .35);
+        border: 1px solid rgba(255, 255, 255, .08);
+        border-radius: 12px;
+        padding: 20px 26px;
+        font-family: "JetBrains Mono", Consolas, monospace;
+        font-size: 14px; line-height: 2;
+    }
+    .install .p { color: var(--muted); user-select: none; }
+
+    /* ── футер ── */
+    footer { border-top: 1px solid rgba(255, 255, 255, .08); padding: 32px 0; text-align: center; color: var(--muted); font-size: 14px; line-height: 1.8; }
+    footer a { color: var(--white); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 760px) {
+        .client { grid-template-columns: 1fr; }
+        .side { display: none; }
+        .cols { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+    <nav>
+        <div class="nav-inner">
+            <div class="logo"><span class="mark">⚡</span>SudoCord</div>
+            <div class="nav-right">
+                <a class="plain" href="#plugins">Плагины</a>
+                <a class="nav-btn" href="https://github.com/Ernest1101/Sudocord" target="_blank">Скачать</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1>Классный мод<br>для Discord</h1>
+        <p class="sub">Все плагины Vencord плюс собственные: спуф устройства,
+        фейковые сообщения в ЛС и троллинг демонстрацией экрана.</p>
+        <div class="cta">
+            <a class="btn-main" href="https://github.com/Ernest1101/Sudocord" target="_blank">↓ Скачать</a>
+            <a class="gh-link" href="https://github.com/Ernest1101/Sudocord" target="_blank">GitHub ↗</a>
+        </div>
+
+    </header>
+
+    <section class="features" id="plugins">
+        <h2>Возможности</h2>
+        <p class="sub2">Всё из Vencord — и немного сверху</p>
+        <div class="cols">
+            <div class="feat"><div class="check">✓</div><div><b>100+ встроенных плагинов</b><span>Весь набор Vencord: от MessageLogger до FakeNitro</span></div></div>
+            <div class="feat"><div class="check">✓</div><div><b>Собственные плагины</b><span>FakeMessages, SpoofPlatform, TrollStream — написаны с нуля</span></div></div>
+            <div class="feat"><div class="check">✓</div><div><b>Простая установка</b><span>Клонируй, собери, инжектни — три команды</span></div></div>
+            <div class="feat"><div class="check">✓</div><div><b>Работает везде</b><span>Stable, Canary и PTB — любые ветки Discord</span></div></div>
+            <div class="feat"><div class="check">✓</div><div><b>Лёгкий и быстрый</b><span>Никакой телеметрии и лишнего груза</span></div></div>
+            <div class="feat"><div class="check">✓</div><div><b>Открытый код</b><span>GPL-3.0, форк Vencord — смотри и меняй что хочешь</span></div></div>
+        </div>
+    <section class="install" id="install">
+        <h2>Установка</h2>
+        <p class="sub2">Три команды — и SudoCord у тебя в Discord</p>
+        <pre><span class="p">$</span> git clone https://github.com/Ernest1101/Sudocord
+<span class="p">$</span> cd Sudocord && pnpm install && pnpm build
+<span class="p">$</span> pnpm inject</pre>
+    </section>
+</div>
+
+<footer>
+    <div class="wrap">
+        SudoCord — форк <a href="https://github.com/Vendicated/Vencord" target="_blank">Vencord</a> · Лицензия <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank">GPL-3.0</a> · Ernest1101
+    </div>
+</footer>
+
+</body>
+</html>

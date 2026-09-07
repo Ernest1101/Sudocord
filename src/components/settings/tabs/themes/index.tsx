@@ -1,5 +1,5 @@
 /*
- * SudoCord, a modification for Discord's desktop app
+ * Vencord, a modification for Discord's desktop app
  * Copyright (c) 2022 Vendicated and contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@
 
 import "./styles.css";
 
+import { getThemeSections } from "@api/ThemeSections";
 import { BaseText } from "@components/BaseText";
 import { Card } from "@components/Card";
 import { Flex } from "@components/Flex";
@@ -32,11 +33,13 @@ import { CspErrorCard } from "./CspErrorCard";
 import { LocalThemesTab } from "./LocalThemesTab";
 import { MarketplaceTab } from "./MarketplaceTab";
 import { OnlineThemesTab } from "./OnlineThemesTab";
+import { SudoMarketplaceTab } from "./SudoMarketplaceTab";
 
 const enum ThemeTab {
     LOCAL,
     ONLINE,
-    MARKETPLACE
+    MARKETPLACE,
+    SUDO_MARKETPLACE
 }
 
 function ThemesTab() {
@@ -69,6 +72,12 @@ function ThemesTab() {
                 >
                     Marketplace
                 </TabBar.Item>
+                <TabBar.Item
+                    className="vc-settings-tab-bar-item"
+                    id={ThemeTab.SUDO_MARKETPLACE}
+                >
+                    SudoCord
+                </TabBar.Item>
             </TabBar>
 
             <Flex flexDirection="column" gap="1em">
@@ -83,8 +92,13 @@ function ThemesTab() {
                 </Card>
 
                 {currentTab === ThemeTab.LOCAL && <LocalThemesTab />}
+                {currentTab === ThemeTab.LOCAL && getThemeSections().map(s => {
+                    const Section = s.component;
+                    return <Section key={s.key} />;
+                })}
                 {currentTab === ThemeTab.ONLINE && <OnlineThemesTab />}
                 {currentTab === ThemeTab.MARKETPLACE && <MarketplaceTab />}
+                {currentTab === ThemeTab.SUDO_MARKETPLACE && <SudoMarketplaceTab />}
             </Flex>
         </SettingsTab>
     );

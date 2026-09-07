@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; background: transparent; overflow: hidden; }
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    display: flex; align-items: flex-end; justify-content: flex-end;
+    padding: 8px;
+  }
+  .card {
+    display: flex; align-items: center; gap: 12px;
+    background: #111214; border: 1px solid #26272b;
+    border-left: 4px solid var(--accent, #5865f2);
+    border-radius: 12px; padding: 12px 16px 12px 12px;
+    min-width: 240px; max-width: 344px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.55);
+    animation: rise 0.25s ease-out;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .avatar { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; }
+  .col { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .name {
+    color: #f2f3f5; font-size: 15px; font-weight: 700;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .row { display: flex; align-items: center; gap: 6px; }
+  .pill {
+    background: rgba(88,101,242,0.2);
+    background: color-mix(in srgb, var(--accent, #5865f2) 20%, transparent);
+    border: 1px solid var(--accent, #5865f2);
+    color: var(--accent, #5865f2);
+    font-size: 11px; font-weight: 700; border-radius: 6px;
+    padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .sub { color: #949ba4; font-size: 12px; }
+  .perms {
+    color: #72767d; font-size: 11px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 230px;
+  }
+</style>
+</head>
+<body>
+  <div class="card" id="card" style="display:none">
+    <img class="avatar" id="avatar" alt="">
+    <div class="col">
+      <div class="name" id="name"></div>
+      <div class="row"><span class="pill" id="role"></span><span class="sub">зашёл в войс</span></div>
+      <div class="perms" id="perms" style="display:none"></div>
+    </div>
+  </div>
+  <script type="application/json" id="sc-data">__SC_STAFF_DATA_JSON__</script>
+  <script>
+    (function () {
+      try {
+        var data = JSON.parse(document.getElementById("sc-data").textContent);
+        if (!data || !data.name) return;
+        document.documentElement.style.setProperty("--accent", data.color || "#5865f2");
+        document.getElementById("name").textContent = data.name;
+        document.getElementById("role").textContent = data.role || "STAFF";
+        var av = document.getElementById("avatar");
+        if (data.avatar) av.src = data.avatar;
+        else av.style.display = "none";
+        if (data.perms) {
+          var p = document.getElementById("perms");
+          p.textContent = data.perms;
+          p.style.display = "block";
+        }
+        document.getElementById("card").style.display = "flex";
+      } catch (e) { /* ignore */ }
+    })();
+  </script>
+</body>
+</html>
