@@ -18,10 +18,10 @@
 
 import ErrorBoundary from "@components/ErrorBoundary";
 import { relaunch } from "@utils/native";
-import { checkForUpdates, update } from "@utils/updater";
 import definePlugin from "@utils/types";
+import { checkForUpdates, update } from "@utils/updater";
 import { findComponentByCodeLazy } from "@webpack";
-import { Toasts, useRef, useState } from "@webpack/common";
+import { showToast, Toasts, useRef, useState } from "@webpack/common";
 import type { PropsWithChildren } from "react";
 
 const HeaderBarIcon = findComponentByCodeLazy(".HEADER_BAR_BADGE_BOTTOM,", 'position:"bottom"');
@@ -45,14 +45,6 @@ function UpdateIcon({ busy }: { busy: boolean; }) {
     );
 }
 
-function toast(message: string, type: number) {
-    Toasts.show({
-        message,
-        type,
-        id: Toasts.genId()
-    });
-}
-
 function SudoCordUpdateButton() {
     const buttonRef = useRef(null);
     const [busy, setBusy] = useState(false);
@@ -61,20 +53,20 @@ function SudoCordUpdateButton() {
         if (busy) return;
         setBusy(true);
         try {
-            toast("Проверяю обновления SudoCord...", 1);
+            showToast("Проверяю обновления SudoCord...", Toasts.Type.MESSAGE);
             const outdated = await checkForUpdates();
             if (!outdated) {
-                toast("SudoCord актуальной версии", 2);
+                showToast("SudoCord актуальной версии", Toasts.Type.SUCCESS);
                 return;
             }
-            toast("Обновляю SudoCord...", 1);
+            showToast("Обновляю SudoCord...", Toasts.Type.MESSAGE);
             const ok = await update();
             if (!ok) throw new Error("update failed");
-            toast("Готово! Перезапускаю Discord...", 2);
+            showToast("Готово! Перезапускаю Discord...", Toasts.Type.SUCCESS);
             setTimeout(relaunch, 1000);
         } catch (err: any) {
             console.error("[UpdateButton] update failed:", err);
-            toast("Ошибка обновления. Запустите инсталлер Sudotl вручную", 3);
+            showToast("Ошибка обновления. Запустите инсталлер SudoCord вручную", Toasts.Type.FAILURE);
         } finally {
             setBusy(false);
         }

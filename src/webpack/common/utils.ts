@@ -89,7 +89,7 @@ export interface ToastData {
     /**
      * Toasts.Type
      */
-    type: string,
+    type: string | number,
     options?: ToastOptions;
 }
 
@@ -103,7 +103,7 @@ export interface ToastOptions {
 }
 
 interface ToastsExports {
-    showToast: (data: ToastData) => void;
+    showToast: (data: any) => void;
     popToast(): void;
 }
 
@@ -111,6 +111,23 @@ const ToastsExports = mapMangledModuleLazy(".currentToastMap.has(", {
     showToast: filters.byCode(".currentToastMap.has("),
     popToast: filters.byCode(".delete(")
 });
+
+// Discord's own toast factory. Toasts are now { text, variant, ... } instead of { message, id, type, options }
+const discordCreateToast: (message: string, type?: string, options?: ToastOptions) => any = findByCodeLazy('variant:"default",icon:', ".duration");
+
+// numeric values of Discord's old ToastType enum, still used by some of our plugins
+const LegacyToastTypes = [ToastType.MESSAGE, ToastType.SUCCESS, ToastType.FAILURE, ToastType.CUSTOM];
+
+function toNewToast({ message, type, options }: ToastData) {
+    const typeName = typeof type === "number" ? LegacyToastTypes[type] ?? ToastType.MESSAGE : type;
+
+    try {
+        return discordCreateToast(message, typeName, options);
+    } catch {
+        const variant = typeName === ToastType.SUCCESS ? "success" : typeName === ToastType.FAILURE ? "critical" : "default";
+        return { text: message, variant, position: options?.position === ToastPosition.BOTTOM ? "bottom" : "top", duration: options?.duration };
+    }
+}
 
 export function createToast(message: string, type: string, options?: ToastOptions): ToastData {
     return {
@@ -126,8 +143,9 @@ export const Toasts = {
     Position: ToastPosition,
     genId: () => (Math.random() || Math.random()).toString(36).slice(2),
 
-    show: ToastsExports.showToast,
-    pop: ToastsExports.popToast,
+    /** Accepts both our legacy { message, type } toasts and Discord's new { text, variant } ones */
+    show: (data: ToastData | { text: string; }) => ToastsExports.showToast("message" in data ? toNewToast(data) : data),
+    pop: () => ToastsExports.popToast(),
     create: createToast,
 };
 
