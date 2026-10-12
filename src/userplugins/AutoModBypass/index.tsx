@@ -130,16 +130,16 @@ export default definePlugin({
                     type: ApplicationCommandOptionType.STRING,
                     required: false,
                     choices: [
-                        { name: "combo (кириллица + невидимые)", value: "combo" },
-                        { name: "invisible (невидимые)", value: "invisible" },
-                        { name: "cyrillic (кириллица)", value: "cyrillic" },
-                        { name: "unicode", value: "unicode" },
-                        { name: "emoji", value: "emoji" },
-                        { name: "dot", value: "dot" },
-                        { name: "strikethrough", value: "strikethrough" },
-                        { name: "reverse", value: "reverse" },
-                        { name: "rot13", value: "rot13" },
-                        { name: "base64", value: "base64" }
+                        { label: "combo (кириллица + невидимые)", name: "combo (кириллица + невидимые)", value: "combo" },
+                        { label: "invisible (невидимые)", name: "invisible (невидимые)", value: "invisible" },
+                        { label: "cyrillic (кириллица)", name: "cyrillic (кириллица)", value: "cyrillic" },
+                        { label: "unicode", name: "unicode", value: "unicode" },
+                        { label: "emoji", name: "emoji", value: "emoji" },
+                        { label: "dot", name: "dot", value: "dot" },
+                        { label: "strikethrough", name: "strikethrough", value: "strikethrough" },
+                        { label: "reverse", name: "reverse", value: "reverse" },
+                        { label: "rot13", name: "rot13", value: "rot13" },
+                        { label: "base64", name: "base64", value: "base64" }
                     ]
                 },
                 {
@@ -153,7 +153,7 @@ export default definePlugin({
             execute: async (args, { channel }) => {
                 const text = findOption(args, "text", "");
                 const methodArg = findOption(args, "method", null) as BypassMethod | null;
-                const method = methodArg ?? settings.store.defaultMethod;
+                const method = methodArg ?? (settings.store.defaultMethod as BypassMethod);
                 const ephemeral = findOption(args, "ephemeral", false);
 
                 if (!text) {

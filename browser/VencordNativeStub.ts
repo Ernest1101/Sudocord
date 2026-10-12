@@ -133,6 +133,21 @@ window.VencordNative = {
         openFolder: async () => Promise.reject("settings:openFolder is not supported on web"),
     },
 
+    // no main process on web: plain fetch (subject to CORS)
+    fetchUrl: async (url: string) => {
+        try {
+            const res = await fetch(url);
+            return { ok: res.ok, status: res.status, text: await res.text() };
+        } catch (e) {
+            return { ok: false, status: 0, text: "", error: String(e) };
+        }
+    },
+
+    // the overlay is a separate desktop window, not available on web
+    staffOverlay: {
+        show: NOOP_ASYNC,
+    },
+
     pluginHelpers: {} as any,
     csp: {} as any,
 };

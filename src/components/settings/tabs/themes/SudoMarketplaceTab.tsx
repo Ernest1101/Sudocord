@@ -11,8 +11,8 @@ import { Flex } from "@components/Flex";
 import { Link } from "@components/Link";
 import { Forms, React, showToast, Toasts, useEffect, useState } from "@webpack/common";
 
-import { BdTheme, MarketplaceThemeCard } from "./MarketplaceTab";
 import { clearBackgroundFile, getBackgroundSource, setBackgroundFile } from "../../../../userplugins/CustomBackground";
+import { BdTheme, MarketplaceThemeCard } from "./MarketplaceTab";
 
 const SUDO_API = "https://sudocord.h4ck.me/api/sudo-themes.json";
 

@@ -19,10 +19,8 @@
 import { addContextMenuPatch, NavContextMenuPatchCallback, removeContextMenuPatch } from "@api/ContextMenu";
 import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType } from "@utils/types";
-import { Menu, RestAPI, Toasts } from "@webpack/common";
 import { findByPropsLazy } from "@webpack";
-import { React } from "@webpack/common";
-import { React } from "@webpack/common";
+import { Menu, React, RestAPI, Toasts } from "@webpack/common";
 
 const ChannelStore = findByPropsLazy("getDMFromUserId", "getChannel");
 
@@ -75,11 +73,11 @@ function toggle(channelId: string) {
     if (list.includes(channelId)) {
         saveChannels(list.filter(c => c !== channelId));
         stopTyping(channelId);
-        fakeToast(`FakeTyping выключен для канала`);
+        fakeToast("FakeTyping выключен для канала");
     } else {
         saveChannels([...list, channelId]);
         startTyping(channelId);
-        fakeToast(`FakeTyping включён — ты вечно «печатаешь»`);
+        fakeToast("FakeTyping включён — ты вечно «печатаешь»");
     }
 }
 

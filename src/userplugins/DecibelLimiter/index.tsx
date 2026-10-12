@@ -70,7 +70,7 @@ const settings = definePluginSettings({
         stickToMarkers: true
     },
     whitelist: {
-        type: OptionType.SET,
+        type: OptionType.CUSTOM,
         description: "Whitelist — эти юзеры не будут понижаться лимитером",
         default: [] as string[]
     }
@@ -105,7 +105,7 @@ function restoreVolume(userId: string) {
 }
 
 function applyLimiter(userId: string, db: number, thresholdDb: number) {
-    if (!settings.store.limiterEnabled || MediaEngineStore.isLocalMute(userId) || settings.store.whitelist.has(userId)) {
+    if (!settings.store.limiterEnabled || MediaEngineStore.isLocalMute(userId) || settings.store.whitelist.includes(userId)) {
         restoreVolume(userId);
         return;
     }
@@ -197,7 +197,7 @@ const DbMeterComponent = () => {
     const threshold = settings.store.maxDb;
     const color = db > -threshold ? "#ed4245" : db > -(threshold + 15) ? "#faa61a" : "#23a55a";
 
-    const whitelist = settings.store.whitelist;
+    const { whitelist } = settings.store;
     const users = [...levels.entries()]
         .sort(([, a], [, b]) => b.db - a.db)
         .slice(0, 12);
@@ -207,8 +207,7 @@ const DbMeterComponent = () => {
         if (!val) return;
         const user = UserStore.getUser(val);
         if (user) {
-            whitelist.add(val);
-            settings.store.whitelist = whitelist;
+            if (!whitelist.includes(val)) settings.store.whitelist = [...whitelist, val];
             setInputValue("");
             forceUpdate(n => n + 1);
             showToast(`Added ${user.username} to whitelist`, Toasts.Type.SUCCESS);
@@ -218,8 +217,7 @@ const DbMeterComponent = () => {
     }
 
     function removeFromWhitelist(userId: string) {
-        whitelist.delete(userId);
-        settings.store.whitelist = whitelist;
+        settings.store.whitelist = whitelist.filter(id => id !== userId);
         forceUpdate(n => n + 1);
         const user = UserStore.getUser(userId);
         showToast(`Removed ${user?.username ?? userId} from whitelist`, Toasts.Type.SUCCESS);
@@ -243,7 +241,7 @@ const DbMeterComponent = () => {
                 </div>
             </div>
             <div style={{ color: "#b5bac1", fontSize: 13, marginBottom: 8 }}>
-                Порог: -{threshold} dBFS | Юзеров: {levels.size} | Понижено: {reduced.size} | Whitelist: {whitelist.size}
+                Порог: -{threshold} dBFS | Юзеров: {levels.size} | Понижено: {reduced.size} | Whitelist: {whitelist.length}
             </div>
 
             <div style={{ marginBottom: 12, padding: "8px 0", borderTop: "1px solid #2e3035" }}>
@@ -274,7 +272,7 @@ const DbMeterComponent = () => {
                         +
                     </button>
                 </div>
-                {whitelist.size > 0 && (
+                {whitelist.length > 0 && (
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
                         {[...whitelist].map(id => {
                             const user = UserStore.getUser(id);
@@ -296,7 +294,7 @@ const DbMeterComponent = () => {
                         })}
                     </div>
                 )}
-                {whitelist.size === 0 && (
+                {whitelist.length === 0 && (
                     <div style={{ color: "#72767d", fontSize: 12 }}>
                         Нет юзеров в whitelist. Напиши ID или @username чтобы добавить.
                     </div>
@@ -309,7 +307,7 @@ const DbMeterComponent = () => {
                     <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {UserStore.getUser(id)?.username ?? id}
                     </span>
-                    {whitelist.has(id) && <span style={{ color: "#23a55a", fontSize: 11 }}>W</span>}
+                    {whitelist.includes(id) && <span style={{ color: "#23a55a", fontSize: 11 }}>W</span>}
                     {isReduced(id) && <span style={{ color: "#ed4245" }}>▼</span>}
                     <span style={{ minWidth: 55, textAlign: "right", color: lvl.db > -threshold ? "#ed4245" : undefined }}>
                         {Math.round(lvl.db)} dB

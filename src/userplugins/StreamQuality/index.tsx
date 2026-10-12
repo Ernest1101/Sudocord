@@ -21,7 +21,7 @@ import "./styles.css";
 import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType } from "@utils/types";
 import { find, waitFor } from "@webpack";
-import { MediaEngineStore, UserStore } from "@webpack/common";
+import { MediaEngineStore, Menu, UserStore } from "@webpack/common";
 
 // фильтры модуля с классом голосового/стримового соединения:
 // строгий (оба метода) и широкий (только нужный нам метод)
@@ -314,7 +314,7 @@ function unsubscribeEngine() {
     }
     try {
         const engine = MediaEngineStore?.getMediaEngine?.();
-        const emitter = engine?.emitter;
+        const emitter = (engine as any)?.emitter;
         if (emitter && engineSubscribed) {
             if (typeof emitter.off === "function") emitter.off("connection", onEngineConnection);
             else if (typeof emitter.removeListener === "function") emitter.removeListener("connection", onEngineConnection);
@@ -389,6 +389,15 @@ function applyFromPanel() {
     if (newFps > prevFps || newH > prevH) {
         toast("Повышение вступит после перезапуска демки (стоп/старт)", 1);
     }
+}
+
+type ToolboxAction = { text: string; action: () => void; };
+
+// toolboxActions as a function must return menu nodes, not plain objects
+function toolboxItems(actions: ToolboxAction[]) {
+    return actions.map(({ text, action }, i) => (
+        <Menu.MenuItem key={i} id={`streamquality-toolbox-${i}`} label={text} action={action} />
+    ));
 }
 
 function toast(message: string, type: number) {
@@ -697,7 +706,7 @@ export default definePlugin({
     settings,
 
     toolboxActions() {
-        return [
+        return toolboxItems([
             {
                 text: `FPS: ${settings.store.fps} (сменить)`,
                 action: () => {
@@ -725,7 +734,7 @@ export default definePlugin({
                     toast(s, hooked ? 2 : 3);
                 }
             }
-        ];
+        ]);
     },
 
     start() {

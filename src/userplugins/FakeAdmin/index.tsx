@@ -21,8 +21,7 @@ import "./styles.css";
 import { addContextMenuPatch, NavContextMenuPatchCallback, removeContextMenuPatch } from "@api/ContextMenu";
 import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType } from "@utils/types";
-import { Menu, Toasts } from "@webpack/common";
-import { React } from "@webpack/common";
+import { Menu, React, Toasts } from "@webpack/common";
 
 const settings = definePluginSettings({
     showMute: {
@@ -136,7 +135,7 @@ function fakeTextarea(placeholder?: string): HTMLTextAreaElement {
     const ta = document.createElement("textarea");
     ta.className = "sc-fa-input";
     ta.rows = 3;
-    ta.placeholder = placeholder;
+    ta.placeholder = placeholder ?? "";
     return ta;
 }
 
@@ -159,7 +158,7 @@ function openTimeoutDialog(username: string) {
         buildBody(body) {
             body.appendChild(el("div", {
                 fontSize: "14px", color: D.textDim, lineHeight: "1.4", marginBottom: "4px"
-            }, `Тe, кого отправили думать о своём поведении, временно не могут отправлять сообщения в чат и отвечать в текстовых каналах. Также у них нет возможности подключаться к голосовым каналам или трибунам. `));
+            }, "Тe, кого отправили думать о своём поведении, временно не могут отправлять сообщения в чат и отвечать в текстовых каналах. Также у них нет возможности подключаться к голосовым каналам или трибунам. "));
 
             const learn = el("span", { color: "#00a8fc", cursor: "pointer" }, "Узнать больше.");
             body.appendChild(learn);
@@ -203,7 +202,7 @@ function openBanDialog(username: string) {
             const radios = el("div", { display: "flex", flexDirection: "column", gap: "10px", marginBottom: "4px" });
             reasons.forEach((r, i) => {
                 const row = el("div", { display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" });
-                const circle = el("div", { width: "20px", height: "20px", borderRadius: "50%", border: `2px solid #80848e`, boxSizing: "border-box", flexShrink: "0", position: "relative" });
+                const circle = el("div", { width: "20px", height: "20px", borderRadius: "50%", border: "2px solid #80848e", boxSizing: "border-box", flexShrink: "0", position: "relative" });
                 if (i === 0) select();
                 function select() {
                     radios.querySelectorAll(".sc-fa-radio").forEach(rr => {

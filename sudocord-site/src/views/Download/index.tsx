@@ -22,7 +22,6 @@ import {
 import classNames from "classnames";
 import { AlertCircle, DownloadIcon, MonitorCheck, Package } from "lucide-react";
 
-
 import type { Platform, Section } from "@/types";
 
 const SudoCordPlatforms: Platform[] = [
@@ -190,171 +189,105 @@ export default function Download() {
         >
             <div className="flex flex-col gap-12">
                 {getSections().map(section => (
-                        <div
-                            key={section.title}
-                            className="flex flex-col gap-4"
-                        >
-                            <div className="flex flex-col gap-2">
-                                <div className="flex items-center gap-3">
-                                    <h2 className="text-2xl font-bold">
-                                        {section.title}
-                                    </h2>
-                                    {section.githubUrl && (
-                                        <a
-                                            href={section.githubUrl}
-                                            target="_blank"
-                                            className="text-sm text-neutral-400 hover:text-neutral-200 transition-colors"
-                                        >
-                                            GitHub →
-                                        </a>
-                                    )}
-                                </div>
-                                <p className="text-neutral-400 text-sm">
-                                    {section.description}
-                                </p>
-                                {section.globalWarning && (
-                                    <div className="flex items-start gap-2 px-4 py-3 rounded-lg bg-yellow-950/30 border border-yellow-900/50 text-yellow-200 text-sm">
-                                        <AlertCircle
-                                            size={16}
-                                            className="mt-0.5 shrink-0"
-                                        />
-                                        <span>{section.globalWarning}</span>
-                                    </div>
+                    <div
+                        key={section.title}
+                        className="flex flex-col gap-4"
+                    >
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-3">
+                                <h2 className="text-2xl font-bold">
+                                    {section.title}
+                                </h2>
+                                {section.githubUrl && (
+                                    <a
+                                        href={section.githubUrl}
+                                        target="_blank"
+                                        className="text-sm text-neutral-400 hover:text-neutral-200 transition-colors"
+                                    >
+                                        GitHub →
+                                    </a>
                                 )}
                             </div>
+                            <p className="text-neutral-400 text-sm">
+                                {section.description}
+                            </p>
+                            {section.globalWarning && (
+                                <div className="flex items-start gap-2 px-4 py-3 rounded-lg bg-yellow-950/30 border border-yellow-900/50 text-yellow-200 text-sm">
+                                    <AlertCircle
+                                        size={16}
+                                        className="mt-0.5 shrink-0"
+                                    />
+                                    <span>{section.globalWarning}</span>
+                                </div>
+                            )}
+                        </div>
 
-                            <div className="flex items-stretch flex-wrap gap-6">
-                                {section.platforms.map(platform => (
-                                    <div
-                                        key={platform.title}
-                                        className={classNames(
-                                            "flex-1 xs:min-w-80 flex flex-col justify-between gap-4 py-6 px-6 rounded-xl border border-neutral-800",
-                                            platform.isCurrent
-                                                ? "bg-linear-to-tl from-neutral-900 to-green-950"
-                                                : "bg-linear-to-br from-neutral-900 to-neutral-950",
-                                        )}
-                                    >
-                                        <div className="flex flex-col gap-3">
-                                            <div className="flex justify-between items-center">
-                                                <span className="flex items-center gap-1 font-semibold">
-                                                    <FontAwesomeIcon
-                                                        icon={platform.icon}
-                                                        className="size-4!"
+                        <div className="flex items-stretch flex-wrap gap-6">
+                            {section.platforms.map(platform => (
+                                <div
+                                    key={platform.title}
+                                    className={classNames(
+                                        "flex-1 xs:min-w-80 flex flex-col justify-between gap-4 py-6 px-6 rounded-xl border border-neutral-800",
+                                        platform.isCurrent
+                                            ? "bg-linear-to-tl from-neutral-900 to-green-950"
+                                            : "bg-linear-to-br from-neutral-900 to-neutral-950",
+                                    )}
+                                >
+                                    <div className="flex flex-col gap-3">
+                                        <div className="flex justify-between items-center">
+                                            <span className="flex items-center gap-1 font-semibold">
+                                                <FontAwesomeIcon
+                                                    icon={platform.icon}
+                                                    className="size-4!"
+                                                />
+                                                {platform.title}
+                                            </span>
+
+                                            {platform.isCurrent && (
+                                                <span className="flex items-center gap-1 rounded-lg py-2 px-2 bg-linear-to-r from-transparent to-green-900/50 text-green-200 text-sm font-medium">
+                                                    <MonitorCheck
+                                                        size={14}
                                                     />
-                                                    {platform.title}
+                                                    For your device
                                                 </span>
+                                            )}
+                                        </div>
 
-                                                {platform.isCurrent && (
-                                                    <span className="flex items-center gap-1 rounded-lg py-2 px-2 bg-linear-to-r from-transparent to-green-900/50 text-green-200 text-sm font-medium">
-                                                        <MonitorCheck
-                                                            size={14}
-                                                        />
-                                                        For your device
-                                                    </span>
-                                                )}
+                                        {platform.warning && (
+                                            <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-yellow-950/30 border border-yellow-900/50 text-yellow-200 text-xs">
+                                                <AlertCircle
+                                                    size={12}
+                                                    className="mt-0.5 shrink-0"
+                                                />
+                                                <span>
+                                                    {platform.warning}
+                                                </span>
                                             </div>
-
-                                            {platform.warning && (
-                                                <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-yellow-950/30 border border-yellow-900/50 text-yellow-200 text-xs">
-                                                    <AlertCircle
-                                                        size={12}
-                                                        className="mt-0.5 shrink-0"
-                                                    />
-                                                    <span>
-                                                        {platform.warning}
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="inline-flex items-start flex-wrap gap-3">
-                                            {platform.downloads.map(
-                                                download => (
-                                                    <div
-                                                        key={
-                                                            download.text +
-                                                            download.href
-                                                        }
-                                                        className="flex-1 flex flex-col gap-1.5"
-                                                    >
-                                                        {download.href ? (
-                                                            <a
-                                                                href={
-                                                                    download.href
-                                                                }
-                                                                target="_blank"
-                                                                className="w-full"
-                                                            >
-                                                                <Button
-                                                                    variant={
-                                                                        platform.isCurrent &&
-                                                                            download.prioritize
-                                                                            ? "primary"
-                                                                            : "secondary"
-                                                                    }
-                                                                    className="w-full"
-                                                                    icon={
-                                                                        <DownloadIcon
-                                                                            size={
-                                                                                14
-                                                                            }
-                                                                        />
-                                                                    }
-                                                                >
-                                                                    {
-                                                                        download.text
-                                                                    }
-                                                                </Button>
-                                                            </a>
-                                                        ) : (
-                                                            <Button
-                                                                variant="secondary"
-                                                                className="w-full cursor-not-allowed opacity-60"
-                                                                disabled
-                                                            >
-                                                                {download.text}
-                                                            </Button>
-                                                        )}
-
-                                                        <span className="text-xs text-neutral-500 text-center px-1 min-h-4">
-                                                            {download.note ??
-                                                                ""}
-                                                        </span>
-                                                    </div>
-                                                ),
-                                            )}
-                                        </div>
-
-                                        {platform.command && (
-                                            <CommandBlock
-                                                label={
-                                                    platform.command.label
-                                                }
-                                                command={
-                                                    platform.command.text
-                                                }
-                                            />
                                         )}
+                                    </div>
 
-                                        <p className="text-neutral-300 text-sm">
-                                            {platform.subtext}
-                                        </p>
-
-                                        <div className="inline-flex items-center flex-wrap gap-3">
-                                            {platform.subsection?.map(
-                                                download => (
-                                                    <div
-                                                        key={download.text}
-                                                        className="flex-1 flex flex-col gap-1"
-                                                    >
+                                    <div className="inline-flex items-start flex-wrap gap-3">
+                                        {platform.downloads.map(
+                                            download => (
+                                                <div
+                                                    key={
+                                                        download.text +
+                                                            download.href
+                                                    }
+                                                    className="flex-1 flex flex-col gap-1.5"
+                                                >
+                                                    {download.href ? (
                                                         <a
-                                                            href={download.href}
+                                                            href={
+                                                                download.href
+                                                            }
                                                             target="_blank"
+                                                            className="w-full"
                                                         >
                                                             <Button
                                                                 variant={
                                                                     platform.isCurrent &&
-                                                                        download.prioritize
+                                                                            download.prioritize
                                                                         ? "primary"
                                                                         : "secondary"
                                                                 }
@@ -367,23 +300,89 @@ export default function Download() {
                                                                     />
                                                                 }
                                                             >
-                                                                {download.text}
+                                                                {
+                                                                    download.text
+                                                                }
                                                             </Button>
                                                         </a>
-                                                        {download.note && (
-                                                            <span className="text-xs text-neutral-400 text-center">
-                                                                {download.note}
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                ),
-                                            )}
-                                        </div>
+                                                    ) : (
+                                                        <Button
+                                                            variant="secondary"
+                                                            className="w-full cursor-not-allowed opacity-60"
+                                                            disabled
+                                                        >
+                                                            {download.text}
+                                                        </Button>
+                                                    )}
+
+                                                    <span className="text-xs text-neutral-500 text-center px-1 min-h-4">
+                                                        {download.note ??
+                                                                ""}
+                                                    </span>
+                                                </div>
+                                            ),
+                                        )}
                                     </div>
-                                ))}
-                            </div>
+
+                                    {platform.command && (
+                                        <CommandBlock
+                                            label={
+                                                platform.command.label
+                                            }
+                                            command={
+                                                platform.command.text
+                                            }
+                                        />
+                                    )}
+
+                                    <p className="text-neutral-300 text-sm">
+                                        {platform.subtext}
+                                    </p>
+
+                                    <div className="inline-flex items-center flex-wrap gap-3">
+                                        {platform.subsection?.map(
+                                            download => (
+                                                <div
+                                                    key={download.text}
+                                                    className="flex-1 flex flex-col gap-1"
+                                                >
+                                                    <a
+                                                        href={download.href}
+                                                        target="_blank"
+                                                    >
+                                                        <Button
+                                                            variant={
+                                                                platform.isCurrent &&
+                                                                        download.prioritize
+                                                                    ? "primary"
+                                                                    : "secondary"
+                                                            }
+                                                            className="w-full"
+                                                            icon={
+                                                                <DownloadIcon
+                                                                    size={
+                                                                        14
+                                                                    }
+                                                                />
+                                                            }
+                                                        >
+                                                            {download.text}
+                                                        </Button>
+                                                    </a>
+                                                    {download.note && (
+                                                        <span className="text-xs text-neutral-400 text-center">
+                                                            {download.note}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            ),
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    ))}
+                    </div>
+                ))}
 
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">

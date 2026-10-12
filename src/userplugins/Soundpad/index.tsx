@@ -11,10 +11,9 @@ import { definePluginSettings } from "@api/Settings";
 import { addSudoTabAction, removeSudoTabAction } from "@api/SudoTabActions";
 import { addSudoTab, removeSudoTab } from "@api/SudoTabs";
 import { SettingsTab } from "@components/settings/tabs/BaseTab";
-import { ModalCloseButton, ModalContent, ModalHeader, ModalRoot, ModalSize } from "@utils/modal";
 import definePlugin, { makeRange, OptionType } from "@utils/types";
 import { findAll } from "@webpack";
-import { Forms, openModal, React, showToast, Toasts } from "@webpack/common";
+import { Forms, Menu, Modal, openModal, React, showToast, Toasts } from "@webpack/common";
 
 const API = "https://ru.uwupad.me";
 
@@ -495,7 +494,7 @@ export async function routeToMic(): Promise<boolean> {
 
 // ---------- иконка ----------
 
-function SpeakerIcon({ height = 20, width = 20, className }: { height?: number; width?: number; className?: string; }) {
+function SpeakerIcon({ height = 20, width = 20, className }: { height?: number | string; width?: number | string; className?: string; }) {
     return (
         <svg
             className={className}
@@ -535,7 +534,7 @@ function useRerender(): () => void {
 export function SoundpadBody() {
     const rerender = useRerender();
     const [query, setQuery] = React.useState("");
-    const [tab, setTab] = React.useState<string>(settings.store.defaultTab);
+    const [tab, setTab] = React.useState<string>(settings.store.defaultTab ?? "trending");
     const [sounds, setSounds] = React.useState<UwuSound[]>([]);
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState("");
@@ -728,15 +727,18 @@ export function SoundpadTab() {
 
 export function openSoundpadModal() {
     openModal(props => (
-        <ModalRoot {...props} size={ModalSize.LARGE}>
-            <ModalHeader>
-                <Forms.FormTitle tag="h4">Soundpad — uwupad.me</Forms.FormTitle>
-                <ModalCloseButton onClick={props.onClose} />
-            </ModalHeader>
-            <ModalContent>
-                <SoundpadBody />
-            </ModalContent>
-        </ModalRoot>
+        <Modal {...props} size="lg" title="Soundpad — uwupad.me">
+            <SoundpadBody />
+        </Modal>
+    ));
+}
+
+type ToolboxAction = { text: string; action: () => void; };
+
+// toolboxActions as a function must return menu nodes, not plain objects
+function toolboxItems(actions: ToolboxAction[]) {
+    return actions.map(({ text, action }, i) => (
+        <Menu.MenuItem key={i} id={`soundpad-toolbox-${i}`} label={text} action={action} />
     ));
 }
 
@@ -769,7 +771,7 @@ export default definePlugin({
     },
 
     toolboxActions() {
-        return [
+        return toolboxItems([
             {
                 text: "Найти саундборд-API (в консоль)",
                 action: () => {
@@ -806,7 +808,7 @@ export default definePlugin({
                     }
                 }
             }
-        ];
+        ]);
     },
 
     start() {

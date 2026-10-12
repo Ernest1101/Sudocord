@@ -75,7 +75,7 @@ const badge: ProfileBadge = {
 export default definePlugin({
     name: "SudoBadges",
     description: "Лого SudoCord в профиле у тех, кто в реестре (sudocord.h4ck.me/api/badges.json).",
-    tags: ["SudoCord", "Profile"],
+    tags: ["SudoCord", "Appearance"],
     authors: [{ name: "dsd16", id: 0n }],
     enabledByDefault: true,
 

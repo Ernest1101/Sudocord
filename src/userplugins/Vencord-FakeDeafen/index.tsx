@@ -1,6 +1,13 @@
+/*
+ * SudoCord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 import ErrorBoundary from "@components/ErrorBoundary";
 import definePlugin from "@utils/types";
 import { findByProps, findComponentByCodeLazy } from "@webpack";
+
 import Settings from "./settings";
 
 const Button = findComponentByCodeLazy(".GREEN,positionKeyStemOverride:");
@@ -23,11 +30,11 @@ function refresh_voice_state(enabled: boolean) {
         caca += 1;
     }
     if (caca > 0) return;
-    
+
     const socket = wsModule.getSocket();
     const channelId = SelectedChannelStore.getVoiceChannelId();
     const channel = channelId ? ChannelStore?.getChannel(channelId) : null;
-    
+
     if (socket && channelId) {
         try {
             // op code 4 = voiceStateUpdate
@@ -48,7 +55,7 @@ function refresh_voice_state(enabled: boolean) {
 
 function fd_icon() {
     const iconColor = enabled ? "#ed4245" : "currentColor";
-    
+
     return (
         <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
             <rect x="6" y="8" width="20" height="4" rx="2" fill={iconColor}/>
@@ -108,18 +115,18 @@ export default definePlugin({
     start() {
         const wsModule = findByProps("getSocket");
         if (!wsModule) {
-            console.error("[FakeDeafen] ws module not found")
+            console.error("[FakeDeafen] ws module not found");
             return;
         }
         const socket = wsModule.getSocket();
         if (!socket) {
-            console.error("[FakeDeafen] socket not found")
+            console.error("[FakeDeafen] socket not found");
             return;
         }
-        
+
         // default send function
         originalSend = socket.send;
-        // modify send function 
+        // modify send function
         socket.send = function (op: number, data: any, ...args: any[]) {
             // op code 4 = voiceStateUpdate don't ask me why
             if (op === 4 && enabled && data) {
