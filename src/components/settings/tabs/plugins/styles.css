@@ -45,8 +45,16 @@
     display: grid;
     height: 40px;
     gap: 10px;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
+}
+
+.vc-plugins-client-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    border-radius: 4px;
+    object-fit: contain;
 }
 
 .vc-plugins-filter-control {

@@ -28,6 +28,8 @@ const cl = classNameFactory("vc-addon-");
 
 interface Props {
     name: ReactNode;
+    /** Small icon rendered before the name */
+    nameIcon?: ReactNode;
     description: ReactNode;
     enabled: boolean;
     setEnabled: (enabled: boolean) => void;
@@ -41,7 +43,7 @@ interface Props {
     author?: ReactNode;
 }
 
-export function AddonCard({ disabled, isNew, name, infoButton, footer, author, enabled, setEnabled, description, onMouseEnter, onMouseLeave }: Props) {
+export function AddonCard({ disabled, isNew, name, nameIcon, infoButton, footer, author, enabled, setEnabled, description, onMouseEnter, onMouseLeave }: Props) {
     const titleRef = useRef<HTMLDivElement>(null);
     const titleContainerRef = useRef<HTMLDivElement>(null);
 
@@ -54,6 +56,7 @@ export function AddonCard({ disabled, isNew, name, infoButton, footer, author, e
             <div className={cl("header")}>
                 <div className={cl("name-author")}>
                     <Text variant="text-md/bold" className={cl("name")}>
+                        {nameIcon}
                         <div ref={titleContainerRef} className={cl("title-container")}>
                             <div
                                 ref={titleRef}

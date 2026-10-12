@@ -68,6 +68,9 @@ export const PluginTags = [
 
 export type PluginTag = typeof PluginTags[number];
 
+/** Client mod a plugin originally comes from. Shown as an icon on the plugin card */
+export type PluginClient = "sudocord" | "vencord" | "equicord" | "nightcord";
+
 export type ReplaceFn = (match: string, ...groups: string[]) => string;
 
 export interface PatchReplacement {
@@ -130,6 +133,8 @@ export interface PluginDef {
     /** Additional search terms that will bring up your plugin */
     searchTerms?: string[];
     tags?: PluginTag[];
+    /** Client the plugin was ported from. Defaults to the one its folder belongs to */
+    client?: PluginClient;
     authors: PluginAuthor[];
     start?(): void;
     stop?(): void;

@@ -13,6 +13,7 @@ import { Plugin } from "@utils/types";
 import { React, showToast, Toasts } from "@webpack/common";
 
 import { cl, logger } from ".";
+import { ClientIcon, getPluginClient } from "./clients";
 import { openPluginModal } from "./PluginModal";
 
 interface PluginCardProps extends React.HTMLProps<HTMLDivElement> {
@@ -80,6 +81,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
     return (
         <AddonCard
             name={plugin.name}
+            nameIcon={<ClientIcon client={getPluginClient(plugin)} />}
             description={plugin.description}
             isNew={isNew}
             enabled={isEnabled()}

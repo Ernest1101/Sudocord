@@ -34,12 +34,13 @@ import { Logger } from "@utils/Logger";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import { useAwaiter, useCleanupEffect } from "@utils/react";
-import { PluginTag, PluginTags } from "@utils/types";
+import { PluginClient, PluginTag, PluginTags } from "@utils/types";
 import { Button, ConfirmModal, lodash, openModal, Parser, React, SearchableSelect, Select, TextInput, Tooltip, useMemo, useRef, useState } from "@webpack/common";
 import { JSX } from "react";
 
 import Plugins, { ExcludedPlugins, PluginMeta } from "~plugins";
 
+import { getPluginClient, PluginClients } from "./clients";
 import { PluginCard } from "./PluginCard";
 import { UIElementsButton } from "./UIElements";
 
@@ -166,13 +167,22 @@ function PluginSettings() {
 
     const hasUserPlugins = useMemo(() => !IS_STANDALONE && Object.values(PluginMeta).some(m => m.userPlugin), []);
 
-    const [searchValue, setSearchValue] = useState({ value: "", tags: [] as PluginTag[], status: SearchStatus.ALL });
+    const clientOptions = useMemo(() => {
+        const present = new Set(sortedPlugins.map(getPluginClient));
+        return Object.entries(PluginClients)
+            .filter(([id]) => present.has(id as PluginClient))
+            .map(([id, { name }]) => ({ label: name, value: id as PluginClient }));
+    }, []);
+
+    const [searchValue, setSearchValue] = useState({ value: "", tags: [] as PluginTag[], status: SearchStatus.ALL, client: null as PluginClient | null });
 
     const search = searchValue.value.toLowerCase();
     const onSearch = (query: string) => setSearchValue(prev => ({ ...prev, value: query }));
 
     const pluginFilter = (plugin: typeof Plugins[keyof typeof Plugins]) => {
-        const { status, tags } = searchValue;
+        const { status, tags, client } = searchValue;
+
+        if (client && getPluginClient(plugin) !== client) return false;
 
         switch (status) {
             case SearchStatus.FAVORITES:
@@ -305,6 +315,17 @@ function PluginSettings() {
                         isSelected={v => v === searchValue.status}
                         closeOnSelect={true}
                         placeholder="Filter by Type"
+                    />
+                    <Select
+                        options={[
+                            { label: "All Clients", value: null, default: true },
+                            ...clientOptions
+                        ]}
+                        serialize={String}
+                        select={client => setSearchValue(prev => ({ ...prev, client }))}
+                        isSelected={v => v === searchValue.client}
+                        closeOnSelect={true}
+                        placeholder="Filter by Client"
                     />
                     <SearchableSelect
                         options={PluginTags.map(tag => ({ label: tag, value: tag }))}

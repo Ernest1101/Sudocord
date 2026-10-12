@@ -102,6 +102,7 @@ export default definePlugin({
     name: "FakeDeafen", tags: ["SudoCord", "Utility"],
     description: "Fake deafen yourself",
     authors: [{ name: "hyyven", id: 449282863582412850n }],
+    client: "vencord",
     settings: Settings,
 
     start() {
