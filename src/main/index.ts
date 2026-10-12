@@ -1,5 +1,5 @@
 /*
- * Vencord, a Discord client mod
+ * SudoCord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -8,6 +8,7 @@ import "./ipcMain";
 import "./staffOverlay";
 
 import { app, net, protocol } from "electron";
+import { existsSync } from "fs";
 import { join } from "path";
 import { pathToFileURL } from "url";
 
@@ -31,7 +32,7 @@ if (IS_VESKTOP || !IS_VANILLA) {
                 const theme = url.slice("/themes/".length);
 
                 const safeUrl = ensureSafePath(THEMES_DIR, theme);
-                if (!safeUrl) {
+                if (!safeUrl || !existsSync(safeUrl)) {
                     return new Response(null, {
                         status: 404
                     });

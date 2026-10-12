@@ -86,7 +86,11 @@ export async function initThemes() {
         previousThemeBlobObjectURLs = objectUrls.filter(isNonNullish);
         links.push(...previousThemeBlobObjectURLs);
     } else {
-        const localThemes = enabledThemes.map(theme => `vencord:///themes/${theme}?v=${Date.now()}`);
+        // skip enabled themes whose file was deleted, otherwise the import fails on every load
+        const existing = new Set((await VencordNative.themes.getThemesList().catch(() => null))?.map(t => t.fileName) ?? enabledThemes);
+        const localThemes = enabledThemes
+            .filter(theme => existing.has(theme))
+            .map(theme => `vencord:///themes/${theme}?v=${Date.now()}`);
         links.push(...localThemes);
     }
 
