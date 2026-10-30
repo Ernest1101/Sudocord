@@ -14,7 +14,7 @@ import { Forms, React, showToast, Toasts, useEffect, useState } from "@webpack/c
 import { clearBackgroundFile, getBackgroundSource, setBackgroundFile } from "../../../../userplugins/CustomBackground";
 import { BdTheme, MarketplaceThemeCard } from "./MarketplaceTab";
 
-const SUDO_API = "https://sudocord.h4ck.me/api/sudo-themes.json";
+const SUDO_API = "https://sudocord.mooo.com/api/sudo-themes.json";
 
 function formatNumber(n: number): string {
     if (n >= 1000000) return (n / 1000000).toFixed(1) + "M";
@@ -125,7 +125,7 @@ export function SudoMarketplaceTab() {
                 <Card>
                     <Forms.FormText>
                         Пока пусто — как на сайте. Своя подборка тут:{" "}
-                        <Link href="https://sudocord.h4ck.me/themes/sudocord">
+                        <Link href="https://sudocord.mooo.com/themes/sudocord">
                             Themes
                         </Link>
                     </Forms.FormText>

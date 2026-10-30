@@ -2,9 +2,9 @@
 # SudoCord Linux installer — downloads the Sudotl installer and runs it.
 #
 # One-line install (same style as Vencord):
-#   sh -c "$(curl -sS https://sudocord.h4ck.me/install.sh)"
+#   sh -c "$(curl -sS https://sudocord.mooo.com/install.sh)"
 #
-# Flags (append inside the quotes, e.g. sh -c "$(curl -sS https://sudocord.h4ck.me/install.sh)" sh --cli):
+# Flags (append inside the quotes, e.g. sh -c "$(curl -sS https://sudocord.mooo.com/install.sh)" sh --cli):
 #   --x11            use the X11-only installer build
 #   --wayland        use the Wayland-only installer build
 #   --universal      use the X11+Wayland installer build

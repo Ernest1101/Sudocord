@@ -31,7 +31,7 @@ features:
     link: /plugin-development
   - title: Plugin List
     details: Browse all built-in SudoCord plugins on the website.
-    link: https://sudocord.h4ck.me/plugins
+    link: https://sudocord.mooo.com/plugins
   - title: FAQ
     details: Find answers to common questions and troubleshooting tips.
     link: /faq
@@ -47,7 +47,7 @@ const members = [
     title: 'Owner & Developer',
     links: [
       { icon: 'github', link: 'https://github.com/Ernest1101' },
-      { icon: svgIcon, link: 'https://sudocord.h4ck.me' }
+      { icon: svgIcon, link: 'https://sudocord.mooo.com' }
     ]
   },
 ]

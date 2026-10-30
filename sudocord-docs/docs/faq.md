@@ -58,4 +58,4 @@ pnpm build
 
 ## 6. "I have a different issue!"
 
-For any other issues, please open an issue [on GitHub](https://github.com/Ernest1101/Sudocord/issues) or ask on the [website](https://sudocord.h4ck.me).
+For any other issues, please open an issue [on GitHub](https://github.com/Ernest1101/Sudocord/issues) or ask on the [website](https://sudocord.mooo.com).

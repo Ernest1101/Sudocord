@@ -26,7 +26,7 @@ Run the installer, pick your Discord install, press **Install** — done. Restar
 One-line install (picks the build matching your session — Wayland, X11, or universal):
 
 ```bash
-sh -c "$(curl -sS https://sudocord.h4ck.me/install.sh)"
+sh -c "$(curl -sS https://sudocord.mooo.com/install.sh)"
 ```
 
 Flags: `--x11`, `--wayland`, `--universal`, `--cli` (headless), `--download-only`, `--help`.

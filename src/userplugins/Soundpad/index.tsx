@@ -202,7 +202,7 @@ function audioSources(sound: UwuSound): string[] {
     const ext = sound.extension || "mp3";
     const fid = fileId(sound);
     return [
-        `https://sudocord.h4ck.me/uwu-audio/${fid}.${ext}`,
+        `https://sudocord.mooo.com/uwu-audio/${fid}.${ext}`,
         `https://cdn.uwupad.me/${fid}.${ext}`,
         `${API}/download/${sound.id}`
     ];

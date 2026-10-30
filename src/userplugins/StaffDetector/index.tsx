@@ -39,7 +39,7 @@ const settings = definePluginSettings({
     soundUrl: {
         type: OptionType.STRING,
         description: "Ссылка на звук алерта",
-        default: "https://sudocord.h4ck.me/assets/staff-alert.mp3"
+        default: "https://sudocord.mooo.com/assets/staff-alert.mp3"
     }
 });
 
@@ -372,6 +372,10 @@ export default definePlugin({
     settings,
 
     start() {
+        // sudocord.h4ck.me died on 2026-10-28, move saved urls to the new domain
+        if (settings.store.soundUrl?.includes("sudocord.h4ck.me"))
+            settings.store.soundUrl = settings.store.soundUrl.replace("sudocord.h4ck.me", "sudocord.mooo.com");
+
         lastChannel = null;
         seen.clear();
         console.info("[StaffDetector] started, watching voice joins");

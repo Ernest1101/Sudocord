@@ -8,9 +8,9 @@ import { addProfileBadge, BadgeUserArgs, ProfileBadge, removeProfileBadge } from
 import * as DataStore from "@api/DataStore";
 import definePlugin from "@utils/types";
 
-const BADGES_URL = "https://sudocord.h4ck.me/api/badges.json";
-const LOGO_URL = "https://sudocord.h4ck.me/assets/sudocord-badge-v2.png";
-const SITE_URL = "https://sudocord.h4ck.me";
+const BADGES_URL = "https://sudocord.mooo.com/api/badges.json";
+const LOGO_URL = "https://sudocord.mooo.com/assets/sudocord-badge-v2.png";
+const SITE_URL = "https://sudocord.mooo.com";
 const CACHE_KEY = "SudoBadges_ids";
 const REFRESH_MS = 30 * 60 * 1000;
 const DEFAULT_TOOLTIP = "SudoCord User";
@@ -74,7 +74,7 @@ const badge: ProfileBadge = {
 
 export default definePlugin({
     name: "SudoBadges",
-    description: "Лого SudoCord в профиле у тех, кто в реестре (sudocord.h4ck.me/api/badges.json).",
+    description: "Лого SudoCord в профиле у тех, кто в реестре (sudocord.mooo.com/api/badges.json).",
     tags: ["SudoCord", "Appearance"],
     authors: [{ name: "dsd16", id: 0n }],
     enabledByDefault: true,

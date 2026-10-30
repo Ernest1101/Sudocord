@@ -63,7 +63,7 @@ export const CspPolicies: PolicyMap = {
     "*.vencord.dev": ImageSrc, // VenCloud (api.vencord.dev) and Badges (badges.vencord.dev)
     "manti.vendicated.dev": ImageSrc, // ReviewDB API
     // SudoCord first-party: badges registry, updater metadata, audio proxy (element needs media-src, not just connect-src)
-    "sudocord.h4ck.me": ImageAndMediaSrc,
+    "sudocord.mooo.com": ImageAndMediaSrc,
     // Soundpad plugin: uwupad.me API + audio files (redirect to CDN) + covers CDN
     "ru.uwupad.me": ImageAndMediaSrc,
     "cdn.uwupad.me": ImageAndMediaSrc,

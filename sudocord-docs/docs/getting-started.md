@@ -11,7 +11,7 @@ Welcome to the SudoCord documentation! This guide will help you get started with
 
 ## What is SudoCord?
 
-**SudoCord** is a Vencord fork that is actively maintained by mrernestyt and comes with a bunch of custom-built plugins on top of everything Vencord offers. You can find the full plugin list [on the website](https://sudocord.h4ck.me/plugins) or in the [GitHub repository](https://github.com/Ernest1101/Sudocord) under `src/userplugins`.
+**SudoCord** is a Vencord fork that is actively maintained by mrernestyt and comes with a bunch of custom-built plugins on top of everything Vencord offers. You can find the full plugin list [on the website](https://sudocord.mooo.com/plugins) or in the [GitHub repository](https://github.com/Ernest1101/Sudocord) under `src/userplugins`.
 
 Highlights among the custom plugins:
 

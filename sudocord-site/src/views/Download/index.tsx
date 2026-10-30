@@ -74,7 +74,7 @@ const SudoCordPlatforms: Platform[] = [
         ],
         command: {
             label: "Terminal install (auto-detects Wayland / X11)",
-            text: "sh -c \"$(curl -sS https://sudocord.h4ck.me/install.sh)\"",
+            text: "sh -c \"$(curl -sS https://sudocord.mooo.com/install.sh)\"",
         },
         isCurrent: isLinux(),
     },
