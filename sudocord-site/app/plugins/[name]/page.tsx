@@ -18,10 +18,10 @@ export async function generateMetadata({ params }: { params: Promise<{ name: str
         }
 
         const lower = plugin.filePath.toLowerCase();
-        let iconUrl = "/assets/icons/equicord/icon-128.png";
+        let iconUrl = "/assets/icons/sudocord/icon-128.png";
 
         if (plugin.isModified) {
-            iconUrl = "/assets/icons/equicord/modified.webp";
+            iconUrl = "/assets/icons/sudocord/modified.webp";
         } else if (lower.startsWith("src/plugins")) {
             iconUrl = "/assets/icons/vencord/icon.webp";
         }

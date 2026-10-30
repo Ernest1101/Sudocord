@@ -58,7 +58,7 @@ const Sources = [
         label: "SudoCord",
         icon: (
             <Image
-                src="/assets/icons/equicord/icon.png"
+                src="/assets/icons/sudocord/icon.png"
                 width={24}
                 height={24}
                 className="size-6 select-none"
@@ -71,7 +71,7 @@ const Sources = [
         label: "Modified",
         icon: (
             <Image
-                src="/assets/icons/equicord/modified.webp"
+                src="/assets/icons/sudocord/modified.webp"
                 width={24}
                 height={24}
                 className="size-6 select-none"

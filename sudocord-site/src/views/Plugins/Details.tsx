@@ -50,9 +50,9 @@ interface PluginSourceProps {
 }
 
 const pluginIcons: Record<PluginSource, string> = {
-    [PluginSource.SudoCord]: "/assets/icons/equicord/icon.png",
+    [PluginSource.SudoCord]: "/assets/icons/sudocord/icon.png",
     [PluginSource.Vencord]: "/assets/icons/vencord/icon.webp",
-    [PluginSource.Modified]: "/assets/icons/equicord/modified.webp",
+    [PluginSource.Modified]: "/assets/icons/sudocord/modified.webp",
     [PluginSource.Unknown]: "/assets/icons/misc/userplugin.webp",
 };
 
