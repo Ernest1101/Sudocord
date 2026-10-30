@@ -142,8 +142,8 @@ export default function HomeHero() {
             <Image
                 src="/assets/home/settings.webp"
                 alt="SudoCord Settings Interface"
-                width={2222}
-                height={1250}
+                width={1810}
+                height={1018}
                 priority
                 className={`mt-12 rounded-t-2xl mask-b-from-75% select-none transition-all duration-700 ease-out delay-800 ${
                     mounted
