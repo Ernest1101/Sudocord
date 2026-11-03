@@ -1,6 +1,51 @@
 # SudoCord Changelog (English)
 
-## Unreleased — Global Update (2026-09-06)
+## v2.0.0 — Nightcord & Equicord (2026-11-03)
+
+### Added
+
+- **Nightcord plugins**: 142 plugins from Nightcord. Ones that clash with
+  existing plugins are registered as `nc_*` but keep their original names.
+- **Equicord plugins**: 202 plugins from Equicord, clashing ones as `eq_*`.
+  Everything ported is off by default.
+- **Plugin source icons**: every plugin card shows which client it comes from,
+  plus a filter by client (SudoCord / Vencord / Equicord / Nightcord).
+- **VoiceSubtitles** plugin: live subtitles for the voice channel via Groq
+  Whisper with translation. Captures only Discord's own audio, so music,
+  games and the browser stay out. Optional overlay above all windows.
+- **VoiceSubtitles filters**: skip Russian speech (any Cyrillic in the text)
+  or show English speech only.
+- Core APIs needed by the ported plugins: HeaderBar, UserArea, pluginI18n,
+  AudioPlayer, ProfileSections, SurfaceClasses.
+
+### Changed
+
+- **FakeAdmin rewritten**: spoofs permissions and server ownership on your
+  client through PermissionStore / GuildStore instead of fake dialogs.
+  Channel visibility is left untouched, and the server still rejects
+  actions you have no rights for.
+- Toasts accept Discord's new `{ text, variant }` format alongside the old one.
+- Site moved to **sudocord.mooo.com** with its own icons, OpenGraph and
+  screenshots.
+- The client bundle is noticeably bigger because of the merged plugin
+  collections.
+
+### Fixed
+
+- **ShowHiddenChannels**: stage channel patches updated for the current
+  Discord (stages now share the voice call view); the stage header no longer
+  loses its divider.
+- Patches broken by Discord updates; missing themes are skipped instead of
+  erroring.
+- Console error `findByCode found no module` on every toast.
+- All TypeScript and ESLint errors (CI is green again).
+- UpdateButton.
+
+### Removed
+
+- FakeAdmin's homemade modals, styles and context menu items.
+
+## Global Update (2026-09-06) — included in v2.0.0
 
 ### Added
 
