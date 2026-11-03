@@ -374,38 +374,19 @@ export default definePlugin({
                 }
             ]
         },
+        // Stage channels no longer have their own call view: Discord renders them with the shared voice call view,
+        // so the HiddenChannelLockScreen, gradients and bottom controls for them are handled by the patch above
         {
-            find: '"HasBeenInStageChannel"',
+            // Stage channel header
+            find: "numRequestToSpeak:",
             replacement: [
                 {
-                    // Render our HiddenChannelLockScreen component instead of the main stage channel component
-                    match: /screenMessage:(\i)\?.+?children:(?=!\1)(?<=let \i,{channel:(\i).+?)/,
-                    replace: (m, _isPopoutOpen, channel) => `${m}$self.isHiddenChannel(${channel})?$self.HiddenChannelLockScreen(${channel}):`
-                },
-                {
-                    // Disable useless components for the HiddenChannelLockScreen of stage channels
-                    match: /render(?:BottomLeft|BottomCenter|BottomRight|ChatToasts):\(\)=>(?<=let \i,{channel:(\i).+?)/g,
-                    replace: (m, channel) => `${m}$self.isHiddenChannel(${channel})?null:`
-                },
-                {
-                    // Disable gradients for the HiddenChannelLockScreen of stage channels
-                    match: /"124px".+?disableGradients:(?<=let \i,{channel:(\i).+?)/,
-                    replace: (m, channel) => `${m}$self.isHiddenChannel(${channel})||`
-                },
-                {
-                    // Disable strange styles applied to the header for the HiddenChannelLockScreen of stage channels
-                    match: /"124px".+?style:(?<=let \i,{channel:(\i).+?)/,
-                    replace: (m, channel) => `${m}$self.isHiddenChannel(${channel})?void 0:`
-                }
-            ]
-        },
-        {
-            find: "#{intl::STAGE_FULL_MODERATOR_TITLE}",
-            replacement: [
-                {
-                    // Remove the divider and amount of users in stage channel components for the HiddenChannelLockScreen
-                    match: /\(0,\i\.jsx\)\(\i\.\i\.Divider.+?}\)]}\)(?=.+?:(\i)\.guild_id)/,
-                    replace: (m, channel) => `$self.isHiddenChannel(${channel})?null:(${m})`
+                    // Remove the divider and amount of users in stage channel components for the HiddenChannelLockScreen.
+                    // The match is two elements of the header children array, so spread them instead of wrapping
+                    // them in parentheses (a comma expression would drop the divider for normal channels).
+                    // This runs inside an arrow function, so arguments[0] is still the header component props
+                    match: /\(0,\i\.jsx\)\(\i\.\i\.Divider.+?}\)]}\)/,
+                    replace: "...($self.isHiddenChannel(arguments[0]?.channel)?[]:[$&])"
                 },
                 {
                     // Remove the open chat button for the HiddenChannelLockScreen
