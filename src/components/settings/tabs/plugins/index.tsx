@@ -160,7 +160,7 @@ function PluginSettings() {
     }, []);
 
     const sortedPlugins = useMemo(() =>
-        Object.values(Plugins).sort((a, b) => a.name.localeCompare(b.name)),
+        Object.values(Plugins).sort((a, b) => (a.displayName ?? a.name).localeCompare(b.displayName ?? b.name)),
         []
     )
         .toSorted((a, b) => Number(settings.plugins[b.name]?.isFavorite ?? false) - Number(settings.plugins[a.name]?.isFavorite ?? false));
@@ -209,9 +209,11 @@ function PluginSettings() {
 
         if (!search.length) return true;
 
+        const shownName = plugin.displayName ?? plugin.name;
+
         return (
-            plugin.name.toLowerCase().includes(search) ||
-            plugin.name.match(/[A-Z]/g)?.join("").toLowerCase().includes(search) || // acronyms like BF for BetterFolders
+            shownName.toLowerCase().includes(search) ||
+            shownName.match(/[A-Z]/g)?.join("").toLowerCase().includes(search) || // acronyms like BF for BetterFolders
             plugin.description.toLowerCase().includes(search) ||
             plugin.searchTerms?.some(t => t.toLowerCase().includes(search))
         );
@@ -379,3 +381,21 @@ function makeDependencyList(deps: string[]) {
 }
 
 export default wrapTab(PluginSettings, "Plugins");
+
+export const ExcludedReasons: Record<"web" | "discordDesktop" | "vesktop" | "equibop" | "desktop" | "dev", string> = {
+    desktop: "Discord Desktop app or Vesktop/Equibop",
+    discordDesktop: "Discord Desktop app",
+    vesktop: "Vesktop/Equibop apps",
+    equibop: "Vesktop/Equibop apps",
+    web: "Vesktop/Equibop apps & Discord web",
+    dev: "Developer version of Nightcord"
+};
+
+export function PluginDependencyList({ deps }: { deps: string[]; }) {
+    return (
+        <>
+            <Paragraph>This plugin is required by:</Paragraph>
+            {deps.map((dep: string) => <Paragraph key={dep} className={cl("dep-text")}>{dep}</Paragraph>)}
+        </>
+    );
+}

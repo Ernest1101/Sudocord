@@ -41,6 +41,12 @@ function getRoot() {
 }
 
 export interface NotificationData {
+    /** Accepted for Equicord compatibility, currently unused */
+    id?: string;
+    /** Accepted for Equicord compatibility, currently unused */
+    type?: string;
+    /** Accepted for Equicord compatibility, currently unused */
+    duration?: number;
     title: string;
     body: string;
     /**

@@ -1,0 +1,220 @@
+/*
+ * Nightcord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.nc-qm-modal {
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    background-color: var(--background-primary, #313338) !important;
+    color: var(--text-normal, #dbdee1) !important;
+    font-family: var(--font-primary, "gg sans", sans-serif);
+}
+
+.nc-qm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px !important;
+    border-bottom: 1px solid var(--background-modifier-accent, rgba(255, 255, 255, 0.08));
+    background-color: var(--background-primary, #313338) !important;
+}
+
+.nc-qm-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nc-qm-header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand-500, #5865f2);
+}
+
+.nc-qm-modal-title,
+.nc-qm-header h2,
+.nc-qm-header .vc-h2 {
+    color: #ffffff !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+    font-family: var(--font-display, "gg sans", sans-serif);
+}
+
+.nc-qm-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 20px !important;
+    overflow-y: auto;
+    background-color: var(--background-primary, #313338) !important;
+}
+
+.nc-qm-search-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.nc-qm-search-input-wrap {
+    flex: 1;
+}
+
+/* Textarea in form card */
+.nc-qm-modal textarea {
+    background-color: var(--input-background, #1e1f22) !important;
+    color: var(--text-normal, #dbdee1) !important;
+    border: 1px solid var(--background-modifier-accent, rgba(255, 255, 255, 0.08)) !important;
+    border-radius: 4px !important;
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+    font-family: inherit !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    outline: none !important;
+    resize: vertical;
+}
+
+.nc-qm-modal textarea:focus {
+    border-color: var(--brand-500, #5865f2) !important;
+}
+
+.nc-qm-modal textarea::placeholder {
+    color: var(--text-muted, #949ba4) !important;
+    opacity: 0.8 !important;
+}
+
+.nc-qm-form-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background-color: var(--background-secondary, #2b2d31) !important;
+    border: 1px solid var(--background-modifier-accent, rgba(255, 255, 255, 0.08));
+    border-radius: 8px;
+}
+
+.nc-qm-form-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nc-qm-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.nc-qm-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nc-qm-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    gap: 8px;
+    background-color: var(--background-secondary, #2b2d31) !important;
+    border: 1px dashed var(--background-modifier-accent, rgba(255, 255, 255, 0.12));
+    border-radius: 8px;
+}
+
+.nc-qm-empty-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff !important;
+}
+
+.nc-qm-empty-desc {
+    font-size: 14px;
+    color: var(--text-muted, #949ba4) !important;
+    max-width: 320px;
+}
+
+.nc-qm-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px;
+    background-color: var(--background-secondary, #2b2d31) !important;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.nc-qm-card:hover {
+    background-color: var(--background-secondary-alt, #232428) !important;
+    border-color: var(--background-modifier-accent, rgba(255, 255, 255, 0.08));
+}
+
+.nc-qm-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.nc-qm-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+}
+
+.nc-qm-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nc-qm-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nc-qm-card-body {
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: var(--text-normal, #dbdee1) !important;
+    background-color: var(--background-tertiary, #111214) !important;
+    padding: 10px 12px;
+    border-radius: 6px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 120px;
+    overflow-y: auto;
+    border-left: 3px solid var(--brand-500, #5865f2);
+}
+
+.nc-qm-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px !important;
+    background-color: var(--background-secondary, #2b2d31) !important;
+    border-top: 1px solid var(--background-modifier-accent, rgba(255, 255, 255, 0.08));
+}
+
+.nc-qm-footer-info {
+    font-size: 13px;
+    color: var(--text-muted, #949ba4) !important;
+}

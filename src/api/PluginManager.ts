@@ -396,3 +396,9 @@ export const initPluginManager = onlyOnce(function init() {
         }
     }
 });
+
+export function isPluginRequired(p: string) {
+    return (
+        Plugins[p]?.required
+    ) ?? false;
+}

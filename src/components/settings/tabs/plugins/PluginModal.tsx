@@ -173,7 +173,7 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
             size="lg"
             title={
                 <div className={cl("header")}>
-                    <BaseText tag="h1" weight="semibold" size="lg">{plugin.name}</BaseText>
+                    <BaseText tag="h1" weight="semibold" size="lg">{plugin.displayName ?? plugin.name}</BaseText>
                     {!pluginMeta.userPlugin && (
                         <div className="vc-settings-modal-links">
                             <FavoriteButton

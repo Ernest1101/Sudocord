@@ -43,3 +43,27 @@ export function Flex({ flexDirection, gap = "1em", justifyContent, alignItems, f
         </div>
     );
 }
+
+export enum FlexDirection {
+    HORIZONTAL = "row",
+    HORIZONTAL_REVERSE = "row-reverse",
+    VERTICAL = "column",
+    VERTICAL_REVERSE = "column-reverse",
+}
+
+export enum FlexAlign {
+    START = "flex-start",
+    END = "flex-end",
+    CENTER = "center",
+    STRETCH = "stretch",
+    BASELINE = "baseline",
+}
+
+export enum FlexJustify {
+    START = "flex-start",
+    END = "flex-end",
+    CENTER = "center",
+    BETWEEN = "space-between",
+    AROUND = "space-around",
+    EVENLY = "space-evenly",
+}

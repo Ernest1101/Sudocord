@@ -42,6 +42,8 @@ declare global {
     export var IS_ANTI_CRASH_TEST: boolean;
     export var IS_DISCORD_DESKTOP: boolean;
     export var IS_VESKTOP: boolean;
+    /** Equicord's Equibop app; always false in SudoCord, kept for ported Equicord plugins */
+    export var IS_EQUIBOP: boolean;
     export var VERSION: string;
     export var BUILD_TIMESTAMP: number;
 

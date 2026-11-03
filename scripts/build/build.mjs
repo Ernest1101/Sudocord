@@ -36,6 +36,7 @@ const defines = stringifyValues({
     IS_WEB: false,
     IS_EXTENSION: false,
     IS_USERSCRIPT: false,
+    IS_EQUIBOP: false,
     VERSION,
     BUILD_TIMESTAMP
 });
@@ -77,7 +78,7 @@ const globNativesPlugin = {
         });
 
         build.onLoad({ filter, namespace: "import-natives" }, async () => {
-            const pluginDirs = ["plugins", "equicordplugins", "userplugins"];
+            const pluginDirs = ["plugins", "equicordplugins", "nightcordplugins", "userplugins"];
             let code = "";
             let natives = "\n";
             let i = 0;

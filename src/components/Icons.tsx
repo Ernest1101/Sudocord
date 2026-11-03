@@ -667,3 +667,492 @@ export function StarOutlined(props: IconProps) {
         </Icon>
     );
 }
+
+// ---- icons from Equicord/Nightcord, used by ported Nightcord plugins ----
+export function ColorPaletteIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M12.37 9.04c.25-.26.73-.2 1.06.13L15 10.7c.33.33.39.8.13 1.06L4.92 21.84c-.27.26-.74.2-1.07-.13l-1.56-1.54c-.33-.32-.39-.8-.13-1.05l10.2-10.08ZM16.09 5.16c.25-.26.73-.2 1.06.13l1.56 1.54c.33.32.39.8.13 1.05l-2.1 2.08c-.26.25-.74.2-1.07-.13l-1.56-1.54c-.33-.33-.38-.8-.13-1.05l2.1-2.08ZM17.48 14.36a.56.56 0 0 1 1.04 0l.85 2.27 2.27.85c.48.18.48.86 0 1.04l-2.27.85-.85 2.27a.56.56 0 0 1-1.04 0l-.85-2.27-2.27-.85a.56.56 0 0 1 0-1.04l2.27-.85.85-2.27ZM7.6 2.32a.5.5 0 0 1 .94 0L9.17 4l1.66.62a.5.5 0 0 1 0 .93l-1.66.63-.63 1.66a.5.5 0 0 1-.93 0l-.63-1.66-1.66-.63a.5.5 0 0 1 0-.93l1.66-.62.63-1.67Z"
+            />
+        </Icon>
+    );
+}
+
+export function HeadphonesIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M12 3a9 9 0 0 0-8.95 10h1.87a5 5 0 0 1 4.1 2.13l1.37 1.97a3.1 3.1 0 0 1-.17 3.78 2.85 2.85 0 0 1-3.55.74 11 11 0 1 1 10.66 0c-1.27.71-2.73.23-3.55-.74a3.1 3.1 0 0 1-.17-3.78l1.38-1.97a5 5 0 0 1 4.1-2.13h1.86A9 9 0 0 0 12 3Z"
+            />
+        </Icon>
+    );
+}
+
+export function MagnifyingGlassIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                clipRule="evenodd"
+                fillRule="evenodd"
+                fill={props.fill || "currentColor"}
+                d="M15.62 17.03a9 9 0 1 1 1.41-1.41l4.68 4.67a1 1 0 0 1-1.42 1.42l-4.67-4.68ZM17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+            />
+        </Icon>
+    );
+}
+
+export function ResetIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
+        </Icon>
+    );
+}
+
+export function TrashIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path fill={props.fill || "currentColor"} d="M14.25 1c.41 0 .75.34.75.75V3h5.25c.41 0 .75.34.75.75v.5c0 .41-.34.75-.75.75H3.75A.75.75 0 0 1 3 4.25v-.5c0-.41.34-.75.75-.75H9V1.75c0-.41.34-.75.75-.75h4.5Z" />
+            <path fill={props.fill || "currentColor"} fillRule="evenodd" d="M5.06 7a1 1 0 0 0-1 1.06l.76 12.13a3 3 0 0 0 3 2.81h8.36a3 3 0 0 0 3-2.81l.75-12.13a1 1 0 0 0-1-1.06H5.07ZM11 12a1 1 0 1 0-2 0v6a1 1 0 1 0 2 0v-6Zm3-1a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0v-6a1 1 0 0 1 1-1Z" clipRule="evenodd" />
+        </Icon>
+    );
+}
+
+export function WarningIcon({ height = 32, width = 32, className }: IconProps) {
+    return (
+        <Icon
+            height={height}
+            width={width}
+            className={classes(className, "vc-warning-icon")}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill="currentColor"
+                fillRule="evenodd"
+                d="M10 3.1a2.37 2.37 0 0 1 4 0l8.71 14.75c.84 1.41-.26 3.15-2 3.15H3.29c-1.74 0-2.84-1.74-2-3.15L9.99 3.1Zm3.25 14.65a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0ZM13.06 14l.37-5.94a1 1 0 0 0-1-1.06h-.87a1 1 0 0 0-1 1.06l.38 5.94a1.06 1.06 0 0 0 2.12 0Z"
+            />
+        </Icon>
+    );
+}
+
+// ---- ported from Equicord, used by Equicord plugins ----
+export function AtIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M16.44 6.96c.29 0 .51.25.47.54l-.82 6.34c-.02.08-.03.2-.03.34 0 .71.28 1.07.85 1.07.49 0 .94-.21 1.36-.63.43-.42.77-1 1.02-1.72.26-.75.38-1.57.38-2.48 0-1.35-.29-2.54-.87-3.56a5.92 5.92 0 0 0-2.45-2.35 7.68 7.68 0 0 0-3.61-.83c-1.55 0-2.96.37-4.22 1.1a7.66 7.66 0 0 0-2.96 3.07 9.53 9.53 0 0 0-1.09 4.66c0 1.45.26 2.77.78 3.95a6.3 6.3 0 0 0 2.47 2.81 8.3 8.3 0 0 0 4.36 1.05 12.43 12.43 0 0 0 5.35-1.18.5.5 0 0 1 .7.24l.46 1.07c.1.22.02.47-.19.59-.77.43-1.69.77-2.75 1.02-1.23.3-2.48.44-3.76.44-2.18 0-4-.44-5.48-1.33a8.1 8.1 0 0 1-3.27-3.57 11.93 11.93 0 0 1-1.07-5.12c0-2.24.47-4.19 1.4-5.84a9.7 9.7 0 0 1 3.86-3.8c1.62-.9 3.4-1.34 5.36-1.34 1.8 0 3.4.37 4.8 1.12 1.4.72 2.5 1.76 3.28 3.1a8.86 8.86 0 0 1 1.16 4.56c0 1.36-.23 2.57-.7 3.64a5.81 5.81 0 0 1-1.92 2.47c-.82.58-1.76.87-2.81.87a2.4 2.4 0 0 1-1.6-.5c-.4-.35-.65-.78-.73-1.32-.3.55-.74 1-1.36 1.34a4.3 4.3 0 0 1-2.03.48A3.4 3.4 0 0 1 8 16C7.33 15.16 7 14 7 12.5c0-1.14.2-2.16.6-3.05.43-.89 1-1.57 1.73-2.06a4.3 4.3 0 0 1 4.27-.31c.47.29.82.68 1.07 1.16l.3-.95c.06-.2.25-.33.46-.33h1.02Zm-5.06 8.24c.8 0 1.45-.35 1.97-1.04.51-.7.77-1.6.77-2.7 0-.88-.18-1.56-.53-2.03a1.76 1.76 0 0 0-1.5-.73c-.8 0-1.45.35-1.97 1.04a4.28 4.28 0 0 0-.78 2.67c0 .9.17 1.58.51 2.06.36.49.87.73 1.53.73Z"
+            />
+        </Icon>
+    );
+}
+
+export function AttachmentIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M10.57 4.01a6.97 6.97 0 0 1 9.86 0l.54.55a6.99 6.99 0 0 1 0 9.88l-7.26 7.27a1 1 0 0 1-1.42-1.42l7.27-7.26a4.99 4.99 0 0 0 0-7.06L19 5.43a4.97 4.97 0 0 0-7.02 0l-8.02 8.02a3.24 3.24 0 1 0 4.58 4.58l6.24-6.24a1.12 1.12 0 0 0-1.58-1.58l-3.5 3.5a1 1 0 0 1-1.42-1.42l3.5-3.5a3.12 3.12 0 1 1 4.42 4.42l-6.24 6.24a5.24 5.24 0 0 1-7.42-7.42l8.02-8.02Z"
+            />
+        </Icon>
+    );
+}
+
+export function BookCheckIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                fillRule="evenodd"
+                d="M15 2a3 3 0 0 1 3 3v12H5.5a1.5 1.5 0 0 0 0 3h14a.5.5 0 0 0 .5-.5V5h1a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h10Zm-.3 5.7a1 1 0 0 0-1.4-1.4L9 10.58l-2.3-2.3a1 1 0 0 0-1.4 1.42l3 3a1 1 0 0 0 1.4 0l5-5Z"
+                clipRule="evenodd"
+            />
+        </Icon>
+    );
+}
+
+export function CheckmarkLargeBoldIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M21.7 5.3a1 1 0 0 1 0 1.4l-12 12a1 1 0 0 1-1.4 0l-6-6a1 1 0 1 1 1.4-1.4L9 16.58l11.3-11.3a1 1 0 0 1 1.4 0Z"
+            />
+        </Icon>
+    );
+}
+
+export function ChevronSmallDownIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M5.3 9.3a1 1 0 0 1 1.4 0l5.3 5.29 5.3-5.3a1 1 0 1 1 1.4 1.42l-6 6a1 1 0 0 1-1.4 0l-6-6a1 1 0 0 1 0-1.42Z"
+            />
+        </Icon>
+    );
+}
+
+export function ChevronSmallUpIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M5.3 14.7a1 1 0 0 0 1.4 0l5.3-5.29 5.3 5.3a1 1 0 1 0 1.4-1.42l-6-6a1 1 0 0 0-1.4 0l-6 6a1 1 0 0 0 0 1.42Z"
+            />
+        </Icon>
+    );
+}
+
+export const DiscordIconSizes = {
+    xxs: 12,
+    xs: 16,
+    sm: 18,
+    md: 24,
+    lg: 32,
+    refresh_sm: 20
+} as const;
+
+export function DoubleCheckmarkIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path fill="currentColor"
+                d="M16.7 8.7a1 1 0 0 0-1.4-1.4l-3.26 3.24a1 1 0 0 0 1.42 1.42L16.7 8.7ZM3.7 11.3a1 1 0 0 0-1.4 1.4l4.5 4.5a1 1 0 0 0 1.4-1.4l-4.5-4.5Z" />
+            <path fill="currentColor"
+                d="M21.7 9.7a1 1 0 0 0-1.4-1.4L13 15.58l-3.3-3.3a1 1 0 0 0-1.4 1.42l4 4a1 1 0 0 0 1.4 0l8-8Z" />
+        </Icon>
+    );
+}
+
+export function EyeIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M15.56 11.77c.2-.1.44.02.44.23a4 4 0 1 1-4-4c.21 0 .33.25.23.44a2.5 2.5 0 0 0 3.32 3.32Z"
+            />
+            <path
+                clipRule="evenodd"
+                fillRule="evenodd"
+                fill={props.fill || "currentColor"}
+                d="M22.89 11.7c.07.2.07.4 0 .6C22.27 13.9 19.1 21 12 21c-7.11 0-10.27-7.11-10.89-8.7a.83.83 0 0 1 0-.6C1.73 10.1 4.9 3 12 3c7.11 0 10.27 7.11 10.89 8.7Zm-4.5-3.62A15.11 15.11 0 0 1 20.85 12c-.38.88-1.18 2.47-2.46 3.92C16.87 17.62 14.8 19 12 19c-2.8 0-4.87-1.38-6.39-3.08A15.11 15.11 0 0 1 3.15 12c.38-.88 1.18-2.47 2.46-3.92C7.13 6.38 9.2 5 12 5c2.8 0 4.87 1.38 6.39 3.08Z"
+            />
+        </Icon>
+    );
+}
+
+export function FireIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                fillRule="evenodd"
+                d="M3 14a9 9 0 1 0 18 0c0-2.63-.61-5.22-1.79-7.58L18.2 4.38a.7.7 0 0 0-1.3.18l-.78 3.9a.66.66 0 0 1-1.27.11L12.22 1.6a.9.9 0 0 0-1.48-.33l-4.2 4.2A12.07 12.07 0 0 0 3 14Zm9.26-.84a.57.57 0 0 0-1-.23L9.6 15a3.08 3.08 0 1 0 5.12.48c-.14-.26-.5-.28-.71-.06L13 16.5l-.74-3.34Z"
+                clipRule="evenodd"
+            />
+        </Icon>
+    );
+}
+
+export function GifIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                fillRule="evenodd"
+                d="M5 2a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3H5Zm2.18 13.87a2.9 2.9 0 0 1-1.66-.49 3.18 3.18 0 0 1-1.12-1.35A4.88 4.88 0 0 1 4 12c0-.75.14-1.42.42-2 .29-.59.7-1.04 1.24-1.37a3.7 3.7 0 0 1 1.95-.5c.64 0 1.21.14 1.72.4.5.28.89.67 1.15 1.16l-1.22.88a1.76 1.76 0 0 0-1.64-1.02c-.66 0-1.17.22-1.52.65a2.74 2.74 0 0 0-.53 1.8c0 .78.18 1.39.53 1.81.35.42.86.64 1.52.64.3 0 .57-.06.81-.16.25-.12.45-.27.58-.47v-.93H7.3v-1.4h3.24v4.23H9.27l-.2-.71c-.43.57-1.06.86-1.89.86Zm6.34-.15h-1.57V8.28h1.57v7.44Zm1.51 0h1.57v-2.83h2.76v-1.42H16.6V9.7H20V8.28h-4.97v7.44Z"
+                clipRule="evenodd"
+            />
+        </Icon>
+    );
+}
+
+export const LogsIcon = (props?: any) => {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                fill={props.fill || "currentColor"}
+                d="M21 21.93V2.07a1 1 0 0 0-1.27-.97l-2.5.7a3 3 0 0 1-1.46.04l-3.12-.7a3 3 0 0 0-1.3 0l-3.12.7a3 3 0 0 1-1.45-.04l-2.51-.7A1 1 0 0 0 3 2.07v19.86a1 1 0 0 0 1.27.97l2.5-.7a3 3 0 0 1 1.46-.04l3.12.7a3 3 0 0 0 1.3 0l3.12-.7a3 3 0 0 1 1.45.04l2.51.7a1 1 0 0 0 1.27-.97ZM7 8a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1Zm1 3a1 1 0 0 0 0 2h8a1 1 0 1 0 0-2H8Zm-1 5a1 1 0 0 1 1-1h3a1 1 0 0 1 0 2H8a1 1 0 0 1-1-1Zm8-1a1 1 0 0 0 0 2h1a1 1 0 1 0 0-2h-1Z"
+            />
+        </Icon>
+    );
+};
+
+export function PinIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M19.38 11.38a3 3 0 0 0 4.24 0l.03-.03a.5.5 0 0 0 0-.7L13.35.35a.5.5 0 0 0-.7 0l-.03.03a3 3 0 0 0 0 4.24L13 5l-2.92 2.92-3.65-.34a2 2 0 0 0-1.6.58l-.62.63a1 1 0 0 0 0 1.42l9.58 9.58a1 1 0 0 0 1.42 0l.63-.63a2 2 0 0 0 .58-1.6l-.34-3.64L19 11l.38.38ZM9.07 17.07a.5.5 0 0 1-.08.77l-5.15 3.43a.5.5 0 0 1-.63-.06l-.42-.42a.5.5 0 0 1-.06-.63L6.16 15a.5.5 0 0 1 .77-.08l2.14 2.14Z"
+            />
+        </Icon>
+    );
+}
+
+export const QrCodeIcon = (props?: any) => {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M4 6c0-1.1.9-2 2-2h3a1 1 0 0 0 0-2H6a4 4 0 0 0-4 4v3a1 1 0 0 0 2 0V6ZM4 18c0 1.1.9 2 2 2h3a1 1 0 1 1 0 2H6a4 4 0 0 1-4-4v-3a1 1 0 1 1 2 0v3ZM20 6a2 2 0 0 0-2-2h-3a1 1 0 1 1 0-2h3a4 4 0 0 1 4 4v3a1 1 0 1 1-2 0V6Z"
+            />
+            <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                fill={props.fill || "currentColor"}
+                d="M5 7c0-1.1.9-2 2-2h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7Zm2 0h2v2H7V7ZM5 15c0-1.1.9-2 2-2h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-2Zm2 0h2v2H7v-2ZM13 7c0-1.1.9-2 2-2h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V7Zm2 0h2v2h-2V7ZM17.08 13a1.5 1.5 0 0 0-1.42 1.03c-.09.25-.3.47-.56.47H15a2 2 0 0 0-2 2V20c0 1.1.9 2 2 2h6a2 2 0 0 0 2-2v-3.5a2 2 0 0 0-2-2h-.1c-.26 0-.47-.22-.56-.47A1.5 1.5 0 0 0 18.92 13h-1.84ZM20 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"
+            />
+        </Icon>
+    );
+};
+
+export function RemixIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M6 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V5.41l-6.64 6.64A4.66 4.66 0 0 0 4 15.35V17a3 3 0 0 0 3 3 1 1 0 1 1 0 2 5 5 0 0 1-5-5v-1.66c0-1.76.7-3.46 1.95-4.7L10.59 4H7a1 1 0 0 1-1-1Z"
+            />
+            <path
+                fill={props.fill || "currentColor"}
+                d="M18 21a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1v-6a1 1 0 1 1 2 0v3.59l6.64-6.64A4.66 4.66 0 0 0 20 8.65V7a3 3 0 0 0-3-3 1 1 0 1 1 0-2 5 5 0 0 1 5 5v1.66c0 1.76-.7 3.46-1.95 4.7L13.41 20H17a1 1 0 0 1 1 1Z"
+            />
+        </Icon>
+    );
+}
+
+export function RobotIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M7.89 13.46a1 1 0 0 1-1.78-.9L7 13l-.9-.45.01-.01.01-.02a2.24 2.24 0 0 1 .14-.23c.1-.14.23-.31.4-.5.37-.36.98-.79 1.84-.79.86 0 1.47.43 1.83.8a3.28 3.28 0 0 1 .55.72v.02h.01v.01L10 13l.9-.45a1 1 0 0 1-1.79.9 1.28 1.28 0 0 0-.19-.25c-.14-.13-.28-.2-.42-.2-.14 0-.28.07-.42.2a1.28 1.28 0 0 0-.19.25ZM13.55 13.9a1 1 0 0 0 1.34-.44c0-.02.02-.04.04-.06.03-.05.08-.13.15-.2.14-.13.28-.2.42-.2.14 0 .28.07.42.2a1.28 1.28 0 0 1 .19.25 1 1 0 0 0 1.78-.9L17 13l.9-.45-.01-.01-.01-.02a2.1 2.1 0 0 0-.14-.23 3.28 3.28 0 0 0-.4-.5c-.37-.36-.98-.79-1.84-.79-.86 0-1.47.43-1.83.8a3.28 3.28 0 0 0-.55.72v.02h-.01v.01L14 13l-.9-.45a1 1 0 0 0 .45 1.34Z"
+            />
+            <path
+                fill={props.fill || "currentColor"}
+                fillRule="evenodd"
+                d="M12 21c5.52 0 10-1.86 10-6 0-5.59-2.8-10.07-4.26-11.67a1 1 0 1 0-1.48 1.34 14.8 14.8 0 0 1 2.35 3.86A10.23 10.23 0 0 0 12 6C9.47 6 7.15 7.02 5.4 8.53a14.8 14.8 0 0 1 2.34-3.86 1 1 0 1 0-1.48-1.34A18.65 18.65 0 0 0 2 15c0 4.14 4.48 6 10 6Zm0-12c3.87 0 7 2 7 4.2S15.87 17 12 17s-7-1.6-7-3.8C5 11 8.13 9 12 9Z"
+                clipRule="evenodd"
+            />
+        </Icon>
+    );
+}
+
+export function SearchIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                fillRule="evenodd"
+                d="M15.62 17.03a9 9 0 1 1 1.41-1.41l4.68 4.67a1 1 0 0 1-1.42 1.42l-4.67-4.68ZM17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                clipRule="evenodd"
+            />
+        </Icon>
+    );
+}
+
+export function ShieldIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M17.05 8.76a4.7 4.7 0 0 1-1.29-.88c-.36-.33-.7-.73-.88-1.13-.33-.73-.16-.77-1.08-.77h-3.64c-.91 0-.74.04-1.08.77a4.94 4.94 0 0 1-2.17 2.01c-.74.33-.85.14-.86.82 0 .88-.22 3.34 1.78 5.19a13.68 13.68 0 0 0 3.98 2.47c.09.03.08.04.17.04.09 0 .08 0 .17-.04.76-.25 2.67-1.25 3.98-2.47 2-1.85 1.78-4.3 1.78-5.19-.01-.68-.12-.49-.86-.82Z"
+            />
+            <path
+                fill={props.fill || "currentColor"}
+                d="M19.91 5.41c-.84 0-1.52-.65-1.52-1.46v-.3c0-.9-.77-1.65-1.71-1.65H7.31c-.94 0-1.71.74-1.71 1.65v.3c0 .81-.68 1.46-1.52 1.46H3.7c-.94 0-1.7.73-1.7 1.64v3.52l.01.49c.05 3.11.94 4.69 2.92 6.63C6.72 19.46 11.58 22 11.99 22c.41 0 5.27-2.54 7.06-4.31 1.98-1.95 2.92-3.53 2.92-6.63L22 7.05c0-.9-.76-1.64-1.7-1.64h-.39Zm-2.18 10.74a21.76 21.76 0 0 1-5.58 3.38c-.1.03-.2.03-.31 0a21.76 21.76 0 0 1-5.58-3.38c-1.15-1.08-2.12-2.37-2.12-5.29v-.33l.03-2.57c0-.31.26-.57.59-.57a2.88 2.88 0 0 0 2.89-2.8v-.03c0-.3.26-.55.59-.55h7.56c.32 0 .59.25.59.55v.03c0 1.53 1.3 2.77 2.89 2.8.32 0 .59.26.59.57l.03 2.57v.34c0 2.92-.98 4.2-2.14 5.28h-.03Z"
+            />
+        </Icon>
+    );
+}
+
+export function StickerIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                fillRule="evenodd"
+                d="M6 2h12a4 4 0 0 1 4 4v7.5a.5.5 0 0 1-.5.5H19a5 5 0 0 0-5 5v2.5a.5.5 0 0 1-.5.5H6a4 4 0 0 1-4-4V6a4 4 0 0 1 4-4Zm.5 8a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM19 8.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm-9.91 2.94a1 1 0 0 0-1.66 1.12 5.5 5.5 0 0 0 9.14 0 1 1 0 0 0-1.66-1.12 3.5 3.5 0 0 1-5.82 0Z"
+                clipRule="evenodd"
+            />
+            <path
+                fill={props.fill || "currentColor"}
+                d="M21.66 16c.03 0 .05.03.04.06a3 3 0 0 1-.58.82l-4.24 4.24a3 3 0 0 1-.82.58.04.04 0 0 1-.06-.04V19a3 3 0 0 1 3-3h2.66Z"
+            />
+        </Icon>
+    );
+}
+
+export function TextIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                fillRule="evenodd"
+                d="M10.99 3.16A1 1 0 1 0 9 2.84L8.15 8H4a1 1 0 0 0 0 2h3.82l-.67 4H3a1 1 0 1 0 0 2h3.82l-.8 4.84a1 1 0 0 0 1.97.32L8.85 16h4.97l-.8 4.84a1 1 0 0 0 1.97.32l.86-5.16H20a1 1 0 1 0 0-2h-3.82l.67-4H21a1 1 0 1 0 0-2h-3.82l.8-4.84a1 1 0 1 0-1.97-.32L15.15 8h-4.97l.8-4.84ZM14.15 14l.67-4H9.85l-.67 4h4.97Z"
+                clipRule="evenodd"
+            />
+        </Icon>
+    );
+}
+
+export function UnsendIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M3 2a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 0-2H5.07a8 8 0 1 1 13.29 8.86l-.01.01a7.97 7.97 0 0 1-1.9 1.78 1 1 0 0 0 1.1 1.67c.19-.12.36-.25.53-.38.7-.54 1.32-1.16 1.85-1.85l.01-.01A9.95 9.95 0 0 0 22 12 10 10 0 0 0 4 6V3a1 1 0 0 0-1-1ZM3.18 14.06a1 1 0 0 0-.61 1.27c.11.33.24.64.4.95a1 1 0 0 0 1.8-.86c-.12-.24-.22-.5-.32-.75a1 1 0 0 0-1.27-.61ZM5.33 18.12a1 1 0 0 0 .09 1.41c.51.45 1.07.85 1.67 1.18a1 1 0 0 0 .98-1.74 8.02 8.02 0 0 1-1.33-.95 1 1 0 0 0-1.41.1ZM14.17 20.8a1 1 0 0 0-1.12-.87 8.08 8.08 0 0 1-1.87.03 1 1 0 1 0-.2 1.99 10.1 10.1 0 0 0 2.32-.03 1 1 0 0 0 .87-1.13Z"
+            />
+        </Icon>
+    );
+}
+
+export function UserIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M12 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM11.53 11A9.53 9.53 0 0 0 2 20.53c0 .81.66 1.47 1.47 1.47h.22c.24 0 .44-.17.5-.4.29-1.12.84-2.17 1.32-2.91.14-.21.43-.1.4.15l-.26 2.61c-.02.3.2.55.5.55h11.7a.5.5 0 0 0 .5-.55l-.27-2.6c-.02-.26.27-.37.41-.16.48.74 1.03 1.8 1.32 2.9.06.24.26.41.5.41h.22c.81 0 1.47-.66 1.47-1.47A9.53 9.53 0 0 0 12.47 11h-.94Z"
+            />
+        </Icon>
+    );
+}
+
+export function VideoIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M4 4a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h11a3 3 0 0 0 3-3v-2.12a1 1 0 0 0 .55.9l3 1.5a1 1 0 0 0 1.45-.9V7.62a1 1 0 0 0-1.45-.9l-3 1.5a1 1 0 0 0-.55.9V7a3 3 0 0 0-3-3H4Z"
+            />
+        </Icon>
+    );
+}
+
+export function WindowTopOutlineIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M4 5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v.18a1 1 0 1 0 2 0V5a3 3 0 0 0-3-3H5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h.18a1 1 0 1 0 0-2H5a1 1 0 0 1-1-1V5Z"
+            />
+            <path
+                fill={props.fill || "currentColor"}
+                fillRule="evenodd"
+                d="M8 11a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-8a3 3 0 0 1-3-3v-8Zm2 0a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-8a1 1 0 0 1-1-1v-8Z"
+                clipRule="evenodd"
+            />
+        </Icon>
+    );
+}
+
+export function XLargeBoldIcon(props: IconProps) {
+    return (
+        <Icon
+            {...props}
+            viewBox="0 0 24 24"
+        >
+            <path
+                fill={props.fill || "currentColor"}
+                d="M18.94 21.06a1.5 1.5 0 1 0 2.12-2.12L14.12 12l6.94-6.94a1.5 1.5 0 1 0-2.12-2.12L12 9.88 5.06 2.94a1.5 1.5 0 1 0-2.12 2.12L9.88 12l-6.94 6.94a1.5 1.5 0 1 0 2.12 2.12L12 14.12l6.94 6.94Z"
+            />
+        </Icon>
+    );
+}

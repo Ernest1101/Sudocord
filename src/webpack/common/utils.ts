@@ -112,21 +112,18 @@ const ToastsExports = mapMangledModuleLazy(".currentToastMap.has(", {
     popToast: filters.byCode(".delete(")
 });
 
-// Discord's own toast factory. Toasts are now { text, variant, ... } instead of { message, id, type, options }
-const discordCreateToast: (message: string, type?: string, options?: ToastOptions) => any = findByCodeLazy('variant:"default",icon:', ".duration");
-
 // numeric values of Discord's old ToastType enum, still used by some of our plugins
 const LegacyToastTypes = [ToastType.MESSAGE, ToastType.SUCCESS, ToastType.FAILURE, ToastType.CUSTOM];
 
 function toNewToast({ message, type, options }: ToastData) {
-    const typeName = typeof type === "number" ? LegacyToastTypes[type] ?? ToastType.MESSAGE : type;
+    let typeName = typeof type === "number" ? LegacyToastTypes[type] ?? ToastType.MESSAGE : type;
+    // Discord's new variant names, used by Equicord plugins
+    if (typeName === "critical") typeName = ToastType.FAILURE;
+    else if (typeName === "default") typeName = ToastType.MESSAGE;
 
-    try {
-        return discordCreateToast(message, typeName, options);
-    } catch {
-        const variant = typeName === ToastType.SUCCESS ? "success" : typeName === ToastType.FAILURE ? "critical" : "default";
-        return { text: message, variant, position: options?.position === ToastPosition.BOTTOM ? "bottom" : "top", duration: options?.duration };
-    }
+    // Toasts are now plain { text, variant, ... } objects passed straight to showToast, Discord has no factory for them anymore
+    const variant = typeName === ToastType.SUCCESS ? "success" : typeName === ToastType.FAILURE ? "critical" : "default";
+    return { text: message, variant, position: options?.position === ToastPosition.BOTTOM ? "bottom" : "top", duration: options?.duration };
 }
 
 export function createToast(message: string, type: string, options?: ToastOptions): ToastData {
@@ -152,7 +149,9 @@ export const Toasts = {
 /**
  * Show a simple toast. If you need more options, use Toasts.show manually
  */
-export function showToast(message: string, type = ToastType.MESSAGE, options?: ToastOptions) {
+export function showToast(message: string | { text: string; variant?: string; }, type: string = ToastType.MESSAGE, options?: ToastOptions) {
+    // Equicord-style call: showToast({ text, variant })
+    if (typeof message === "object") return Toasts.show(message);
     Toasts.show(Toasts.create(message, type, options));
 }
 
@@ -234,3 +233,28 @@ export const DateUtils: t.DateUtils = mapMangledModuleLazy("millisecondsInUnit:"
 });
 
 export const MessageTypeSets: t.MessageTypeSets = findByPropsLazy("REPLYABLE", "FORWARDABLE");
+
+// ---- used by ported Equicord/Nightcord plugins ----
+export const CloudUploader = findLazy(m => m.prototype?.trackUploadFinished);
+export const ChannelActions = findByPropsLazy("selectChannel", "preload");
+export const VoiceActions = findByPropsLazy("toggleSelfMute", "setChannel");
+
+// ---- Equicord utils ----
+export const ColorUtils = mapMangledModuleLazy("Invalid hex color format", {
+    rgbToHex: filters.byCode(".toString(16).slice(1)"),
+    hexToRgba: filters.byCode("`rgba(${"),
+    hexToRgb: filters.byCode(".rgb();return"),
+    rgbToHsl: filters.byCode("saturation:", "lightness:"),
+    mixColors: filters.byCode(".substring(1,3),16)"),
+    hexWithAlpha: filters.byCode("Invalid hex color format"),
+    getDominantColor: filters.byCode("hex:", "hsv:"),
+    generatePalette: filters.byCode("360/("),
+});
+export const GuildActions = findByPropsLazy("setServerMute", "setServerDeaf");
+export const Humanize: t.Humanize = findByPropsLazy("filesize", "relativeTime", "ordinal");
+export const ReadStateUtils = mapMangledModuleLazy('type:"ENABLE_AUTOMATIC_ACK",', {
+    ackChannel: filters.byCode(".isForumLikeChannel(")
+});
+export const openUserProfileModal: any = findByCodeLazy('type:"USER_PROFILE_MODAL_OPEN"');
+export const useDrag = findByCodeLazy("useDrag::spec.begin was deprecated");
+export const useDrop = findByCodeLazy(".disconnectDropTarget()", ".dropTargetOptions=");

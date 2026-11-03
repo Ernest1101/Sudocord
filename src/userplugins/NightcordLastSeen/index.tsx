@@ -146,7 +146,6 @@ export default definePlugin({
     name: "LastSeen",
     description: "Показывает когда юзер был в сети последний раз, прямо в профиле.",
     authors: [{ name: "Nightcord", id: 0n }],
-    client: "nightcord",
     tags: ["Utility"],
     enabledByDefault: false,
     settings,

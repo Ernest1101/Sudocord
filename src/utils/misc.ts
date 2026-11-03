@@ -16,7 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { DevsById } from "./constants";
+import type { User } from "@vencord/discord-types";
+import { ChannelStore, GuildMemberStore, IconUtils } from "@webpack/common";
+
+import { DevsById, EQUICORD_HELPERS, EquicordDevsById, GUILD_ID } from "./constants";
 
 /**
  * Calls .join(" ") on the arguments
@@ -102,3 +105,41 @@ export function removeFromArray<T>(arr: T[], predicate: (e: T) => boolean) {
     const idx = arr.findIndex(predicate);
     if (idx !== -1) arr.splice(idx, 1);
 }
+
+export const isAnyPluginDev = (id: string) => Object.hasOwn(DevsById, id) || Object.hasOwn(EquicordDevsById, id);
+
+export function isEquicordGuild(id: string | null | undefined, isGuildId: boolean = false): boolean {
+    if (!id) return false;
+    if (isGuildId) return id === GUILD_ID;
+    const channel = ChannelStore.getChannel(id);
+    if (!channel) return false;
+    return channel.guild_id === GUILD_ID;
+}
+
+export function isEquicordSupport(userId: string | null | undefined): boolean {
+    if (!userId) return false;
+
+    const member = GuildMemberStore.getMember(GUILD_ID, userId);
+    if (!member) return false;
+    return member.roles.includes(EQUICORD_HELPERS) || false;
+}
+
+// ---- ported from Equicord, used by Equicord plugins ----
+export function getUserAvatarUrl(user: User, guildId?: string, canAnimate?: boolean, size?: number): string {
+    const memberAvatar = guildId ? GuildMemberStore.getMember(guildId, user.id)?.avatar || null : null;
+    if (memberAvatar) {
+        return IconUtils.getGuildMemberAvatarURLSimple({
+            guildId: guildId!,
+            userId: user.id,
+            avatar: memberAvatar,
+            canAnimate,
+            size
+        });
+    }
+
+    return IconUtils.getUserAvatarURL(user, canAnimate, size) ?? IconUtils.getDefaultAvatarURL(user.id, user?.discriminator);
+}
+
+export const isEquicordPluginDev = (id: string) => Object.hasOwn(EquicordDevsById, id);
+
+export const pluralize = pluralise;

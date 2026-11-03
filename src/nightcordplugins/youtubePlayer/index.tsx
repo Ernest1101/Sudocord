@@ -1,0 +1,108 @@
+/*
+ * Nightcord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+import { addServerListElement, removeServerListElement, ServerListRenderPosition } from "@api/ServerList";
+import { ErrorBoundary } from "@components/index";
+import { setOverlayActive } from "@nightcordplugins/_utils/fullscreenOverlayHelper";
+import { forceServerListRerender } from "@nightcordplugins/_utils/serverListRefresh";
+import definePlugin, { PluginNative } from "@utils/types";
+import { FluxDispatcher, React,ThemeStore } from "@webpack/common";
+
+const Native = VencordNative.pluginHelpers.youtubePlayer as PluginNative<any>;
+
+import { YoutubeButton } from "./components/YoutubeButton";
+
+export let isYoutubeOpen = false;
+let updateButtonState: () => void = () => {};
+
+let savedPath: string | null = null;
+
+function restoreSavedPath() {
+    if (savedPath && (window.location.pathname + window.location.search + window.location.hash) !== savedPath) {
+        try {
+            const WP = (SudoCord as any).Webpack;
+            const router = WP?.findByProps?.("transitionTo", "replaceWith");
+            if (router?.transitionTo) {
+                router.transitionTo(savedPath);
+            } else {
+                window.history.replaceState(null, "", savedPath);
+            }
+        } catch {
+            try { window.history.replaceState(null, "", savedPath); } catch {}
+        }
+    }
+}
+
+export function setYoutubeOpen(open: boolean) {
+    if (isYoutubeOpen !== open) {
+        if (open) {
+            savedPath = window.location.pathname + window.location.search + window.location.hash;
+        }
+        isYoutubeOpen = open;
+        setOverlayActive("ytd", open);
+        updateButtonState();
+
+        // Dispatch an event so the view can update
+        FluxDispatcher.dispatch({ type: "YOUTUBE_TOGGLE", isOpen: open });
+        if (!open) {
+            restoreSavedPath();
+        }
+    }
+}
+
+function handleDiscordNavigation() {
+    setYoutubeOpen(false);
+}
+
+function handleOtherPluginToggle(e: any) {
+    if (e.isOpen) {
+        setYoutubeOpen(false);
+    }
+}
+
+function YoutubeButtonWrapper() {
+    const [, forceUpdate] = React.useState({});
+    updateButtonState = () => forceUpdate({});
+
+    return <YoutubeButton />;
+}
+
+const RenderElement = () => <ErrorBoundary><YoutubeButtonWrapper /></ErrorBoundary>;
+
+export default definePlugin({
+    name: "youtubePlayer",
+    enabledByDefault: false,
+    description: "Adds a YouTube button next to the QxChat button",
+    authors: [{ name: "Nightcord", id: 0n }],
+    dependencies: ["ServerListAPI"],
+    tags: ["Utility"],
+
+    start() {
+        const isDark = ThemeStore?.theme?.startsWith("dark") ?? true;
+        Native.installWatchingTogetherIntercept(isDark).catch(() => {});
+        addServerListElement(ServerListRenderPosition.Above, RenderElement);
+        forceServerListRerender();
+
+        FluxDispatcher.subscribe("CHANNEL_SELECT", handleDiscordNavigation);
+        FluxDispatcher.subscribe("GUILD_SELECT", handleDiscordNavigation);
+        FluxDispatcher.subscribe("QXCHAT_TOGGLE", handleOtherPluginToggle);
+        FluxDispatcher.subscribe("BROWSER_TOGGLE", handleOtherPluginToggle);
+        FluxDispatcher.subscribe("NIGHTCORDNEWS_TOGGLE", handleOtherPluginToggle);
+    },
+
+    stop() {
+        setYoutubeOpen(false);
+        setOverlayActive("ytd", false);
+        removeServerListElement(ServerListRenderPosition.Above, RenderElement);
+        forceServerListRerender();
+
+        FluxDispatcher.unsubscribe("CHANNEL_SELECT", handleDiscordNavigation);
+        FluxDispatcher.unsubscribe("GUILD_SELECT", handleDiscordNavigation);
+        FluxDispatcher.unsubscribe("QXCHAT_TOGGLE", handleOtherPluginToggle);
+        FluxDispatcher.unsubscribe("BROWSER_TOGGLE", handleOtherPluginToggle);
+        FluxDispatcher.unsubscribe("NIGHTCORDNEWS_TOGGLE", handleOtherPluginToggle);
+    }
+});

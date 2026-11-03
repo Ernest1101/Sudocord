@@ -25,6 +25,9 @@ import { React, useEffect, useState } from "@webpack/common";
 
 let lastState = false;
 
+// read by the ported Nightcord VoiceMessages plugin
+export { lastState };
+
 const settings = definePluginSettings({
     persistState: {
         type: OptionType.BOOLEAN,

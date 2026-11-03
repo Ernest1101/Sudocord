@@ -145,8 +145,8 @@ export const globPlugins = kind => ({
         });
 
         build.onLoad({ filter, namespace: "import-plugins" }, async () => {
-            const pluginDirs = ["plugins/_api", "plugins/_core", "plugins", "equicordplugins", "userplugins"];
-            const dirClients = { equicordplugins: "equicord", userplugins: "sudocord" };
+            const pluginDirs = ["plugins/_api", "plugins/_core", "plugins", "equicordplugins/_api", "equicordplugins", "nightcordplugins/_api", "nightcordplugins", "userplugins"];
+            const dirClients = { "equicordplugins/_api": "equicord", equicordplugins: "equicord", "nightcordplugins/_api": "nightcord", nightcordplugins: "nightcord", userplugins: "sudocord" };
             let code = "";
             let pluginsCode = "\n";
             let metaCode = "\n";

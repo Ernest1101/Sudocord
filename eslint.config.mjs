@@ -145,5 +145,27 @@ export default tseslint.config(
             "unused-imports/no-unused-imports": "error",
             "path-alias/no-relative": "error"
         }
+    },
+    {
+        // Code ported from Nightcord / Equicord: keep their license headers and leave
+        // regexes and imports as written upstream; everything else is still linted
+        files: [
+            "src/nightcordplugins/**",
+            "src/equicordplugins/**",
+            "src/api/{HeaderBar,stealthState,UserArea,AudioPlayer,i18n,pluginI18n,OAuth2,PluginSync}.{ts,tsx}",
+            "src/api/SettingsSync/pluginSync.tsx",
+            "src/components/{Badge,SafeSearchableSelect,Notice,Text,ServerListItem}.tsx",
+            "src/api/SurfaceClasses.ts",
+            "src/utils/{apiKeyWarning,promptToRestart}.tsx",
+            "src/utils/csp.ts",
+            "src/plugins/_core/concatenatedModules.tsx"
+        ],
+        rules: {
+            "simple-header/header": "off",
+            "no-useless-escape": "off",
+            "no-duplicate-imports": "off",
+            "react/no-deprecated": "off",
+            "react/no-render-return-value": "off"
+        }
     }
 );

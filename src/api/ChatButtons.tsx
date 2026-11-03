@@ -12,11 +12,12 @@ import { classes } from "@utils/misc";
 import { IconComponent } from "@utils/types";
 import { Channel } from "@vencord/discord-types";
 import { findCssClassesLazy } from "@webpack";
-import { Clickable, Menu, Tooltip } from "@webpack/common";
+import { Clickable, Menu, Tooltip, useEffect, useState } from "@webpack/common";
 import { HTMLProps, JSX, MouseEventHandler, ReactNode } from "react";
 
 import { addContextMenuPatch, findGroupChildrenByChildId } from "./ContextMenu";
 import { useSettings } from "./Settings";
+import { isStealthModeEnabled } from "./stealthState";
 
 const ButtonWrapperClasses = findCssClassesLazy("button", "buttonWrapper", "notificationDot");
 const ChannelTextAreaClasses = findCssClassesLazy("buttonContainer", "channelTextArea", "button");
@@ -95,14 +96,36 @@ export type ChatBarButtonData = {
 export const ChatBarButtonMap = new Map<string, ChatBarButtonData>();
 const logger = new Logger("ChatButtons");
 
+/**
+ * Buttons hidden by the Backpack plugin (ported from Equicord/Nightcord).
+ * They are rendered inside the Backpack popout instead of the main bar.
+ */
+export const BackpackedButtons = new Set<string>();
+export const backpackListeners = new Set<() => void>();
+export function notifyBackpackChange() { backpackListeners.forEach(l => l()); }
+
 function SudoCordChatBarButtons(props: ChatBarProps) {
     const { chatBarButtons } = useSettings(["uiElements.chatBarButtons.*"]).uiElements;
+    const [, forceUpdate] = useState(0);
+
+    useEffect(() => {
+        const listener = () => forceUpdate(n => n + 1);
+        backpackListeners.add(listener);
+        window.addEventListener("nightcord-stealth-change", listener);
+        return () => {
+            backpackListeners.delete(listener);
+            window.removeEventListener("nightcord-stealth-change", listener);
+        };
+    }, []);
+
+    if (isStealthModeEnabled()) return null;
 
     const { analyticsName } = props.type;
     return (
         <>
             {Array.from(ChatBarButtonMap)
-                .filter(([key]) => chatBarButtons[key]?.enabled !== false)
+                .filter(([key]) => chatBarButtons[key]?.enabled !== false && !BackpackedButtons.has(key))
+                .sort(([a], [b]) => (a === "Backpack" ? -1 : b === "Backpack" ? 1 : 0))
                 .map(([key, { render: Button }]) => (
                     <ErrorBoundary noop key={key} onError={e => logger.error(`Failed to render ${key}`, e.error)}>
                         <Button {...props} isMainChat={analyticsName === "normal"} isAnyChat={["normal", "sidebar"].includes(analyticsName)} />

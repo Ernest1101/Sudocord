@@ -130,6 +130,8 @@ export type IconComponent = (props: IconProps & Record<string, any>) => ReactNod
 export type IconProps = { height?: number | string; width?: number | string; className?: string; };
 export interface PluginDef {
     name: string;
+    /** Name shown in the UI when it differs from the internal one, e.g. ported duplicates registered as nc_Foo */
+    displayName?: string;
     description: string;
     /** Additional search terms that will bring up your plugin */
     searchTerms?: string[];

@@ -1,0 +1,80 @@
+/*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2024 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+// @ts-nocheck -- ported from Equicord, typed against Equicord's discord-types
+
+import * as DataStore from "@api/DataStore";
+import { definePluginSettings } from "@api/Settings";
+import { Button } from "@components/Button";
+import { HeadingSecondary } from "@components/Heading";
+import { OpenExternalIcon } from "@components/Icons";
+import { Paragraph } from "@components/Paragraph";
+import { copyToClipboard } from "@utils/clipboard";
+import { classNameFactory } from "@utils/css";
+import { OptionType } from "@utils/types";
+import { showToast } from "@webpack/common";
+
+import { authorizeUser, deauthorizeUser } from "./auth";
+
+const cl = classNameFactory("vce-");
+
+export const settings = definePluginSettings({
+    hideWarningCard: {
+        type: OptionType.BOOLEAN,
+        default: false,
+        description: "Hide the warning card displayed at the top of the theme library tab",
+        restartNeeded: false,
+    },
+    buttons: {
+        type: OptionType.COMPONENT,
+        description: "ThemeLibrary Buttons",
+        component: () => {
+            const handleClick = async () => {
+                const token = await DataStore.get("ThemeLibrary_uniqueToken");
+
+                if (!token) return showToast({
+                    text: "No token to copy, try authorizing first!",
+                    variant: "critical",
+                    duration: 2.5e3,
+                    position: "bottom"
+                });
+
+                copyToClipboard(token);
+
+                showToast({
+                    text: "Copied to Clipboard!",
+                    variant: "success",
+                    duration: 2.5e3,
+                    position: "bottom"
+                });
+            };
+
+            return (
+                <section>
+                    <HeadingSecondary style={{ marginTop: 0, marginBottom: 8 }}>ThemeLibrary Auth</HeadingSecondary>
+                    <div className={cl("button-grid")}>
+                        <Button onClick={() => authorizeUser()}>
+                            Authorize with ThemeLibrary
+                        </Button>
+                        <Button onClick={handleClick}>
+                            Copy ThemeLibrary Token
+                        </Button>
+                        <Button variant="dangerPrimary" onClick={() => deauthorizeUser()}>
+                            Deauthorize ThemeLibrary
+                        </Button>
+                    </div>
+                    <HeadingSecondary style={{ marginTop: 8, marginBottom: 8 }}>Theme Removal</HeadingSecondary>
+                    <Paragraph style={{ marginTop: 0, marginBottom: 8 }}> All Theme Authors are given credit in the theme info, no source has been modified, if you wish your theme to be removed anyway, open an Issue by clicking below.</Paragraph>
+                    <div className={cl("button-grid")}>
+                        <Button onClick={() => VencordNative.native.openExternal("https://github.com/Faf4a/plugins/issues/new?labels=removal&projects=&template=request_removal.yml&title=Theme+Removal")}>
+                            Request Theme Removal <OpenExternalIcon height={16} width={16} />
+                        </Button>
+                    </div>
+                </section>
+            );
+        }
+    }
+});

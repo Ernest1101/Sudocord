@@ -80,7 +80,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
 
     return (
         <AddonCard
-            name={plugin.name}
+            name={plugin.displayName ?? plugin.name}
             nameIcon={<ClientIcon client={getPluginClient(plugin)} />}
             description={plugin.description}
             isNew={isNew}

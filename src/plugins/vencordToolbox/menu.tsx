@@ -268,7 +268,7 @@ function buildCustomPluginEntries() {
             pluginEntries.push({
                 plugin,
                 node:
-                    <Menu.MenuGroup label={plugin.name} key={`${plugin.name}-group`}>
+                    <Menu.MenuGroup label={plugin.displayName ?? plugin.name} key={`${plugin.name}-group`}>
                         {entries}
                     </Menu.MenuGroup>
             });
@@ -286,7 +286,7 @@ function buildCustomPluginEntries() {
         <Menu.MenuItem
             id={`${plugin.name}-menu`}
             key={`${plugin.name}-menu`}
-            label={plugin.name}
+            label={plugin.displayName ?? plugin.name}
             action={() => openPluginModal(plugin)}
         >
             {node}

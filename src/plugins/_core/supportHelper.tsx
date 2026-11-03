@@ -359,3 +359,13 @@ export default definePlugin({
         );
     }, { noop: true }),
 });
+
+// ---- ported from Equicord, used by Equicord plugins ----
+type clientData = { name: string; version?: string; info?: string; spoofed?: string | null; dev?: boolean; shortHash?: string; hash?: string | null; };
+
+/** Ported from Equicord (used by DiscordDevBanner), trimmed to the clients SudoCord runs on */
+export function detectClient(): clientData {
+    if (IS_DISCORD_DESKTOP) return { name: "Discord Desktop", version: DiscordNative.app.getVersion() };
+    if (IS_VESKTOP) return { name: "Vesktop", version: VesktopNative.app.getVersion() };
+    return { name: "Web", info: navigator.userAgent };
+}

@@ -150,3 +150,29 @@ waitForStore("ThemeStore", m => {
     // For this reason, use a non import access here.
     SudoCord.Api.Themes.initQuickCssThemeStore(m);
 });
+
+// ---- stores used by ported Equicord/Nightcord plugins ----
+export let QuestStore: any;
+export let SortedGuildStore: any;
+export let PrivateChannelSortStore: any;
+waitForStore("QuestStore", m => QuestStore = m);
+waitForStore("SortedGuildStore", m => SortedGuildStore = m);
+waitForStore("PrivateChannelSortStore", m => PrivateChannelSortStore = m);
+
+// ---- Equicord stores ----
+export let ApplicationStreamingSettingsStore: any;
+waitForStore("ApplicationStreamingSettingsStore", m => ApplicationStreamingSettingsStore = m);
+export let BasicGuildStore: any;
+waitForStore("BasicGuildStore", m => BasicGuildStore = m);
+export let ChannelSectionStore: any;
+waitForStore("ChannelSectionStore", m => ChannelSectionStore = m);
+export let GuildProfileStore: any;
+waitForStore("GuildProfileStore", m => GuildProfileStore = m);
+export let JoinedThreadsStore: any;
+waitForStore("JoinedThreadsStore", m => JoinedThreadsStore = m);
+export let SafetyHubStore: any;
+waitForStore("SafetyHubStore", m => SafetyHubStore = m);
+export let SelfPresenceStore: any;
+waitForStore("SelfPresenceStore", m => SelfPresenceStore = m);
+export let UserProfileSettingsStore: any;
+waitForStore("UserProfileSettingsStore", m => UserProfileSettingsStore = m);

@@ -10,3 +10,6 @@ import gitRemote from "~git-remote";
 export { gitHash, gitRemote };
 
 export const VENCORD_USER_AGENT = `SudoCord/${gitHash}${gitRemote ? ` (https://github.com/${gitRemote})` : ""}`;
+
+// ---- ported from Equicord, used by Equicord plugins ----
+export const gitHashShort = gitHash.slice(0, 9);

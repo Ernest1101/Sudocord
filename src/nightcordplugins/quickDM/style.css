@@ -1,0 +1,56 @@
+/*
+ * Nightcord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.nc-quick-dm-button-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.nc-quick-dm-button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    color: #ffffff !important;
+    transition: transform 0.1s ease !important;
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08)) !important;
+    outline: none !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.nc-quick-dm-button:hover {
+    background: rgba(0, 0, 0, 0.6) !important;
+    border-color: var(--border-subtle, rgba(255, 255, 255, 0.08)) !important;
+    color: #ffffff !important;
+}
+
+.nc-quick-dm-button:active {
+    transform: scale(0.92) !important;
+}
+
+.nc-quick-dm-button svg {
+    width: 16px !important;
+    height: 16px !important;
+    display: block !important;
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+.nc-quick-dm-button svg path {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+}

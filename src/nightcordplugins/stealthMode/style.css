@@ -1,0 +1,51 @@
+/*
+ * Nightcord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/* Stealth Mode - hide Nightcord plugin UI and settings */
+
+/* Plugin buttons: header bar, channel toolbar, chat bar, user area */
+body.nightcord-stealth .vc-header-bar-btns,
+body.nightcord-stealth .vc-channel-toolbar-btns,
+body.nightcord-stealth .vc-chat-bar-btns,
+body.nightcord-stealth .vc-user-area-btns,
+
+/* Titlebar injected elements */
+body.nightcord-stealth #nightcord-titlebar-btn,
+body.nightcord-stealth #nightcord-titlebar-link-style,
+
+/* NightcordAI nav button */
+body.nightcord-stealth .nai-nav-item,
+
+/* Modern Discord settings sidebar: complete Nightcord section wrapper and items */
+body.nightcord-stealth li:has([data-settings-sidebar-item*="equicord"]),
+body.nightcord-stealth li:has([data-settings-sidebar-item*="nightcord"]),
+body.nightcord-stealth li:has([data-settings-sidebar-item*="illegalcord"]),
+body.nightcord-stealth li:has([data-list-item-id*="settings-sidebar___equicord"]),
+body.nightcord-stealth li:has([data-list-item-id*="settings-sidebar___nightcord"]),
+body.nightcord-stealth li:has([data-list-item-id*="settings-sidebar___illegalcord"]),
+body.nightcord-stealth [data-settings-sidebar-item*="equicord"],
+body.nightcord-stealth [data-settings-sidebar-item*="nightcord"],
+body.nightcord-stealth [data-settings-sidebar-item*="illegalcord"],
+body.nightcord-stealth [data-list-item-id*="settings-sidebar___equicord"],
+body.nightcord-stealth [data-list-item-id*="settings-sidebar___nightcord"],
+body.nightcord-stealth [data-list-item-id*="settings-sidebar___illegalcord"],
+
+/* Fallback tab attributes */
+body.nightcord-stealth [data-tab-id*="equicord" i],
+body.nightcord-stealth [data-tab-id*="nightcord" i],
+body.nightcord-stealth [data-tab-id*="vencord" i],
+body.nightcord-stealth [data-tab-id="ThemeLibrary"],
+body.nightcord-stealth [data-tab-id="StereoInstaller"],
+body.nightcord-stealth [aria-controls*="equicord" i],
+body.nightcord-stealth [aria-controls*="nightcord" i],
+body.nightcord-stealth [aria-controls*="vencord" i],
+body.nightcord-stealth [id*="equicord" i],
+body.nightcord-stealth [id*="nightcord" i],
+body.nightcord-stealth [id*="vencord" i],
+body.nightcord-stealth .nc-modal-root,
+body.nightcord-stealth .nc-settings-tab {
+    display: none !important;
+}
