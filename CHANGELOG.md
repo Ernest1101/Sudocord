@@ -1,5 +1,23 @@
 # SudoCord Changelog (English)
 
+## v2.0.1 — Discord startup fix (2026-11-07)
+
+### Fixed
+
+- **Endless "Starting" screen**: the Discord update from November 7 changed
+  how its modules export values, and SudoCord's hook dropped them, so the
+  client froze on launch with `i.A is not a constructor`. SudoCord now
+  understands the new format.
+- **Plugins not finding Discord modules**: modules in the new Discord build no
+  longer carry a "loaded" flag, which made module search skip everything.
+  This caused error spam (e.g. ShowHiddenChannels) and many plugins silently
+  doing nothing.
+- `ChannelActions`, `VoiceActions`, `UserProfileActions` and `SettingsRouter`
+  lookups updated for Discord's split modules.
+
+If Discord is stuck on "Starting", reinstall SudoCord with the installer —
+the in-client updater can't run while the client doesn't start.
+
 ## v2.0.0 — Nightcord & Equicord (2026-11-03)
 
 ### Added
