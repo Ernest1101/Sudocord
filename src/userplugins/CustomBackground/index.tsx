@@ -504,7 +504,9 @@ export default definePlugin({
     description: "Свой фон Discord: mp4, gif, png и другие картинки (ссылка или файл). Настройки — во вкладке Темы.",
     tags: ["SudoCord", "Appearance", "Customisation"],
     authors: [{ name: "dsd16", id: 0n }],
-    enabledByDefault: true,
+    // hidden plugins can't be turned back on from the UI, so a stored enabled:false hid the background section for good;
+    // the "show your background" toggle inside the section decides whether the background is shown
+    required: true,
     hidden: true,
 
     settings,

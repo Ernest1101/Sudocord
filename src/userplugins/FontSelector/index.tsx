@@ -138,7 +138,8 @@ export default definePlugin({
     description: "Выбор шрифта и размера текста для всего клиента без CSS",
     tags: ["SudoCord", "Appearance"],
     authors: [{ name: "dsd16", id: 0n }],
-    enabledByDefault: true,
+    // hidden, so it could never be re-enabled from the UI; the default font changes nothing
+    required: true,
     hidden: true,
 
     settings,
