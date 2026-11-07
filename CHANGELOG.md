@@ -1,5 +1,16 @@
 # SudoCord Changelog (English)
 
+## v2.0.2 — Custom background fix (2026-11-07)
+
+### Fixed
+
+- **CustomBackground** shows the background again: the November 7 Discord
+  update renamed the app background layer (`bg__*` → `bg_*`), so it covered
+  the picture.
+- **CustomBackground** with Discord client themes (Nitro gradients): the
+  theme gradients painted over the chat, member list and server list. They
+  are now cleared while a custom background is on.
+
 ## v2.0.1 — Discord startup fix (2026-11-07)
 
 ### Fixed

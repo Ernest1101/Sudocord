@@ -71,7 +71,11 @@ const SURFACE_VARS = [
     "--bg-base-primary", "--bg-base-secondary", "--bg-base-tertiary",
     "--background-surface-high", "--background-surface-higher", "--background-surface-highest",
     "--background-mobile-primary", "--background-mobile-secondary",
-    "--home-background"
+    "--home-background",
+    // Discord client themes (gradients) paint chat, member list, server list etc. through these
+    "--background-gradient-app-frame", "--background-gradient-chat", "--background-gradient-chat-preview",
+    "--background-gradient-highest", "--background-gradient-higher", "--background-gradient-high",
+    "--background-gradient-low", "--background-gradient-lower", "--background-gradient-lowest"
 ];
 
 function cssText(dim: number, blur: number): string {
@@ -86,8 +90,8 @@ body, #app-mount { background: transparent !important; }
 #app-mount, #app-mount * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 /* Discord 2026: отдельный фоновый слой приложения (div.background_*) */
 #app-mount div[class*="background_"] { background: transparent !important; }
-/* Discord 2026: второй фоновый слой (div.bg__*, красится через oklab) */
-div[class*="bg__"] { background: transparent !important; }
+/* Discord 2026: второй фоновый слой (раньше div.bg__*, с ноября 2026 div.bg_<hash>) */
+div[class*="bg__"], div[class^="bg_"], div[class*=" bg_"] { background: transparent !important; }
 /* Сайдбар серверов (nav.wrapper_*, глухой oklab) */
 nav[class*="wrapper_"] { background: transparent !important; }
 /* Список ЛС и каналов (nav.container_*, тот же глухой oklab) */
