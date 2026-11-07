@@ -183,7 +183,8 @@ export const ChannelRouter: t.ChannelRouter = mapMangledModuleLazy('"Thread must
 });
 
 export let SettingsRouter: any;
-waitFor(["openUserSettings", "USER_SETTINGS_MODAL_KEY"], m => SettingsRouter = m);
+// USER_SETTINGS_MODAL_KEY is gone, openUserSettings now lives alone in a lazily required module
+waitFor(["openUserSettings"], m => SettingsRouter = m);
 
 export const PermissionsBits: t.PermissionsBits = findLazy(m => typeof m.ADMINISTRATOR === "bigint");
 
@@ -197,7 +198,8 @@ export const { zustandPersist } = mapMangledModuleLazy(".onRehydrateStorage)?", 
 
 export const MessageActions = findByPropsLazy("editMessage", "sendMessage");
 export const MessageCache = findByPropsLazy("clearCache", "_channelMessages");
-export const UserProfileActions = findByPropsLazy("openUserProfileModal", "closeUserProfileModal");
+// closeUserProfileModal moved out of this module, openUserProfileModal is now its only export
+export const UserProfileActions = findByPropsLazy("openUserProfileModal");
 export const InviteActions = findByPropsLazy("resolveInvite");
 export const ChannelActionCreators = findByPropsLazy("openPrivateChannel");
 
@@ -236,8 +238,8 @@ export const MessageTypeSets: t.MessageTypeSets = findByPropsLazy("REPLYABLE", "
 
 // ---- used by ported Equicord/Nightcord plugins ----
 export const CloudUploader = findLazy(m => m.prototype?.trackUploadFinished);
-export const ChannelActions = findByPropsLazy("selectChannel", "preload");
-export const VoiceActions = findByPropsLazy("toggleSelfMute", "setChannel");
+export const ChannelActions = findByPropsLazy("selectChannel", "selectVoiceChannel");
+export const VoiceActions = findByPropsLazy("toggleSelfMute", "toggleSelfDeaf");
 
 // ---- Equicord utils ----
 export const ColorUtils = mapMangledModuleLazy("Invalid hex color format", {
