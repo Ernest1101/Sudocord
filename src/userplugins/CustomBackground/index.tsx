@@ -102,6 +102,8 @@ div[class*="scroller_"] { background: transparent !important; }
 section[class*="theme-dark"],
 section[class*="panels_"] { background: transparent !important; }
 div[class*="panel_"] { background: transparent !important; }
+/* Экран звонка: callContainer_* и его root_* красятся сплошным var(--black); плитки и видео остаются как есть */
+div[class*="callContainer_"], div[class*="callContainer_"] div[class^="root_"] { background: transparent !important; }
 /* Поле ввода (scrollableContainer_*, channelTextArea_*) */
 div[class*="scrollableContainer_"],
 div[class*="channelTextArea_"] { background: transparent !important; }
