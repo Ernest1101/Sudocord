@@ -1,5 +1,24 @@
 # SudoCord Changelog (English)
 
+## v2.0.3 — Window dragging & background fixes (2026-11-08)
+
+### Fixed
+
+- **Window can be dragged again**: an old SudoCord workaround marked the page
+  body as "no-drag". Current Chromium passes that on to every element, so the
+  whole interface cut the drag area out of the title bar and the window could
+  only be moved by the title text.
+- **Missing "Background" section in Themes**: the background and font plugins
+  are hidden from the plugin list, so once they ended up disabled there was no
+  way to turn them back on. They are now always on; the "show your
+  background" toggle in the section controls the background.
+
+### Changed
+
+- **CustomBackground**: the voice call screen is transparent too, so the
+  background shows around the call tiles. Tiles, video and streams are
+  unchanged.
+
 ## v2.0.2 — Custom background fix (2026-11-07)
 
 ### Fixed
