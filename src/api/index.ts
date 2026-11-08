@@ -21,6 +21,7 @@ import * as $ChatButtons from "./ChatButtons";
 import * as $Commands from "./Commands";
 import * as $ContextMenu from "./ContextMenu";
 import * as $DataStore from "./DataStore";
+import * as $HeaderBar from "./HeaderBar";
 import * as $MemberListDecorators from "./MemberListDecorators";
 import * as $MessageAccessories from "./MessageAccessories";
 import * as $MessageDecorations from "./MessageDecorations";
@@ -29,10 +30,12 @@ import * as $MessagePopover from "./MessagePopover";
 import * as $MessageUpdater from "./MessageUpdater";
 import * as $Notices from "./Notices";
 import * as $Notifications from "./Notifications";
+import * as $ProfileSections from "./ProfileSections";
 export * as PluginManager from "./PluginManager";
 import * as $ServerList from "./ServerList";
 import * as $Settings from "./Settings";
 import * as $Styles from "./Styles";
+import * as $SurfaceClasses from "./SurfaceClasses";
 import * as $Themes from "./Themes";
 import * as $UserSettings from "./UserSettings";
 
@@ -129,3 +132,18 @@ export const UserSettings = $UserSettings;
  * Don't use this
  */
 export const Themes = $Themes;
+
+/**
+ * Buttons in the title bar and the channel toolbar. Patches call SudoCord.Api.HeaderBar
+ */
+export const HeaderBar = $HeaderBar;
+
+/**
+ * Sections next to "Member Since" in user profiles. Patches call SudoCord.Api.ProfileSections
+ */
+export const ProfileSections = $ProfileSections;
+
+/**
+ * Extra classes/props on Discord surfaces. Patches call SudoCord.Api.SurfaceClasses
+ */
+export const SurfaceClasses = $SurfaceClasses;
