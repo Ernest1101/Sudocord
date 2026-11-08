@@ -1,5 +1,16 @@
 # SudoCord Changelog (English)
 
+## v2.0.4 — Captcha fix (2026-11-08)
+
+### Fixed
+
+- **hCaptcha in the client** ("rate limit or network error", e.g. when
+  claiming quest rewards): SudoCord's CSP patch added missing directives even
+  to pages that had no restrictions at all. hCaptcha's frame sends a policy
+  with only `report-uri`, so it ended up blocking its own scripts and requests.
+  Pages without restrictions are now left as they are; Discord's own pages are
+  patched exactly as before.
+
 ## v2.0.3 — Window dragging & background fixes (2026-11-08)
 
 ### Fixed
