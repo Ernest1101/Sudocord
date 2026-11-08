@@ -1,5 +1,30 @@
 # SudoCord Changelog (English)
 
+## v2.0.6 — SudoCord badges for everyone (2026-11-08)
+
+### Changed
+
+- **SudoBadges** is always on and no longer listed in plugins, so it can't
+  be turned off by accident.
+- **Every SudoCord user gets the badge**: the badge used to show only for
+  accounts added to the list by hand. The client now adds your account to
+  the badge list once a day, so the SudoCord logo appears on your profile
+  for everyone running SudoCord (it can take up to 30 minutes to show up
+  for others).
+
+### Fixed
+
+- **Installer downloads when GitHub is down**: GitHub release downloads
+  return "503 Service Unavailable" for many users. The download page now
+  serves installers from the sudocord.mooo.com mirror (GitHub stays as a
+  backup link), and the Linux `install.sh` falls back to the mirror when
+  GitHub fails or stalls.
+
+### Docs
+
+- New README with install steps for every OS and the list of SudoCord's
+  own plugins.
+
 ## v2.0.5 — Updater fix (2026-11-08)
 
 ### Fixed
