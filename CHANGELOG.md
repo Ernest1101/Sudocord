@@ -1,5 +1,22 @@
 # SudoCord Changelog (English)
 
+## v2.0.5 — Updater fix (2026-11-08)
+
+### Fixed
+
+- **Updater stuck on "downloading"**: the built-in updater downloaded the
+  build from GitHub without any timeout, so behind a VPN or a flaky connection
+  it could hang forever. Requests now time out (20 s to respond, 30 s without
+  data) and the size is checked against the server's.
+
+### Added
+
+- **Updater mirror**: when GitHub fails, release info and the build come from
+  the sudocord.mooo.com mirror. Without GitHub the commit list shows a single
+  "new build" line, but the update itself still works.
+- The updater never writes an error page or a truncated file over a working
+  install.
+
 ## v2.0.4 — Captcha fix (2026-11-08)
 
 ### Fixed
