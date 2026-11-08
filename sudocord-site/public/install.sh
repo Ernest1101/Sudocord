@@ -16,6 +16,8 @@ set -eu
 
 REPO="Ernest1101/Sudotl"
 BASE="https://github.com/$REPO/releases/latest/download"
+# copy of the latest Sudotl release on the site (sudocord-mirror.timer), used when GitHub fails or is blocked
+MIRROR="https://sudocord.mooo.com/releases/files/Sudotl"
 BIN_DIR="${SUDOCORD_BIN_DIR:-$HOME/.local/bin}"
 
 ASSET=""
@@ -61,9 +63,10 @@ case "$arch" in
 esac
 
 if command -v curl >/dev/null 2>&1; then
-    dl() { curl -fSL --progress-bar -o "$2" "$1"; }
+    # give up on a dead or stalled connection instead of hanging (GitHub behind some ISPs/VPNs)
+    dl() { curl -fSL --progress-bar --connect-timeout 15 --speed-limit 1024 --speed-time 30 -o "$2" "$1"; }
 elif command -v wget >/dev/null 2>&1; then
-    dl() { wget -O "$2" "$1"; }
+    dl() { wget -T 30 -t 2 -O "$2" "$1"; }
 else
     echo "Need curl or wget to download SudoCord" >&2; exit 1
 fi
@@ -78,7 +81,14 @@ cleanup() { rm -f "$tmp"; }
 trap cleanup EXIT INT TERM
 
 echo "Downloading $ASSET..."
-dl "$BASE/$ASSET" "$tmp"
+if ! dl "$BASE/$ASSET" "$tmp"; then
+    echo "GitHub download failed, trying the sudocord.mooo.com mirror..." >&2
+    dl "$MIRROR/$ASSET" "$tmp"
+fi
+# never install an error page instead of the installer
+if [ "$(wc -c < "$tmp")" -lt 1000000 ]; then
+    echo "Download is broken (too small). Try again later." >&2; exit 1
+fi
 chmod +x "$tmp"
 cp "$tmp" "$BIN_DIR/$OUT_NAME"
 chmod +x "$BIN_DIR/$OUT_NAME"
