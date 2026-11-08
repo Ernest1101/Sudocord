@@ -1,5 +1,19 @@
 # SudoCord Changelog (English)
 
+## v2.0.7 — Header bar fix (2026-11-08)
+
+### Fixed
+
+- **Header bar crash** (`Cannot read properties of undefined (reading
+  '_addHeaderBarButtons')`): the header bar, profile section and surface
+  class APIs ported from Equicord in v2.0.0 were never exposed to their
+  patches. With a plugin that adds a header bar button enabled
+  (EquicordToolbox, EquiTweaks, MessageLoggerEnhanced, SidebarChat,
+  VoiceChannelLog, CollapsibleUi, VoiceMessagesInBackground), the title bar
+  crashed and its buttons disappeared. They now work.
+- Added the missing profile sections API used by the "Member Since" area
+  patches.
+
 ## v2.0.6 — SudoCord badges for everyone (2026-11-08)
 
 ### Changed
