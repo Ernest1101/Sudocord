@@ -122,7 +122,14 @@ const patchCsp = (headers: PolicyMap) => {
         const csp = parsePolicy(headers[header][0]);
 
         const pushDirective = (directive: string, ...values: string[]) => {
-            csp[directive] ??= [...(csp["default-src"] ?? [])];
+            if (!csp[directive]) {
+                // Neither the directive nor default-src is set, so this kind of resource is not restricted at all.
+                // Creating the directive here would turn "anything allowed" into "only our values allowed":
+                // hCaptcha's frame sends a CSP with just report-uri, and that broke its scripts and requests
+                // ("rate limit or network error" when claiming quest rewards).
+                if (!csp["default-src"]) return;
+                csp[directive] = [...csp["default-src"]];
+            }
             csp[directive].push(...values);
         };
 
