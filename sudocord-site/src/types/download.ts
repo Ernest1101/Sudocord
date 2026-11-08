@@ -5,6 +5,8 @@ export interface Download {
     href: string
     prioritize?: boolean
     note?: string
+    /** same file on GitHub, shown as a small backup link under the button */
+    githubHref?: string
 }
 
 export interface Platform {

@@ -24,6 +24,12 @@ import { AlertCircle, DownloadIcon, MonitorCheck, Package } from "lucide-react";
 
 import type { Platform, Section } from "@/types";
 
+// Main buttons download from the site mirror (sudocord-mirror.timer on the VDS): GitHub release downloads
+// are often blocked or down (503) for our users. GitHub stays as a small backup link under each button.
+const MIRROR_URL = "https://sudocord.mooo.com/releases/files/Sudotl/";
+const GITHUB_URL = "https://github.com/Ernest1101/Sudotl/releases/latest/download/";
+const sudotl = (file: string) => ({ href: MIRROR_URL + file, githubHref: GITHUB_URL + file });
+
 const SudoCordPlatforms: Platform[] = [
     {
         title: "Windows",
@@ -31,13 +37,13 @@ const SudoCordPlatforms: Platform[] = [
         downloads: [
             {
                 text: "GUI",
-                href: "https://github.com/Ernest1101/Sudotl/releases/latest/download/Sudotl.exe",
+                ...sudotl("Sudotl.exe"),
                 prioritize: true,
                 note: "Recommended",
             },
             {
                 text: "CLI",
-                href: "https://github.com/Ernest1101/Sudotl/releases/latest/download/SudotlCli.exe",
+                ...sudotl("SudotlCli.exe"),
             },
         ],
         isCurrent: isWindows(),
@@ -48,28 +54,28 @@ const SudoCordPlatforms: Platform[] = [
         downloads: [
             {
                 text: "GUI",
-                href: "https://github.com/Ernest1101/Sudotl/releases/latest/download/Sudotl",
+                ...sudotl("Sudotl"),
                 prioritize: true,
                 note: "Both X11 and Wayland",
             },
             {
                 text: "GUI",
-                href: "https://github.com/Ernest1101/Sudotl/releases/latest/download/Sudotl-x11",
+                ...sudotl("Sudotl-x11"),
                 note: "X11 only",
             },
             {
                 text: "GUI",
-                href: "https://github.com/Ernest1101/Sudotl/releases/latest/download/Sudotl-wayland",
+                ...sudotl("Sudotl-wayland"),
                 note: "Wayland only",
             },
             {
                 text: "Hyprland",
-                href: "https://github.com/Ernest1101/Sudotl/releases/latest/download/Sudotl-wayland",
+                ...sudotl("Sudotl-wayland"),
                 note: "Hyprland (Wayland)",
             },
             {
                 text: "CLI",
-                href: "https://github.com/Ernest1101/Sudotl/releases/latest/download/SudotlCli-linux",
+                ...sudotl("SudotlCli-linux"),
             },
         ],
         command: {
@@ -84,19 +90,19 @@ const SudoCordPlatforms: Platform[] = [
         downloads: [
             {
                 text: "GUI",
-                href: "https://github.com/Ernest1101/Sudotl/releases/latest/download/Sudotl-darwin-arm64.zip",
+                ...sudotl("Sudotl-darwin-arm64.zip"),
                 prioritize: getMacArch() === "arm64",
                 note: "Apple Silicon (ARM64)",
             },
             {
                 text: "GUI",
-                href: "https://github.com/Ernest1101/Sudotl/releases/latest/download/Sudotl-darwin-x64.zip",
+                ...sudotl("Sudotl-darwin-x64.zip"),
                 prioritize: getMacArch() === "x64",
                 note: "Intel (X64)",
             },
             {
                 text: "CLI",
-                href: "https://github.com/Ernest1101/Sudotl/releases/latest/download/SudotlCli-darwin-arm64",
+                ...sudotl("SudotlCli-darwin-arm64"),
                 prioritize: getMacArch() === "arm64",
             },
         ],
@@ -163,7 +169,7 @@ const getSections = (): Section[] => [
     {
         title: "SudoCord",
         description:
-            "An enhanced version of Vencord with more of 100+ extra plugins.",
+            "Vencord, Equicord and Nightcord plugins in one client. Downloads come from the sudocord.mooo.com mirror, so they work even when GitHub is down or blocked.",
         githubUrl: "https://github.com/Ernest1101/Sudocord",
         platforms: SudoCordPlatforms,
     },
@@ -319,6 +325,15 @@ export default function Download() {
                                                         {download.note ??
                                                                 ""}
                                                     </span>
+                                                    {download.githubHref && (
+                                                        <a
+                                                            href={download.githubHref}
+                                                            target="_blank"
+                                                            className="text-xs text-neutral-600 hover:text-neutral-300 text-center transition-colors"
+                                                        >
+                                                            or from GitHub
+                                                        </a>
+                                                    )}
                                                 </div>
                                             ),
                                         )}
