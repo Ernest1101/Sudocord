@@ -7,8 +7,13 @@
 import { addProfileBadge, BadgeUserArgs, ProfileBadge, removeProfileBadge } from "@api/Badges";
 import * as DataStore from "@api/DataStore";
 import definePlugin from "@utils/types";
+import { UserStore } from "@webpack/common";
 
 const BADGES_URL = "https://sudocord.mooo.com/api/badges.json";
+// adds the logged-in user to the registry, so everyone running SudoCord gets the badge (sudocord-badges.service on the VDS)
+const REGISTER_URL = "https://sudocord.mooo.com/api/badges/register";
+const REGISTERED_KEY = "SudoBadges_registered";
+const REGISTER_EVERY_MS = 24 * 60 * 60 * 1000;
 const LOGO_URL = "https://sudocord.mooo.com/assets/sudocord-badge-v2.png";
 const SITE_URL = "https://sudocord.mooo.com";
 const CACHE_KEY = "SudoBadges_ids";
@@ -58,6 +63,23 @@ async function refresh() {
     }
 }
 
+async function registerSelf() {
+    const id = UserStore.getCurrentUser()?.id;
+    if (!id) return;
+    try {
+        const last = await DataStore.get(REGISTERED_KEY) as { id: string; at: number; } | undefined;
+        if (tooltips.has(id) && last?.id === id && Date.now() - last.at < REGISTER_EVERY_MS) return;
+
+        // text/plain keeps it a simple request (no CORS preflight)
+        const res = await fetch(REGISTER_URL, { method: "POST", body: id, signal: AbortSignal.timeout(10000) });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        await DataStore.set(REGISTERED_KEY, { id, at: Date.now() });
+        if (!tooltips.has(id)) await refresh();
+    } catch (e) {
+        console.warn("[SudoBadges] could not register this account", e);
+    }
+}
+
 const badge: ProfileBadge = {
     id: "sudocord-user",
     getBadges({ userId }: BadgeUserArgs): ProfileBadge[] {
@@ -77,11 +99,20 @@ export default definePlugin({
     description: "Лого SudoCord в профиле у тех, кто в реестре (sudocord.mooo.com/api/badges.json).",
     tags: ["SudoCord", "Appearance"],
     authors: [{ name: "dsd16", id: 0n }],
-    enabledByDefault: true,
+    // always on and not listed: everyone running SudoCord sees the badges, it can't be switched off
+    required: true,
+    hidden: true,
+
+    flux: {
+        // fires after login and on account switch
+        CONNECTION_OPEN() {
+            void registerSelf();
+        }
+    },
 
     start() {
         addProfileBadge(badge);
-        void refresh();
+        void refresh().then(registerSelf);
         timer = setInterval(() => void refresh(), REFRESH_MS);
     },
 
