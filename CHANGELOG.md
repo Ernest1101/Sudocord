@@ -1,5 +1,18 @@
 # SudoCord Changelog (English)
 
+## v2.0.8 — AntiDeleteMessage fix (2026-11-08)
+
+### Fixed
+
+- **One message sent 5+ times** with AntiDeleteMessage on: the plugin resent
+  your message on every deletion, including your own, and also restored the
+  messages it had resent, so a bot or automod deleting them started an
+  endless loop until Discord rate-limited you. Now:
+  - messages you delete yourself stay deleted;
+  - a deleted message is restored once at most;
+  - messages that are still sending or failed to send are ignored;
+  - if the plugin can't tell your own deletions apart, it does nothing.
+
 ## v2.0.7 — Header bar fix (2026-11-08)
 
 ### Fixed
