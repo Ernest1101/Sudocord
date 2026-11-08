@@ -7,7 +7,8 @@
 import * as DataStore from "@api/DataStore";
 import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType } from "@utils/types";
-import { Constants, RestAPI, UserStore } from "@webpack/common";
+import { findByProps } from "@webpack";
+import { Constants, RestAPI, SnowflakeUtils, UserStore } from "@webpack/common";
 
 const settings = definePluginSettings({
     enabled: {
@@ -46,6 +47,20 @@ interface CachedMessage {
         guild_id?: string;
     };
     savedAt: number; // timestamp for cache cleanup
+}
+
+// messages you deleted yourself: those must stay deleted
+const selfDeleted = new Set<string>();
+// nonces of messages this plugin sent back: a restored message is restored only once, otherwise
+// a bot/automod deleting it again starts an endless resend loop (one message turning into 5+)
+const resentNonces = new Set<string>();
+
+let messageActions: any = null;
+let originalDeleteMessage: ((...args: any[]) => any) | null = null;
+
+function rememberFor(set: Set<string>, id: string, ms: number) {
+    set.add(id);
+    setTimeout(() => set.delete(id), ms);
 }
 
 // In-memory cache — mirror of IndexedDB for fast access
@@ -110,9 +125,10 @@ async function resendMessage(cached: CachedMessage) {
             content: cached.content,
             flags: 0,
             mobile_network_type: "unknown",
-            nonce: cached.nonce, // same nonce = same visual position in chat
+            nonce: SnowflakeUtils.fromTimestamp(Date.now()),
             tts: false,
         };
+        rememberFor(resentNonces, body.nonce, 5 * 60 * 1000);
 
         if (cached.messageReference) {
             body.message_reference = cached.messageReference;
@@ -135,7 +151,8 @@ export default definePlugin({
     settings,
 
     flux: {
-        MESSAGE_CREATE({ message, guildId }: {
+        MESSAGE_CREATE({ message, guildId, optimistic }: {
+            optimistic?: boolean;
             message: {
                 id: string;
                 author: { id: string; };
@@ -144,11 +161,18 @@ export default definePlugin({
                 nonce?: string;
                 message_reference?: any;
                 attachments?: { url: string; }[];
+                state?: string;
             };
             guildId?: string;
         }) {
             if (!settings.store.enabled) return;
             if (!dbLoaded) return; // not ready yet
+
+            // local echo of a message that is still sending (or failed): not on the server yet
+            if (optimistic || (message.state && message.state !== "SENT")) return;
+
+            // a message we restored ourselves: don't restore it a second time
+            if (message.nonce && resentNonces.has(message.nonce)) return;
 
             const currentUser = UserStore.getCurrentUser();
             if (!currentUser || message.author.id !== currentUser.id) return;
@@ -178,6 +202,14 @@ export default definePlugin({
             const cached = memCache[id];
             if (!cached) return;
 
+            // you deleted it yourself
+            if (selfDeleted.has(id)) {
+                selfDeleted.delete(id);
+                delete memCache[id];
+                scheduleSave();
+                return;
+            }
+
             // Check blacklist at delete-time too (in case the setting changed)
             if (cached.guildId && getBlacklistedGuildIds().has(cached.guildId)) {
                 delete memCache[id];
@@ -194,10 +226,34 @@ export default definePlugin({
     },
 
     async start() {
+        // remember messages deleted from this client, so only deletions by others get restored
+        try {
+            messageActions = findByProps("deleteMessage", "editMessage", "sendMessage");
+            originalDeleteMessage = messageActions.deleteMessage;
+            if (typeof originalDeleteMessage !== "function") throw new Error("deleteMessage not found");
+            const hooked = function (this: unknown, channelId: string, messageId: string, ...rest: any[]) {
+                rememberFor(selfDeleted, messageId, 60 * 1000);
+                return originalDeleteMessage!.call(this, channelId, messageId, ...rest);
+            };
+            try {
+                messageActions.deleteMessage = hooked;
+            } catch { /* getter-only export, handled below */ }
+            if (messageActions.deleteMessage !== hooked)
+                Object.defineProperty(messageActions, "deleteMessage", { configurable: true, enumerable: true, writable: true, value: hooked });
+        } catch (e) {
+            // without the hook your own deletions would be resent, so stay idle instead
+            console.error("[AntiDeleteMessage] could not hook deleteMessage, plugin stays idle", e);
+            messageActions = originalDeleteMessage = null;
+            return;
+        }
         await loadCache();
     },
 
     stop() {
+        if (messageActions && originalDeleteMessage) messageActions.deleteMessage = originalDeleteMessage;
+        messageActions = originalDeleteMessage = null;
+        selfDeleted.clear();
+        resentNonces.clear();
         if (saveTimer) {
             clearTimeout(saveTimer);
             // Final synchronous save
