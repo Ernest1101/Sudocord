@@ -58,6 +58,48 @@ export async function fetchBuffer(url: Url, options?: RequestInit) {
     return Buffer.from(buf);
 }
 
+/**
+ * Like fetchBuffer, but gives up instead of hanging forever: connectTimeout limits the wait for the response,
+ * stallTimeout aborts once no data has arrived for that long (a stuck VPN or blocked CDN otherwise never errors).
+ */
+export async function fetchBufferWithTimeout(url: Url, options: RequestInit = {}, { connectTimeout = 20_000, stallTimeout = 30_000 } = {}) {
+    const controller = new AbortController();
+    let timer = setTimeout(() => controller.abort(new Error(`no response in ${connectTimeout / 1000}s`)), connectTimeout);
+    const resetStallTimer = () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => controller.abort(new Error(`download stalled for ${stallTimeout / 1000}s`)), stallTimeout);
+    };
+
+    try {
+        const res = await checkedFetch(url, { ...options, signal: controller.signal });
+        if (!res.body) throw new Error(`GET ${url}: response body is empty`);
+
+        const expected = Number(res.headers.get("content-length")) || 0;
+        const chunks: Uint8Array[] = [];
+        let received = 0;
+        const reader = res.body.getReader();
+        resetStallTimer();
+        for (; ;) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            received += value.byteLength;
+            resetStallTimer();
+        }
+
+        if (expected && received !== expected)
+            throw new Error(`GET ${url}: got ${received} of ${expected} bytes`);
+
+        return Buffer.concat(chunks);
+    } catch (err) {
+        if (controller.signal.aborted && controller.signal.reason instanceof Error)
+            throw new Error(`GET ${url} failed: ${controller.signal.reason.message}`);
+        throw err;
+    } finally {
+        clearTimeout(timer);
+    }
+}
+
 export async function downloadToFile(url: Url, path: string, options?: RequestInit) {
     const res = await checkedFetch(url, options);
     if (!res.body) {

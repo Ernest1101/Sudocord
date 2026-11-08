@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { fetchBuffer, fetchJson } from "@main/utils/http";
+import { fetchBufferWithTimeout, fetchJson } from "@main/utils/http";
 import { IpcEvents } from "@shared/IpcEvents";
 import { VENCORD_USER_AGENT } from "@shared/vencordUserAgent";
 import { ipcMain } from "electron";
@@ -17,7 +17,13 @@ import gitRemote from "~git-remote";
 import { serializeErrors } from "./common";
 
 const API_BASE = `https://api.github.com/repos/${gitRemote}`;
+// Release mirror on the site (sudocord-mirror.timer on the VDS) for when GitHub is blocked or hangs behind a VPN
+const MIRROR_RELEASES = "https://sudocord.mooo.com/releases/Sudocord";
+const MIRROR_ASAR = "https://sudocord.mooo.com/releases/files/Sudocord/desktop.asar";
+const API_TIMEOUT = 20_000;
+
 let PendingAsarUrl: string | null = null;
+let PendingHash: string | null = null;
 
 async function githubGet<T = any>(endpoint: string) {
     return fetchJson<T>(API_BASE + endpoint, {
@@ -26,28 +32,52 @@ async function githubGet<T = any>(endpoint: string) {
             // "All API requests MUST include a valid User-Agent header.
             // Requests with no User-Agent header will be rejected."
             "User-Agent": VENCORD_USER_AGENT
-        }
+        },
+        signal: AbortSignal.timeout(API_TIMEOUT)
     });
+}
+
+async function getReleases(): Promise<any[]> {
+    let data: any;
+    try {
+        // list endpoint: the newest release may be a stable one, we want the devbuild prerelease
+        data = await githubGet("/releases?per_page=10");
+    } catch (githubErr) {
+        console.warn("[SudoCord Updater] GitHub unavailable, using mirror:", githubErr);
+        try {
+            data = await fetchJson(MIRROR_RELEASES, {
+                headers: { "User-Agent": VENCORD_USER_AGENT },
+                signal: AbortSignal.timeout(API_TIMEOUT)
+            });
+        } catch (mirrorErr) {
+            throw new Error(`${githubErr}\nMirror: ${mirrorErr}`);
+        }
+    }
+    return Array.isArray(data) ? data : [data];
 }
 
 async function calculateGitChanges() {
     const isOutdated = await fetchUpdates();
     if (!isOutdated) return [];
 
-    const data = await githubGet(`/compare/${gitHash}...HEAD`);
+    try {
+        const data = await githubGet(`/compare/${gitHash}...HEAD`);
 
-    return data.commits.map((c: any) => ({
-        // github api only sends the long sha
-        hash: c.sha.slice(0, 7),
-        author: c.author?.login ?? c.commit?.author?.name ?? "Unknown Author",
-        message: c.commit.message.split("\n")[0]
-    }));
+        return data.commits.map((c: any) => ({
+            // github api only sends the long sha
+            hash: c.sha.slice(0, 7),
+            author: c.author?.login ?? c.commit?.author?.name ?? "Unknown Author",
+            message: c.commit.message.split("\n")[0]
+        }));
+    } catch (err) {
+        // the commit list is only shown in the updater; without GitHub the update itself still works through the mirror
+        console.warn("[SudoCord Updater] Could not load the commit list:", err);
+        return [{ hash: PendingHash!.slice(0, 7), author: "SudoCord", message: "New build (commit list unavailable)" }];
+    }
 }
 
 async function fetchUpdates() {
-    // list endpoint: the newest release may be a stable one, we want the devbuild prerelease
-    const data = await githubGet("/releases?per_page=10");
-    const releases = Array.isArray(data) ? data : [data];
+    const releases = await getReleases();
 
     const release = releases.find(r => r.tag_name === "devbuild" || r.prerelease) ?? releases[0];
     if (!release) throw new Error("No releases found");
@@ -62,13 +92,33 @@ async function fetchUpdates() {
     if (!asar) throw new Error("No desktop.asar found in the latest release");
 
     PendingAsarUrl = asar.browser_download_url;
+    PendingHash = hash;
     return true;
+}
+
+async function downloadAsar(url: string) {
+    const contents = await fetchBufferWithTimeout(url, { headers: { "User-Agent": VENCORD_USER_AGENT } });
+    // never write an error page or a truncated file over the working install
+    if (contents.length < 1_000_000)
+        throw new Error(`GET ${url}: got only ${contents.length} bytes, not a SudoCord build`);
+    return contents;
 }
 
 async function applyUpdates() {
     if (!PendingAsarUrl) return false;
 
-    const contents = await fetchBuffer(PendingAsarUrl);
+    let contents: Buffer;
+    try {
+        contents = await downloadAsar(PendingAsarUrl);
+    } catch (err) {
+        if (PendingAsarUrl === MIRROR_ASAR) throw err;
+        console.warn("[SudoCord Updater] Download from GitHub failed, using mirror:", err);
+        try {
+            contents = await downloadAsar(MIRROR_ASAR);
+        } catch (mirrorErr) {
+            throw new Error(`${err}\nMirror: ${mirrorErr}`);
+        }
+    }
 
     // when running from inside an asar, __dirname looks like
     // "...\SudoCord\sudocord.asar\..." - the real file on disk is the part up to ".asar"
