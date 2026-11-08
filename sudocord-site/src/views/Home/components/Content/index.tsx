@@ -8,9 +8,9 @@ import Policy from "./Policy";
 export default function HomeContent() {
     return (
         <div className="max-w-eq-lg mx-auto px-6">
-            <h1 className="pt-12 pb-48 text-center text-4xl font-bold text-neutral-200 sm:text-5xl">
+            <h2 className="pt-12 pb-48 text-center text-4xl font-bold text-neutral-200 sm:text-5xl">
                 What's special?
-            </h1>
+            </h2>
 
             <div className="flex flex-col">
                 <div className="flex flex-col gap-12">
@@ -19,9 +19,9 @@ export default function HomeContent() {
                     <FeatureCloud />
                 </div>
 
-                <h1 className="py-32 text-center text-4xl font-bold text-neutral-200 sm:text-5xl">
+                <h2 className="py-32 text-center text-4xl font-bold text-neutral-200 sm:text-5xl">
                     and more!
-                </h1>
+                </h2>
 
                 <div className="flex justify-between gap-6 max-md:flex-col">
                     <Community />

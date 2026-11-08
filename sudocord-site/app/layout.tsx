@@ -13,13 +13,32 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
     metadataBase: new URL("https://sudocord.mooo.com"),
     title: {
-        default: "SudoCord",
+        default: "SudoCord — Discord client mod with 500+ plugins",
         template: "%s | SudoCord",
     },
     description:
-        "An enhanced version of Vencord with more than 100+ extra plugins.",
+        "SudoCord is a Discord client mod: Vencord, Equicord and Nightcord plugins in one client, custom backgrounds, themes and voice subtitles. Free download for Windows, Linux and macOS.",
+    applicationName: "SudoCord",
+    keywords: [
+        "SudoCord",
+        "Sudocord",
+        "Sudo Cord",
+        "Discord client mod",
+        "Discord mod",
+        "Vencord",
+        "Equicord",
+        "Nightcord",
+        "Discord plugins",
+        "Discord themes",
+        "мод для Discord",
+        "плагины Discord",
+    ],
+    robots: { index: true, follow: true },
     openGraph: {
         siteName: "SudoCord",
+        title: "SudoCord — Discord client mod with 500+ plugins",
+        description: "Vencord, Equicord and Nightcord plugins in one Discord client. Free for Windows, Linux and macOS.",
+        url: "/",
         type: "website",
         images: [
             {

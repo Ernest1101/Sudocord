@@ -51,7 +51,7 @@ function getPlatform(mounted: boolean): {
 
 export default function HomeHero() {
     const [mounted, setMounted] = useState(false);
-    const headerWords = "An enhanced version of Vencord".split(" ");
+    const headerWords = "SudoCord: an enhanced version of Vencord".split(" ");
 
     useEffect(() => {
         requestAnimationFrame(() => setMounted(true));
@@ -70,6 +70,7 @@ export default function HomeHero() {
                             "delay-[200ms]",
                             "delay-[300ms]",
                             "delay-[400ms]",
+                            "delay-[500ms]",
                         ];
                         return (
                             <span
