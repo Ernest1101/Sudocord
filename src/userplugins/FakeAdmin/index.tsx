@@ -126,7 +126,8 @@ function refresh() {
 
 export default definePlugin({
     name: "FakeAdmin",
-    description: "Подменяет права и владельца сервера через PermissionStore и GuildStore, открывая интерфейс администратора. Только на твоём клиенте, сервер реальные действия без прав отклонит",
+    description: "Spoofs permissions and server ownership through PermissionStore and GuildStore to open the admin interface. Only on your client: the server still rejects actions you have no rights for",
+    descriptionLocales: { ru: "Подменяет права и владельца сервера через PermissionStore и GuildStore, открывая интерфейс администратора. Только на твоём клиенте, сервер реальные действия без прав отклонит" },
     tags: ["SudoCord", "Trolling"],
     authors: [{ name: "dsd16", id: 0n }],
 

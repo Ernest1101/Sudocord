@@ -105,10 +105,10 @@ export function bypass(input: string, method: BypassMethod): string {
 
 export default definePlugin({
     name: "AutoModBypass",
-    description: "Auto-Mod bypass: преобразует текст методами (combo/invisible/cyrillic/unicode/...) и отправляет как сообщение",
+    description: "Auto-Mod bypass: transforms text with different methods (combo/invisible/cyrillic/unicode/...) and sends it as a message",
+    descriptionLocales: { ru: "Auto-Mod bypass: преобразует текст методами (combo/invisible/cyrillic/unicode/...) и отправляет как сообщение" },
     tags: ["SudoCord", "Utility"],
     authors: [{ name: "mrernestyt", id: 0n }],
-    enabledByDefault: true,
 
     settings,
 

@@ -139,7 +139,8 @@ function getSpoofProps(source = "patch"): Record<string, string | number> {
 
 export default definePlugin({
     name: "SpoofPlatform",
-    description: "Подменяет устройство, которое видят другие: ПК, телефон, браузер, консоль, VR",
+    description: "Changes the device others see: PC, phone, browser, console, VR",
+    descriptionLocales: { ru: "Подменяет устройство, которое видят другие: ПК, телефон, браузер, консоль, VR" },
     authors: [{ name: "dsd16", id: 0n }], tags: ["SudoCord", "Trolling"],
     settings,
 

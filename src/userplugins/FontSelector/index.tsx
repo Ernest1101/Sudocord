@@ -135,7 +135,8 @@ export function FontSection() {
 
 export default definePlugin({
     name: "FontSelector",
-    description: "Выбор шрифта и размера текста для всего клиента без CSS",
+    description: "Pick the font and text size for the whole client without CSS",
+    descriptionLocales: { ru: "Выбор шрифта и размера текста для всего клиента без CSS" },
     tags: ["SudoCord", "Appearance"],
     authors: [{ name: "dsd16", id: 0n }],
     // hidden, so it could never be re-enabled from the UI; the default font changes nothing

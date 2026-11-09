@@ -364,10 +364,10 @@ function scan() {
 
 export default definePlugin({
     name: "StaffDetector",
-    description: "Алерт когда в войс заходит стафф (админ/модер): звук + плавный оверлей с именем и ролью",
+    description: "Alert when staff (admin/mod) joins your voice channel: sound + smooth overlay with their name and role",
+    descriptionLocales: { ru: "Алерт когда в войс заходит стафф (админ/модер): звук + плавный оверлей с именем и ролью" },
     tags: ["SudoCord", "Voice", "Utility"],
     authors: [{ name: "dsd16", id: 0n }],
-    enabledByDefault: true,
 
     settings,
 

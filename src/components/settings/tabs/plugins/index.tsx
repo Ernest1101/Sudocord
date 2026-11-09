@@ -33,6 +33,7 @@ import { isTruthy } from "@utils/guards";
 import { Logger } from "@utils/Logger";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
+import { getPluginDescription } from "@utils/pluginLocale";
 import { useAwaiter, useCleanupEffect } from "@utils/react";
 import { PluginClient, PluginTag, PluginTags } from "@utils/types";
 import { Button, ConfirmModal, lodash, openModal, Parser, React, SearchableSelect, Select, TextInput, Tooltip, useMemo, useRef, useState } from "@webpack/common";
@@ -215,6 +216,8 @@ function PluginSettings() {
             shownName.toLowerCase().includes(search) ||
             shownName.match(/[A-Z]/g)?.join("").toLowerCase().includes(search) || // acronyms like BF for BetterFolders
             plugin.description.toLowerCase().includes(search) ||
+            getPluginDescription(plugin).toLowerCase().includes(search) || // search the shown (translated) text too
+            Object.values(plugin.descriptionLocales ?? {}).some(d => d?.toLowerCase().includes(search)) ||
             plugin.searchTerms?.some(t => t.toLowerCase().includes(search))
         );
     };

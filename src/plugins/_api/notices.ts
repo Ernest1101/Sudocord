@@ -29,7 +29,8 @@ export default definePlugin({
             find: '"NoticeStore"',
             replacement: [
                 {
-                    match: /(?<=!1;)\i=null;(?=.{0,80}getPremiumSubscription\(\))/g,
+                    // Discord now ends the isConnected check with "return!1}" right before the reset
+                    match: /(?<=!1\}?;?)\i=null;(?=.{0,120}getPremiumSubscription\(\))/g,
                     replace: "if(SudoCord.Api.Notices.currentNotice)return false;$&"
                 },
                 {

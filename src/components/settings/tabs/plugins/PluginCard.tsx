@@ -9,6 +9,7 @@ import { hasAnyVisibleSettings, isPluginEnabled, pluginRequiresRestart, startDep
 import { Settings } from "@api/Settings";
 import { CogWheel, InfoIcon } from "@components/Icons";
 import { AddonCard } from "@components/settings/AddonCard";
+import { getPluginDescription, usePluginLang } from "@utils/pluginLocale";
 import { Plugin } from "@utils/types";
 import { React, showToast, Toasts } from "@webpack/common";
 
@@ -24,6 +25,7 @@ interface PluginCardProps extends React.HTMLProps<HTMLDivElement> {
 }
 
 export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, onMouseLeave, isNew }: PluginCardProps) {
+    const lang = usePluginLang();
     const settings = Settings.plugins[plugin.name];
 
     const isEnabled = () => isPluginEnabled(plugin.name);
@@ -82,7 +84,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
         <AddonCard
             name={plugin.displayName ?? plugin.name}
             nameIcon={<ClientIcon client={getPluginClient(plugin)} />}
-            description={plugin.description}
+            description={getPluginDescription(plugin, lang)}
             isNew={isNew}
             enabled={isEnabled()}
             setEnabled={toggleEnabled}

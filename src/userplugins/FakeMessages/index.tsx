@@ -298,7 +298,8 @@ const patchMessageContextMenu: NavContextMenuPatchCallback = (children, props) =
 
 export default definePlugin({
     name: "FakeMessages",
-    description: "Пишите визуальные сообщения от имени собеседника в ЛС — видно только вам",
+    description: "Write visual messages as the other person in DMs. Only you can see them",
+    descriptionLocales: { ru: "Пишите визуальные сообщения от имени собеседника в ЛС — видно только вам" },
     authors: [{ name: "dsd16", id: 0n }], tags: ["SudoCord", "Trolling"],
     settings,
 

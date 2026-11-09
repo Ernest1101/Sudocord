@@ -144,7 +144,8 @@ const LastSeenSection = ErrorBoundary.wrap(
 
 export default definePlugin({
     name: "LastSeen",
-    description: "Показывает когда юзер был в сети последний раз, прямо в профиле.",
+    description: "Shows when a user was last online, right in their profile.",
+    descriptionLocales: { ru: "Показывает когда юзер был в сети последний раз, прямо в профиле." },
     authors: [{ name: "Nightcord", id: 0n }],
     tags: ["Utility"],
     enabledByDefault: false,

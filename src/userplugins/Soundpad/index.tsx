@@ -758,10 +758,10 @@ const SoundpadChatButton: ChatBarButtonFactory = ({ isAnyChat }) => {
 
 export default definePlugin({
     name: "Soundpad",
-    description: "Встроенный саундпад: поиск звуков uwupad.me и вывод в микрофон (через VB-Cable) или колонки",
+    description: "Built-in soundpad: search sounds on uwupad.me and play them into your microphone (via VB-Cable) or speakers",
+    descriptionLocales: { ru: "Встроенный саундпад: поиск звуков uwupad.me и вывод в микрофон (через VB-Cable) или колонки" },
     tags: ["SudoCord", "Voice", "Utility"],
     authors: [{ name: "dsd16", id: 0n }],
-    enabledByDefault: true,
 
     settings,
 

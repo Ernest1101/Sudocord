@@ -320,10 +320,10 @@ const DbMeterComponent = () => {
 
 export default definePlugin({
     name: "DecibelLimiter",
-    description: "Реальный измеритель dB входящего голоса (из RTC-статистики Discord) + авто-понижение громкости орущих",
+    description: "Real dB meter for incoming voice (from Discord's RTC stats) + automatically turns down people who shout",
+    descriptionLocales: { ru: "Реальный измеритель dB входящего голоса (из RTC-статистики Discord) + авто-понижение громкости орущих" },
     tags: ["SudoCord", "Voice"],
     authors: [{ name: "mrernestyt", id: 0n }],
-    enabledByDefault: true,
 
     settings,
     settingsAboutComponent: DbMeterComponent,

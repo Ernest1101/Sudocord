@@ -127,10 +127,10 @@ const ChannelPatch: NavContextMenuPatchCallback = (children, props) => {
 
 export default definePlugin({
     name: "FakeTyping",
-    description: "Вечное «печатает...» в выбранных каналах: ПКМ по текстовому каналу → FakeTyping. Жертвы ждут сообщения, которое не придёт",
+    description: "Endless \"typing...\" in chosen channels: right-click a text channel → FakeTyping. They wait for a message that never comes",
+    descriptionLocales: { ru: "Вечное «печатает...» в выбранных каналах: ПКМ по текстовому каналу → FakeTyping. Жертвы ждут сообщения, которое не придёт" },
     tags: ["SudoCord", "Trolling", "Utility"],
     authors: [{ name: "dsd16", id: 0n }],
-    enabledByDefault: true,
 
     settings,
 

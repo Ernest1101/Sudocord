@@ -698,10 +698,10 @@ function stopPanelObserver() {
 
 export default definePlugin({
     name: "StreamQuality",
-    description: "Кастомное FPS/разрешение/битрейт стрима. Свои поля FPS и разрешения внизу меню «Качество передачи» + тулбокс",
+    description: "Custom stream FPS/resolution/bitrate. Your own FPS and resolution fields at the bottom of the \"Stream quality\" menu + toolbox",
+    descriptionLocales: { ru: "Кастомное FPS/разрешение/битрейт стрима. Свои поля FPS и разрешения внизу меню «Качество передачи» + тулбокс" },
     tags: ["SudoCord", "Utility"],
     authors: [{ name: "dsd16", id: 0n }],
-    enabledByDefault: true,
 
     settings,
 

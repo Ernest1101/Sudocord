@@ -97,7 +97,8 @@ const badge: ProfileBadge = {
 
 export default definePlugin({
     name: "SudoBadges",
-    description: "Лого SudoCord в профиле у тех, кто в реестре (sudocord.mooo.com/api/badges.json).",
+    description: "SudoCord logo on the profiles of everyone who uses SudoCord.",
+    descriptionLocales: { ru: "Лого SudoCord в профиле у всех, кто пользуется SudoCord." },
     tags: ["SudoCord", "Appearance"],
     authors: [{ name: "dsd16", id: 0n }],
     // always on and not listed: everyone running SudoCord sees the badges, it can't be switched off

@@ -99,11 +99,10 @@ export default definePlugin({
             find: "#{intl::COPY_VERSION}",
             replacement: [
                 {
-                    match: /"text-xxs\/normal".{0,300}?(?=null!=(\i)&&(.{0,20}\i\.\i.{0,200}?,children:).{0,15}?("span"),({className:\i\.\i,children:\["Build Override: ",\1\.id\]\})\)\}\))/,
-                    replace: (m, _buildOverride, makeRow, component, props) => {
-                        props = props.replace(/children:\[.+\]/, "");
-                        return `${m},$self.makeInfoElements(${component},${props}).map(e=>${makeRow}e})),`;
-                    }
+                    // version footer (Nov 2026): the rows are footnote/normal Text components, the build override row
+                    // is the last child; add SudoCord's rows after it with the same component and props
+                    match: /null!=(\i)&&\(0,\i\.jsx\)\((\i\.\i),(\{tag:"span",variant:"footnote\/normal",color:"text-muted"),children:\(0,\i\.jsxs?\)\("span",\{className:\i\.\i,children:\["Build Override: ",\1\.id,\i\]\}\)\}\)/,
+                    replace: (m, _buildOverride, component, props) => `${m},...$self.makeInfoElements(${component},${props}})`
                 },
                 {
                     match: /copyValue:\i\.join\(" "\)/g,

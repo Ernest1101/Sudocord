@@ -26,6 +26,9 @@ import { MessageClickListener, MessageEditListener, MessageSendListener } from "
 import { MessagePopoverButtonData } from "@api/MessagePopover";
 import { Command, FluxEvents } from "@vencord/discord-types";
 import { ReactNode } from "react";
+
+/** Languages plugin descriptions are written in; any other Discord language falls back to English */
+export type PluginLang = "en" | "ru";
 import { LiteralUnion } from "type-fest";
 
 // exists to export default definePlugin({...})
@@ -132,7 +135,10 @@ export interface PluginDef {
     name: string;
     /** Name shown in the UI when it differs from the internal one, e.g. ported duplicates registered as nc_Foo */
     displayName?: string;
+    /** English description, also the fallback for every Discord language without a translation */
     description: string;
+    /** Hand-written translations of {@link description}, picked by Discord's language (see utils/pluginLocale) */
+    descriptionLocales?: Partial<Record<PluginLang, string>>;
     /** Additional search terms that will bring up your plugin */
     searchTerms?: string[];
     tags?: PluginTag[];

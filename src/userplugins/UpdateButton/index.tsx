@@ -85,7 +85,8 @@ function SudoCordUpdateButton() {
 
 export default definePlugin({
     name: "UpdateButton",
-    description: "Кнопка рядом с инбоксом: проверяет обновления SudoCord и обновляет клиент в один клик",
+    description: "Button next to the inbox: checks for SudoCord updates and updates the client in one click",
+    descriptionLocales: { ru: "Кнопка рядом с инбоксом: проверяет обновления SudoCord и обновляет клиент в один клик" },
     tags: ["SudoCord", "Utility"],
     authors: [{ name: "dsd16", id: 0n }],
     enabledByDefault: true,

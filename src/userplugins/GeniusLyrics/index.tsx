@@ -513,7 +513,8 @@ async function tick() {
 
 export default definePlugin({
     name: "GeniusLyrics",
-    description: "Статус профиля со строкой текущего трека Spotify: определяет трек, сверяет песню через Genius API и ставит живую строку текста в обычный статус (не RPC).",
+    description: "Profile status with the current Spotify lyric line: detects the track, matches the song through the Genius API and puts the live lyric line in your regular status (not RPC).",
+    descriptionLocales: { ru: "Статус профиля со строкой текущего трека Spotify: определяет трек, сверяет песню через Genius API и ставит живую строку текста в обычный статус (не RPC)." },
     tags: ["SudoCord", "Media", "Activity"],
     authors: [{ name: "dsd16", id: 0n }],
     enabledByDefault: false,

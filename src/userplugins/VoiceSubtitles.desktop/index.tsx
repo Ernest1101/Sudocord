@@ -766,7 +766,8 @@ function unmountHud() {
 
 export default definePlugin({
     name: "VoiceSubtitles",
-    description: "Распознаёт речь участников голосового канала через Groq Whisper, переводит и показывает субтитры вверху окна",
+    description: "Recognizes the speech of voice channel members with Groq Whisper, translates it and shows subtitles at the top of the window",
+    descriptionLocales: { ru: "Распознаёт речь участников голосового канала через Groq Whisper, переводит и показывает субтитры вверху окна" },
     authors: [{ name: "dsd16", id: 0n }],
     tags: ["SudoCord", "Voice", "Accessibility"],
     settings,

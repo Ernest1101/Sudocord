@@ -1,5 +1,35 @@
 # SudoCord Changelog (English)
 
+## v2.0.10 — Plugin language, clean defaults & patch fixes (2026-11-09)
+
+### Changed
+
+- **Plugin descriptions follow Discord's language**: with Discord in
+  Russian, plugins are described in Russian; in English (and in every other
+  language without a translation) they are described in English. Switching
+  the language in Discord updates the plugin list right away, no restart.
+- **Clean install starts with plugins off**: AutoModBypass, DecibelLimiter
+  (it turned down voices), FakeTyping, Soundpad, StaffDetector and
+  StreamQuality are no longer enabled by default. Only system parts stay on
+  (updater button, SudoCord badges, crash handler). Existing installs keep
+  their current plugin choices.
+
+### Fixed
+
+Found through the new anonymous error reports:
+
+- **Notices**: SudoCord notices could be dismissed by Discord again (the
+  latest Discord changed the code around its notice reset).
+- **FakeNitro**: subscription-locked server emojis and Nitro gradient
+  themes work again (both functions became anonymous in the latest Discord).
+- **VoiceMessages**: the voice message player is found again (another
+  player shared the same text and was picked by mistake).
+- **Settings footer**: the SudoCord version is shown under Discord's version
+  info again (Discord redesigned that footer).
+- **Icons** used by IconViewer, ChannelTabs folder icons and BetterForwards:
+  Discord split its single icon module into hundreds of small ones, so
+  SudoCord now collects the icons from what Discord has loaded.
+
 ## v2.0.9 — Safe mode, error reports & what's new (2026-11-09)
 
 ### Added

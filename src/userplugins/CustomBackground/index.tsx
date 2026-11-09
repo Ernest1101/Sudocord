@@ -503,7 +503,8 @@ export function BackgroundSection() {
 
 export default definePlugin({
     name: "CustomBackground",
-    description: "Свой фон Discord: mp4, gif, png и другие картинки (ссылка или файл). Настройки — во вкладке Темы.",
+    description: "Your own Discord background: mp4, gif, png and other images (link or file). Settings are in the Themes tab.",
+    descriptionLocales: { ru: "Свой фон Discord: mp4, gif, png и другие картинки (ссылка или файл). Настройки — во вкладке Темы." },
     tags: ["SudoCord", "Appearance", "Customisation"],
     authors: [{ name: "dsd16", id: 0n }],
     // hidden plugins can't be turned back on from the UI, so a stored enabled:false hid the background section for good;
