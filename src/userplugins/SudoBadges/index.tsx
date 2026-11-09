@@ -10,7 +10,8 @@ import definePlugin from "@utils/types";
 import { UserStore } from "@webpack/common";
 
 const BADGES_URL = "https://sudocord.mooo.com/api/badges.json";
-// adds the logged-in user to the registry, so everyone running SudoCord gets the badge (sudocord-badges.service on the VDS)
+// adds the logged-in user to the registry, so everyone running SudoCord gets the badge (sudocord-badges.service on the VDS);
+// the server removes ids that have not checked in for 3 days, so the badge goes away when SudoCord is uninstalled
 const REGISTER_URL = "https://sudocord.mooo.com/api/badges/register";
 const REGISTERED_KEY = "SudoBadges_registered";
 const REGISTER_EVERY_MS = 24 * 60 * 60 * 1000;
@@ -113,7 +114,8 @@ export default definePlugin({
     start() {
         addProfileBadge(badge);
         void refresh().then(registerSelf);
-        timer = setInterval(() => void refresh(), REFRESH_MS);
+        // keep checking in while Discord stays open for days: the server drops badges of clients that stop (SudoCord removed)
+        timer = setInterval(() => void refresh().then(registerSelf), REFRESH_MS);
     },
 
     stop() {
