@@ -1,5 +1,28 @@
 # SudoCord Changelog (English)
 
+## v2.0.9 — Safe mode, error reports & what's new (2026-11-09)
+
+### Added
+
+- **Safe mode**: if Discord fails to finish loading twice in a row (for
+  example an endless "Starting" screen after a Discord update), the next
+  launch starts with plugins turned off, so you can still open Discord and
+  update SudoCord instead of reinstalling. A window offers "Exit safe mode",
+  and installing an update leaves safe mode automatically. Your plugin
+  settings are not changed.
+- **Anonymous error reports**: when a Discord update breaks a plugin,
+  SudoCord sends the plugin name and the error text to the SudoCord server,
+  so broken plugins get fixed faster. No account id and no messages are
+  sent; user paths, tokens and ids are stripped. You can turn this off in
+  Settings → SudoCord → "Send anonymous error reports".
+- **What's new**: after an update, a window shows what changed in the new
+  version (once per version).
+
+### Changed
+
+- **SudoCord badge**: the badge now disappears a few days after SudoCord is
+  uninstalled. It comes back on the next launch if you install it again.
+
 ## v2.0.8 — AntiDeleteMessage fix (2026-11-08)
 
 ### Fixed
