@@ -17,6 +17,7 @@
 */
 
 import { traceFunction } from "@debug/Tracer";
+import { reportError } from "@utils/errorReporter";
 import { makeLazy, proxyLazy } from "@utils/lazy";
 import { LazyComponent } from "@utils/lazyReact";
 import { Logger } from "@utils/Logger";
@@ -213,9 +214,17 @@ if (IS_DEV && IS_DISCORD_DESKTOP) {
     }, 0);
 }
 
+function describeFilter(filter: unknown[]) {
+    return filter
+        .map(f => typeof f === "function" ? String((f as any).$$vencordProps ?? f) : JSON.stringify(f))
+        .join(", ")
+        .slice(0, 300);
+}
+
 export function handleModuleNotFound(method: string, ...filter: unknown[]) {
     const err = new Error(`webpack.${method} found no module`);
     logger.error(err, "Filter:", filter);
+    reportError("find-failed", "unknown", `${method}(${describeFilter(filter)})`);
 
     // Strict behaviour in DevBuilds to fail early and make sure the issue is found
     if (IS_DEV && !devToolsOpen)

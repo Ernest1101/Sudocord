@@ -52,7 +52,7 @@ type KeysOfType<Object, Type> = {
 }[keyof Object];
 
 function Switches() {
-    const settings = useSettings(["useQuickCss", "enableReactDevtools", "frameless", "winNativeTitleBar", "transparent", "winCtrlQ", "disableMinSize"]);
+    const settings = useSettings(["useQuickCss", "enableReactDevtools", "frameless", "winNativeTitleBar", "transparent", "winCtrlQ", "disableMinSize", "errorReports"]);
 
     const Switches = [
         {
@@ -88,6 +88,11 @@ function Switches() {
             key: "winCtrlQ",
             title: "Register Ctrl+Q as shortcut to close Discord (Alternative to Alt+F4)",
             restartRequired: true
+        },
+        !IS_WEB && {
+            key: "errorReports",
+            title: "Send anonymous error reports",
+            description: "When a Discord update breaks a plugin, SudoCord sends the plugin name and error text (no account, no messages) so it gets fixed faster."
         },
     ] satisfies Array<false | {
         key: KeysOfType<typeof settings, boolean>;

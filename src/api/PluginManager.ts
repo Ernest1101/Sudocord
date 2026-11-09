@@ -28,9 +28,11 @@ import { addMessagePopoverButton, removeMessagePopoverButton } from "@api/Messag
 import { Settings, SettingsStore } from "@api/Settings";
 import { disableStyle, enableStyle } from "@api/Styles";
 import { traceFunction } from "@debug/Tracer";
+import { reportError } from "@utils/errorReporter";
 import { Logger } from "@utils/Logger";
 import { onlyOnce } from "@utils/onlyOnce";
 import { canonicalizeFind, canonicalizeReplacement } from "@utils/patches";
+import { isSafeMode, SAFE_MODE_PLUGINS } from "@utils/safeMode";
 import { DefinedSettings, Patch, Plugin, PluginDef, PluginSettingDef, ReporterTestable, StartAt } from "@utils/types";
 import { FluxEvents } from "@vencord/discord-types";
 import { FluxDispatcher } from "@webpack/common";
@@ -47,6 +49,9 @@ let enabledPluginsSubscribedFlux = false;
 const subscribedFluxEventsPlugins = new Set<string>();
 
 export function isPluginEnabled(p: string) {
+    // safe mode: only core plugins and what they depend on, user settings stay untouched
+    if (isSafeMode()) return SAFE_MODE_PLUGINS.has(p) || !!Plugins[p]?.isDependency;
+
     return (
         Plugins[p]?.required ||
         Plugins[p]?.isDependency ||
@@ -217,6 +222,7 @@ export const startPlugin = traceFunction("startPlugin", function startPlugin(p: 
             p.start();
         } catch (e) {
             logger.error(`Failed to start ${name}\n`, e);
+            reportError("plugin-start", name, e);
             return false;
         }
     }
@@ -280,6 +286,7 @@ export const stopPlugin = traceFunction("stopPlugin", function stopPlugin(p: Plu
             p.stop();
         } catch (e) {
             logger.error(`Failed to stop ${name}\n`, e);
+            reportError("plugin-stop", name, e);
             return false;
         }
     }

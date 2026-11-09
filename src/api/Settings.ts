@@ -65,6 +65,16 @@ export interface Settings {
     windowsMaterial: "none" | "mica" | "tabbed" | "acrylic";
     disableMinSize: boolean;
     winNativeTitleBar: boolean;
+    /** send anonymous plugin/patch error reports to the SudoCord server */
+    errorReports: boolean;
+    /** safe mode bookkeeping, see utils/safeMode */
+    startupGuard: {
+        pending: boolean;
+        failures: number;
+        safeModeHash: string;
+    };
+    /** heading of the last changelog section shown in the "What's new" modal */
+    lastChangelog: string;
     plugins: {
         [plugin: string]: {
             enabled: boolean;
@@ -108,6 +118,13 @@ const DefaultSettings: Settings = {
     windowsMaterial: "none",
     disableMinSize: false,
     winNativeTitleBar: false,
+    errorReports: true,
+    startupGuard: {
+        pending: false,
+        failures: 0,
+        safeModeHash: ""
+    },
+    lastChangelog: "",
     plugins: {},
 
     uiElements: {

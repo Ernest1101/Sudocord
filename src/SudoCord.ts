@@ -22,8 +22,11 @@ import { openSettingsTabModal, UpdaterTab } from "@components/settings";
 import { debounce } from "@shared/debounce";
 import { IS_WINDOWS } from "@utils/constants";
 import { createAndAppendStyle } from "@utils/css";
+import { isSafeMode, markStartupOk } from "@utils/safeMode";
+import { openSafeModeModal } from "@utils/safeModeModal";
 import { StartAt } from "@utils/types";
-import { SettingsRouter } from "@webpack/common";
+import { maybeShowWhatsNew } from "@utils/whatsNew";
+import { FluxDispatcher, SettingsRouter, UserStore } from "@webpack/common";
 
 import { get as dsGet } from "./api/DataStore";
 import { NotificationData, showNotification } from "./api/Notifications";
@@ -139,9 +142,42 @@ async function runUpdateCheck() {
     }
 }
 
+/** Safe mode: open the dialog right away and keep a notification to reopen it. No plugin patch involved. */
+function showSafeModeNotice() {
+    openSafeModeModal();
+    showNotification({
+        title: "SudoCord safe mode",
+        body: "Plugins are off because Discord failed to load. Click to update or exit safe mode.",
+        color: "var(--yellow-360)",
+        permanent: true,
+        noPersist: true,
+        onClick: openSafeModeModal
+    });
+}
+
+/** The launch worked once Discord is connected: reset the safe mode counter and show what's new. */
+function watchStartup() {
+    let done = false;
+    const onConnected = () => {
+        if (done) return;
+        done = true;
+        FluxDispatcher.unsubscribe("CONNECTION_OPEN", onConnected);
+        markStartupOk();
+
+        if (isSafeMode()) showSafeModeNotice();
+        else setTimeout(maybeShowWhatsNew, 3000);
+    };
+
+    FluxDispatcher.subscribe("CONNECTION_OPEN", onConnected);
+    // already connected before we subscribed
+    if (UserStore.getCurrentUser()) onConnected();
+}
+
 async function init() {
     await onceReady;
     startAllPlugins(StartAt.WebpackReady);
+
+    if (!IS_REPORTER) watchStartup();
 
     syncSettings();
 

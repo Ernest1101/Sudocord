@@ -6,6 +6,7 @@
 
 import { Settings } from "@api/Settings";
 import { traceFunctionWithResults } from "@debug/Tracer";
+import { reportError } from "@utils/errorReporter";
 import { makeLazy } from "@utils/lazy";
 import { Logger } from "@utils/Logger";
 import { interpolateIfDefined } from "@utils/misc";
@@ -596,6 +597,7 @@ function patchFactory(moduleId: PropertyKey, originalFactory: AnyModuleFactory):
                 if (newPatchedCode === patchedCode) {
                     if (!(patch.noWarn || replacement.noWarn)) {
                         logger.warn(`Patch by ${patch.plugin} had no effect (Module id is ${String(moduleId)}): ${replacement.match}`);
+                        reportError("patch-no-effect", patch.plugin, String(replacement.match));
                         if (IS_DEV) {
                             logger.debug("Function Source:\n", patchedCode);
                         }
@@ -631,6 +633,7 @@ function patchFactory(moduleId: PropertyKey, originalFactory: AnyModuleFactory):
                 const shouldSuppressError = patch.plugin === "ContextMenuAPI" && err instanceof SyntaxError && err.message.includes("arguments");
                 if (!shouldSuppressError) {
                     logger.error(`Patch by ${patch.plugin} errored (Module id is ${String(moduleId)}): ${replacement.match}\n`, err);
+                    reportError("patch-error", patch.plugin, `${String(replacement.match)} -> ${err}`);
 
                     if (IS_DEV) {
                         diffErroredPatch(newPatchedCode, patchedCode, patchedCode.match(replacement.match)!);
