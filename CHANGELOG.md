@@ -1,5 +1,14 @@
 # SudoCord Changelog (English)
 
+## v2.0.11 — DecibelLimiter off for everyone (2026-11-09)
+
+### Changed
+
+- **DecibelLimiter is turned off once for existing installs**: it used to be
+  on by default and turned down other people's voices without most users
+  knowing. This update switches it off one time; if you actually use it,
+  turn it back on in Plugins and it stays on.
+
 ## v2.0.10 — Plugin language, clean defaults & patch fixes (2026-11-09)
 
 ### Changed

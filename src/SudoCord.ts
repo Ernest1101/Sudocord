@@ -204,6 +204,24 @@ async function init() {
     }
 }
 
+/**
+ * One-time settings migrations, run before plugins start so a disabled plugin doesn't start this session.
+ * Each runs once per install and records a flag; turning the plugin back on afterwards is respected.
+ */
+function runMigrations() {
+    if (IS_REPORTER) return;
+    try {
+        // DecibelLimiter was enabled by default until v2.0.10 and turned down other people's voices for everyone
+        if (!Settings.migrated_decibel_limiter_v1) {
+            if (Settings.plugins.DecibelLimiter) Settings.plugins.DecibelLimiter.enabled = false;
+            Settings.migrated_decibel_limiter_v1 = true;
+        }
+    } catch (e) {
+        PMLogger.error("Settings migration failed", e);
+    }
+}
+
+runMigrations();
 initPluginManager();
 initStyles();
 startAllPlugins(StartAt.Init);

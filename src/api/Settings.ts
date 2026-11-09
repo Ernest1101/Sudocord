@@ -75,6 +75,8 @@ export interface Settings {
     };
     /** heading of the last changelog section shown in the "What's new" modal */
     lastChangelog: string;
+    /** one-time migration: DecibelLimiter used to be on by default and turned voices down, see SudoCord.ts */
+    migrated_decibel_limiter_v1: boolean;
     plugins: {
         [plugin: string]: {
             enabled: boolean;
@@ -125,6 +127,7 @@ const DefaultSettings: Settings = {
         safeModeHash: ""
     },
     lastChangelog: "",
+    migrated_decibel_limiter_v1: false,
     plugins: {},
 
     uiElements: {
