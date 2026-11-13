@@ -7,7 +7,8 @@
 // @ts-nocheck -- ported from Nightcord, typed against Equicord's discord-types
 
 import { definePluginSettings } from "@api/Settings";
-import { Button } from "@components/Button";
+// the plugin uses the old Discord button API (color={Button.Colors.RED}, look={Button.Looks.LINK}); the new Button has variants instead
+import { ButtonCompat as Button } from "@components/Button";
 import { FormSwitch } from "@components/FormSwitch";
 import { t } from "@nightcordplugins/autoTranslateNightcord";
 import { ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalProps, ModalRoot, ModalSize, openModal } from "@utils/modal";

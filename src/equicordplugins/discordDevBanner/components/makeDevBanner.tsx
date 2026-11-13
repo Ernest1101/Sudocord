@@ -12,10 +12,31 @@ import { JSX } from "react";
 
 import { ChromiumIcon, ClientIcon, DevBannerIcon, DiscordIcon, ElectronIcon, EquicordIcon, names, settings } from ".";
 
+/**
+ * Rendered inside Discord's title bar by a patch, so it must never throw: a crash here takes the whole UI down
+ * ("Something went wrong"). Falls back to the plain build channel and number.
+ */
 export function makeDevBanner(state?: string): string | JSX.Element {
+    try {
+        return buildDevBanner(state);
+    } catch (e) {
+        console.error("[DiscordDevBanner] failed to build the banner", e);
+        const env = window.GLOBAL_ENV ?? {} as typeof window.GLOBAL_ENV;
+        return `${env.RELEASE_CHANNEL ?? ""} ${env.BUILD_NUMBER ?? ""}`.trim();
+    }
+}
+
+// Equicord's Settings plugin has getVersionInfo(), SudoCord's doesn't: describe the build ourselves
+function versionInfo() {
+    const { getVersionInfo } = (SettingsPlugin as any);
+    if (typeof getVersionInfo === "function") return String(getVersionInfo.call(SettingsPlugin, false));
+    return IS_STANDALONE ? "Standalone" : "Dev Build";
+}
+
+function buildDevBanner(state?: string): string | JSX.Element {
     const { RELEASE_CHANNEL, BUILD_NUMBER, VERSION_HASH } = window.GLOBAL_ENV;
     const buildChannel = names[RELEASE_CHANNEL] || RELEASE_CHANNEL.charAt(0).toUpperCase() + RELEASE_CHANNEL.slice(1);
-    const { chromiumVersion, electronVersion, getVersionInfo } = SettingsPlugin;
+    const { chromiumVersion, electronVersion } = SettingsPlugin;
     const format = settings.store.format ?? "{devbannerIcon} {buildChannel} {buildNumber} ({buildHash}) | {equicordIcon} {equicordName} {equicordVersion} ({equicordHash})";
     const baseFormat = state ?? format;
 
@@ -27,7 +48,7 @@ export function makeDevBanner(state?: string): string | JSX.Element {
         .replace(/{buildHash}/g, VERSION_HASH.slice(0, 9))
         .replace(/{equicordVersion}/g, VERSION)
         .replace(/{equicordHash}/g, gitHashShort)
-        .replace(/{equicordPlatform}/g, getVersionInfo(false))
+        .replace(/{equicordPlatform}/g, versionInfo())
         .replace(/{electronVersion}/g, electronVersion)
         .replace(/{chromiumVersion}/g, chromiumVersion)
         .replace(/{clientName}/g, clientInfo.name)

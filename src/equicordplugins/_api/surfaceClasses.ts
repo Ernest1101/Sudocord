@@ -14,14 +14,16 @@ export default definePlugin({
 
     patches: [
         {
-            find: "AnnouncementsSpoilerIcon:",
+            // app layout module. "AnnouncementsSpoilerIcon:" now hits a small icon module first (build 671535),
+            // so find it by the channel sidebar resize tracking, which only this module has
+            find: ".CHANNEL_SIDEBAR_RESIZED,{width:",
             replacement: [
                 {
-                    match: /"data-fullscreen":\i.{0,150},\{isSidebarOpen:/,
+                    match: /"data-fullscreen":\i.{0,250},\{isSidebarOpen:/,
                     replace: '...SudoCord.Api.SurfaceClasses._useSurfaceProps("base"),$&'
                 },
                 {
-                    match: /"data-collapsed":\i,.{0,130}themeOverride/,
+                    match: /"data-collapsed":\i,.{0,200}themeOverride/,
                     replace: '...SudoCord.Api.SurfaceClasses._useSurfaceProps("sidebar"),$&'
                 },
                 {
@@ -29,7 +31,7 @@ export default definePlugin({
                     replace: '$&...SudoCord.Api.SurfaceClasses._useSurfaceProps("channelList"),'
                 },
                 {
-                    match: /ref:\i.{0,70}#{intl::vTl6Lk::raw}\),/,
+                    match: /ref:\i.{0,120}#{intl::vTl6Lk::raw}\),/,
                     replace: "...SudoCord.Api.SurfaceClasses._useSurfaceProps('userArea'),$&"
                 }
             ]

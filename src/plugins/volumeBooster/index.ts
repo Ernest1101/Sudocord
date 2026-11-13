@@ -59,7 +59,8 @@ export default definePlugin({
         {
             find: "#{intl::USER_VOLUME}",
             replacement: {
-                match: /(?<=maxValue:)\i\.isPlatformEmbedded\?(\i\.\i):\i\.\i(?=,)/,
+                // Nov 2026: the limits are plain numbers now ("isPlatformEmbedded?200:100"), older builds used constants
+                match: /(?<=maxValue:)\i\.isPlatformEmbedded\?(\i\.\i|\d+):(?:\i\.\i|\d+)(?=,)/,
                 replace: (_, higherMaxVolume) => `${higherMaxVolume}*$self.settings.store.multiplier`
             }
         },

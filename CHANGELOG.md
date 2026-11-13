@@ -1,5 +1,23 @@
 # SudoCord Changelog (English)
 
+## v2.0.12 — Fixes for Discord build 671535 (2026-11-13)
+
+### Fixed
+
+- **Toasts everywhere**: Discord rewrote its toast module, so every SudoCord
+  toast failed (`showToast is not a function`), for example when starting
+  or stopping AutoQuests. Toasts work again.
+- **AutoQuests**: the panel crashed (`Cannot read properties of undefined
+  (reading 'RED')`); its buttons render again.
+- **FakeNitro**: client themes, app icons, stickers everywhere, high stream
+  quality and HD video uploads work again (Discord moved these checks into
+  a separate module).
+- **VolumeBooster**: the user volume slider goes above 200% again.
+- **DiscordDevBanner** can no longer crash Discord ("Something went wrong"),
+  which happened for example right after leaving safe mode.
+- **SurfaceClassesAPI** (used by CollapsibleUi): all four layout hooks apply
+  again.
+
 ## v2.0.11 — DecibelLimiter off for everyone (2026-11-09)
 
 ### Changed

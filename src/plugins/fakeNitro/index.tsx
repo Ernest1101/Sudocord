@@ -203,30 +203,32 @@ export default definePlugin({
     settings,
 
     patches: [
+        // The premium checks (canUseCustomStickersEverywhere & co.) are now references to functions in
+        // ProductCatalog.tsx that each check one perk; match them by the perk name, which survives minification
         {
-            find: "canUseCustomStickersEverywhere:",
+            find: "ProductCatalog.tsx",
             replacement: [
                 {
-                    match: /(?<=canUseCustomStickersEverywhere:function\(\i\)\{)/,
+                    match: /(?<=function \i\(\i\)\{)(?=return \i\(\i\.\i\.STICKERS_EVERYWHERE,\i\)\})/,
                     replace: "return true;",
                     predicate: () => settings.store.enableStickerBypass
                 },
                 {
-                    match: /(?<=canUseHighVideoUploadQuality:function\(\i\)\{)/,
+                    match: /(?<=function \i\(\i\)\{)(?=return \i\(\i\.\i\.INCREASED_VIDEO_UPLOAD_QUALITY,\i\)\})/,
                     replace: "return true;",
                     predicate: () => settings.store.enableStreamQualityBypass
                 },
                 {
-                    match: /(?<=canStreamQuality:function\(\i,\i\)\{)/,
+                    match: /(?<=function \i\(\i,\i\)\{)(?=return"high"===\i\?\i\(\i\.\i\.STREAM_HIGH_QUALITY)/,
                     replace: "return true;",
                     predicate: () => settings.store.enableStreamQualityBypass
                 },
                 {
-                    match: /(?<=canUseClientThemes:function\(\i\)\{)/,
+                    match: /(?<=function \i\(\i\)\{)(?=return \i\(\i\.\i\.CLIENT_THEMES,\i\)\})/,
                     replace: "return true;"
                 },
                 {
-                    match: /(?<=canUsePremiumAppIcons:function\(\i\)\{)/,
+                    match: /(?<=function \i\(\i\)\{)(?=return \i\(\i\.\i\.APP_ICONS,\i\)\})/,
                     replace: "return true;"
                 }
             ],

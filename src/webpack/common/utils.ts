@@ -107,9 +107,13 @@ interface ToastsExports {
     popToast(): void;
 }
 
-const ToastsExports = mapMangledModuleLazy(".currentToastMap.has(", {
-    showToast: filters.byCode(".currentToastMap.has("),
-    popToast: filters.byCode(".delete(")
+// Toast store module (exports: show, pop, the store itself). Nov 2026: show no longer contains ".currentToastMap.has("
+// (it queues per surface by toastKey), so match either version. pop is the other function that deletes from currentToastMap
+// (the store hook itself never mentions currentToastMap).
+const isShowToast = (m: any) => typeof m === "function" && (String(m).includes(".currentToastMap.has(") || String(m).includes(".toastKey"));
+const ToastsExports = mapMangledModuleLazy("currentToastMap:new Map", {
+    showToast: isShowToast,
+    popToast: (m: any) => typeof m === "function" && !isShowToast(m) && String(m).includes("currentToastMap") && String(m).includes(".delete(")
 });
 
 // numeric values of Discord's old ToastType enum, still used by some of our plugins
